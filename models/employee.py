@@ -85,7 +85,7 @@ class Employee:
         """
         Load employee from http
         """
-        self.s.load()
+        self.s.get()
         data = httpFn.get_employee_data(self.s)
         if data:
             data = list(data)

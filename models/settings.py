@@ -37,9 +37,10 @@ class Settings:
         if not self.q.exist_table(self.model["name"]):
             sql = self.q.build("create", self.model)
             self.q.execute(sql)
+            self.get()
 
     @property
-    def active(self):
+    def item(self):
         """
         current
         Returns:
@@ -48,12 +49,12 @@ class Settings:
         try:
             _ = self._settings["usermail"]
         except KeyError:
-            self.load()
+            self.get()
 
         return self._settings
 
-    @active.setter
-    def active(self, settings):
+    @item.setter
+    def item(self, settings):
         """
         Pushing new current settings
         Args:
@@ -62,24 +63,7 @@ class Settings:
         self._settings = settings
         self.update()
 
-    def __insert(self, values):
-        """
-        Inserts in database and activates the current settings values
-        Args:
-            values:
-
-        Returns:
-
-        """
-
-        sql = self.q.build("insert", self.model)
-
-        success, data = self.q.execute(sql, values=values)
-
-        if success and data:
-            self._settings = dict(zip(self.model["fields"], values))
-
-    def load(self):
+    def get(self):
         """
         Load current
         """
@@ -119,3 +103,20 @@ class Settings:
             return data
 
         return False
+
+    def __insert(self, values):
+        """
+        Inserts in database and activates the current settings values
+        Args:
+            values:
+
+        Returns:
+
+        """
+
+        sql = self.q.build("insert", self.model)
+
+        success, data = self.q.execute(sql, values=values)
+
+        if success and data:
+            self._settings = dict(zip(self.model["fields"], values))

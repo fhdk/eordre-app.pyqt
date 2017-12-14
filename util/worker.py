@@ -60,7 +60,7 @@ class Worker(QObject):
 
                 self.sig_status.emit(self.__thread_id, "{} - {}".format(row[2].strip(), row[3].strip()))
 
-                contacts.import_csv(row)  # send row to database
+                contacts.translate_row_insert(row)  # send row to database
 
         self.sig_status.emit(self.__thread_id, "{}".format(ftext))
         self.sig_done.emit(self.__thread_id)
@@ -94,7 +94,7 @@ class Worker(QObject):
 
                 self.sig_status.emit(self.__thread_id, "{} - {}".format(row[1].strip(), row[2].strip()))
 
-                customers.import_csv(row)  # send row to database
+                customers.translate_row_insert(row)  # send row to database
 
         self.sig_status.emit(self.__thread_id, "{}".format(ftext))
         self.sig_done.emit(self.__thread_id)
@@ -151,7 +151,7 @@ class Worker(QObject):
 
                 self.sig_status.emit(self.__thread_id, "{} - {}".format(row[2].strip(), row[3].strip()))
 
-                orderlines.import_csv(row)              # send row to database
+                orderlines.translate_row_insert(row)              # send row to database
 
         self.sig_status.emit(self.__thread_id, "{}".format(ftext))
         self.sig_done.emit(self.__thread_id)
@@ -208,7 +208,7 @@ class Worker(QObject):
 
                 self.sig_status.emit(self.__thread_id, "{} - {}".format(row[2].strip(), row[3].strip()))
 
-                reports.import_csv(row, employeeid)  # send row to database
+                reports.translate_row_insert(row, employeeid)  # send row to database
 
         self.sig_status.emit(self.__thread_id, "{}".format(ftext))
         self.sig_done.emit(self.__thread_id)
@@ -242,7 +242,7 @@ class Worker(QObject):
 
                 self.sig_status.emit(self.__thread_id, "{} - {}".format(row[2].strip(), row[3].strip()))
 
-                visits.import_csv(row)                  # send row to database
+                visits.translate_row_insert(row)                  # send row to database
 
         self.sig_status.emit(self.__thread_id, "{}".format(ftext))
         self.sig_done.emit(self.__thread_id)

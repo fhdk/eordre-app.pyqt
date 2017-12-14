@@ -42,7 +42,7 @@ class ReportCalculator:
             self.q.execute(sql)
 
     @property
-    def active(self):
+    def item(self):
         """
         Totals
         Returns:
@@ -50,8 +50,8 @@ class ReportCalculator:
         """
         return self._totals
 
-    @active.setter
-    def active(self, date_employee):
+    @item.setter
+    def item(self, date_employee):
         """
         Sets the current totals
         :param date_employee: tuple with date and employee
@@ -61,9 +61,9 @@ class ReportCalculator:
             try:
                 _ = self._totals["workdate"]
                 if not _ == date_employee[0]:
-                    self.select_by_date_employee(date_employee[0], date_employee[1])
+                    self.get_by_date_employee(date_employee[0], date_employee[1])
             except KeyError:
-                self.select_by_date_employee(date_employee[0], date_employee[1])
+                self.get_by_date_employee(date_employee[0], date_employee[1])
         except IndexError:
             self.clear()
 
@@ -72,6 +72,42 @@ class ReportCalculator:
         Clear internal variables
         """
         self._totals = {}
+
+    def get_by_id(self, calc_id):
+        """
+        Select by id
+        Returns:
+            bool indicating current has been set for the requested id
+        """
+        filters = [(self.model["id"], "=")]
+        values = (calc_id,)
+
+        sql = self.q.build("select", self.model, filters=filters)
+
+        success, data = self.q.execute(sql, values=values)
+
+        if success and data:
+            self._totals = dict(zip(self.model["fields"], data[0]))
+        return False
+
+    def get_by_date_employee(self, workdate, employee_id):
+        """
+        Select current for employeeid and workdate
+
+        Args:
+            workdate:
+            employee_id:
+        Returns:
+            bool indicating current for the selected reportid is now set
+        """
+        filters = [("workdate", "=", "and"), ("employee_id", "=")]
+        values = (workdate, employee_id)
+
+        sql = self.q.build("select", self.model, filters=filters)
+        success, data = self.q.execute(sql, values=values)
+        if success and data:
+            self._totals = dict(zip(self.model["fields"], data[0]))
+        return False
 
     def insert(self, values):
         """
@@ -89,42 +125,6 @@ class ReportCalculator:
 
         if success and data:
             return data
-        return False
-
-    def select_by_id(self, calc_id):
-        """
-        Select by id
-        Returns:
-            bool indicating current has been set for the requested id
-        """
-        filters = [(self.model["id"], "=")]
-        values = (calc_id,)
-
-        sql = self.q.build("select", self.model, filters=filters)
-
-        success, data = self.q.execute(sql, values=values)
-
-        if success and data:
-            self._totals = dict(zip(self.model["fields"], data[0]))
-        return False
-
-    def select_by_date_employee(self, workdate, employee_id):
-        """
-        Select current for employeeid and workdate
-
-        Args:
-            workdate:
-            employee_id:
-        Returns:
-            bool indicating current for the selected reportid is now set
-        """
-        filters = [("workdate", "=", "and"), ("employee_id", "=")]
-        values = (workdate, employee_id)
-
-        sql = self.q.build("select", self.model, filters=filters)
-        success, data = self.q.execute(sql, values=values)
-        if success and data:
-            self._totals = dict(zip(self.model["fields"], data[0]))
         return False
 
     def update(self):

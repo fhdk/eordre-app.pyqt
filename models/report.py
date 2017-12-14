@@ -52,7 +52,7 @@ class Report:
             self.q.execute(sql)
 
     @property
-    def active(self):
+    def item(self):
         """
         Report
         Returns:
@@ -60,8 +60,8 @@ class Report:
         """
         return self._report
 
-    @active.setter
-    def active(self, workdate):
+    @item.setter
+    def item(self, workdate):
         """
         Set reportid to workdate
         Args:
@@ -70,7 +70,7 @@ class Report:
         try:
             _ = self._report["rep_date"]
         except KeyError:
-            self.load_report(workdate=workdate)
+            self.__load_report(workdate=workdate)
 
     @property
     def csv_record_length(self):
@@ -78,7 +78,7 @@ class Report:
         return self._csv_record_length
 
     @property
-    def report_list(self):
+    def list(self):
         """
         Report List
         Returns:
@@ -86,15 +86,15 @@ class Report:
         """
         return self._reports
 
-    @report_list.setter
-    def report_list(self, year=None, month=None):
+    @list.setter
+    def list(self, year=None, month=None):
         """
         Set the current list of reports to specified filter
         Args:
             year:
             month:
         """
-        self.load_reports(year=year, month=month)
+        self.__load_reports(year=year, month=month)
 
     def clear(self):
         """
@@ -111,7 +111,7 @@ class Report:
             employee: object
             workdate: iso formatted str representing the reportid date
         """
-        # we need to find the number of reports for the month of the supplied date
+        # we need to get the number of reports for the month of the supplied date
         # then init_detail 1 to that number
         # we need to calculate the sums for the previous reportid for month
         # those sums will be stored in seperate table
@@ -200,7 +200,7 @@ class Report:
             return data
         return False
 
-    def import_csv(self, row, employee_id):
+    def translate_row_insert(self, row, employee_id):
         """
         Translate a csv row
         Args:
@@ -219,7 +219,7 @@ class Report:
 
         self.insert(values)
 
-    def load_report(self, workdate):
+    def __load_report(self, workdate):
         """
         Load report for supplied date arg
 
@@ -242,7 +242,7 @@ class Report:
 
         return False
 
-    def load_reports(self, year=None, month=None):
+    def __load_reports(self, year=None, month=None):
         """
         Load reports matching args or all if no args
 

@@ -145,7 +145,7 @@ class OrderLine:
                 self._line = {}
         return False
 
-    def import_csv(self, row):
+    def translate_row_insert(self, row):
         """
         Translate a csv row
         Args:

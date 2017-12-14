@@ -33,27 +33,27 @@ class Contact:
             self.q.execute(sql)
 
     @property
-    def active(self):
+    def item(self):
         """
         Active contact
         :return:
         """
         return self._contact
 
-    @active.setter
-    def active(self, contact_id):
+    @item.setter
+    def item(self, contact_id):
         """
         Set contact
         :return:
         """
-        self.find(contact_id)
+        self.get(contact_id)
 
     @property
-    def contact_list(self):
+    def list(self):
         return self._contacts
 
-    @contact_list.setter
-    def contact_list(self, customer_id):
+    @list.setter
+    def list(self, customer_id):
         self.load_for_customer(customer_id=customer_id)
 
     @property
@@ -80,7 +80,7 @@ class Contact:
         """
         values = (None, name, department, email, phone, info)
         new_id = self.insert(values)
-        return self.find(new_id)
+        return self.get(new_id)
 
     def delete(self, contact_id):
         """
@@ -98,7 +98,7 @@ class Contact:
             return True
         return False
 
-    def find(self, contact_id):
+    def get(self, contact_id):
         """
         Load specific contact by id
         Args:
@@ -118,7 +118,7 @@ class Contact:
             return True
         return False
 
-    def import_csv(self, row):
+    def translate_row_insert(self, row):
         """
         Translate a csv row
         Args:

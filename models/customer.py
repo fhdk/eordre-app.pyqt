@@ -44,14 +44,14 @@ class Customer:
             self.q.execute(sql)
 
     @property
-    def active(self):
+    def item(self):
         """
         Return active customer
         """
         return self._customer
 
-    @active.setter
-    def active(self, customer_id):
+    @item.setter
+    def item(self, customer_id):
         """
         Set active customer
         Args:
@@ -105,7 +105,7 @@ class Customer:
             self.lookup_by_id(new_id)
         return True
 
-    def import_csv(self, row):
+    def translate_row_insert(self, row):
         """
         Translate a csv row
         Args:
@@ -134,9 +134,9 @@ class Customer:
         # app use 'zip' 'city' in different columns
         # zip city can contain more than one space
         # eg '2200  København K' or '4430 Kirke Hyllinge'
-        # find the first occurence of space
+        # get the first occurence of space
         # and insert '|' and use it to split zip and city
-        loc = values[4].find(" ")
+        loc = values[4].get(" ")
         zipcity = values[4][:loc] + "|" + values[4][loc:]
         zipcity = zipcity.split("|")
         zipcode = zipcity[0].strip()

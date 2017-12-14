@@ -36,19 +36,19 @@ class CustomerProducts:
             self.q.execute(sql)
 
     @property
-    def cust_prod_list(self):
+    def list(self):
         """
         Customer products
         :return:
         """
         return self._products
 
-    @cust_prod_list.setter
-    def cust_prod_list(self, customer_id):
+    @list.setter
+    def list(self, customer_id):
         """
         Load customers into primary list
         """
-        self.load(customer_id)
+        self.__load(customer_id)
 
     def clear(self):
         """
@@ -68,7 +68,7 @@ class CustomerProducts:
             bool
         """
         self.insert((None, customer_id, item, sku, pcs))
-        self.load(customer_id)
+        self.__load(customer_id)
 
     def insert(self, values):
         """
@@ -84,7 +84,7 @@ class CustomerProducts:
             return data
         return False
 
-    def load(self, customer_id):
+    def __load(self, customer_id):
         """
         Load products
         Args:
