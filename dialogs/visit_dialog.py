@@ -37,11 +37,11 @@ class VisitDialog(QDialog, Ui_visitDialog):
         self.setupUi(self)
         self.txtVisitDate.setText(self._workdate)
 
-        self._customerid = customers.item["customer_id"]
-        self._employeeid = employees.item["employee_id"]
-        self._reportid = reports.item["report_id"]
-        self._workdate = reports.item["rep_date"]
-        self._products = products.product_list
+        self._customerid = customers.item_["customer_id"]
+        self._employeeid = employees.item_["employee_id"]
+        self._reportid = reports.item_["report_id"]
+        self._workdate = reports.item_["rep_date"]
+        self._products = products.list_
 
         self._visit = visits
         self._visit.clear()
@@ -50,18 +50,18 @@ class VisitDialog(QDialog, Ui_visitDialog):
             load visits for workdata
             """
             self._visit.get_by_customer(self._customerid, self._workdate)
-            _ = self._visit.item["visit_id"]
+            _ = self._visit.item_["visit_id"]
 
         except KeyError:
             self._visit.add(self._reportid, self._employeeid, self._customerid, self._workdate)
-            self._visit.item["visit_type"] = "R"
-            if customers.item["account"] == "NY":
-                self._visit.item["visit_type"] = "N"
+            self._visit.item_["visit_type"] = "R"
+            if customers.item_["account"] == "NY":
+                self._visit.item_["visit_type"] = "N"
 
-        p.debug("{} {}".format(__module__, "init"), "active visit", self._visit.item)
+        p.debug("{} {}".format(__module__, "init"), "active visit", self._visit.item_)
         exit(p.DEBUG)
         self._orderlines = OrderLine()
-        self._orderlines.load_visit(self._visit.item["visit_id"])
+        self._orderlines.load_visit(self._visit.item_["visit_id"])
         for idx, detail in enumerate(self._orderlines.lines):
             # "pcs", "sku", "text", "price", "sas", "discount", "linetype", "extra"
             row_count = idx + 1
@@ -154,20 +154,20 @@ class VisitDialog(QDialog, Ui_visitDialog):
         Slot for saving the visit
         """
         # save visit head contents
-        self._visit.item["po_buyer"] = self.txtPoBuyer.text()
-        self._visit.item["po_number"] = self.txtPoNumber.text()
-        self._visit.item["po_company"] = self.txtPoCompany.text()
-        self._visit.item["po_address1"] = self.txtPoAddress1.text()
-        self._visit.item["po_address2"] = self.txtPoAddress2.text()
-        self._visit.item["po_postcode"] = self.txtPoPostcode.text()
-        self._visit.item["po_postofffice"] = self.txtPoPostoffice.text()
-        self._visit.item["po_country"] = self.txtPoCountry.text()
-        self._visit.item["info_text"] = self.txtInfoText.toPlainText()
-        self._visit.item["prod_demo"] = self.txtProductDemo.text()
-        self._visit.item["prod_sale"] = self.txtProductSale.text()
-        self._visit.item["sas"] = self.txtVisitSas.text()
-        self._visit.item["sale"] = self.txtVisitSale.text()
-        self._visit.item["total"] = self.txtVisitTotal.text()
+        self._visit.item_["po_buyer"] = self.txtPoBuyer.text()
+        self._visit.item_["po_number"] = self.txtPoNumber.text()
+        self._visit.item_["po_company"] = self.txtPoCompany.text()
+        self._visit.item_["po_address1"] = self.txtPoAddress1.text()
+        self._visit.item_["po_address2"] = self.txtPoAddress2.text()
+        self._visit.item_["po_postcode"] = self.txtPoPostcode.text()
+        self._visit.item_["po_postofffice"] = self.txtPoPostoffice.text()
+        self._visit.item_["po_country"] = self.txtPoCountry.text()
+        self._visit.item_["info_text"] = self.txtInfoText.toPlainText()
+        self._visit.item_["prod_demo"] = self.txtProductDemo.text()
+        self._visit.item_["prod_sale"] = self.txtProductSale.text()
+        self._visit.item_["sas"] = self.txtVisitSas.text()
+        self._visit.item_["sale"] = self.txtVisitSale.text()
+        self._visit.item_["total"] = self.txtVisitTotal.text()
 
         # TODO: save visitdetails
 

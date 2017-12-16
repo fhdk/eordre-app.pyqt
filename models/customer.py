@@ -44,14 +44,14 @@ class Customer:
             self.q.execute(sql)
 
     @property
-    def item(self):
+    def customer(self):
         """
         Return active customer
         """
         return self._customer
 
-    @item.setter
-    def item(self, customer_id):
+    @customer.setter
+    def customer(self, customer_id):
         """
         Set active customer
         Args:

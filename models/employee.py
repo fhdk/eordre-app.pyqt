@@ -36,11 +36,11 @@ class Employee:
             sql = self.q.build("create", self.model)
             self.q.execute(sql)
         self.s = Settings()
-        if rules.check_settings(self.s.active):
-            self.load(self.s.active["usermail"])
+        if rules.check_settings(self.s.setting):
+            self.load(self.s.setting["usermail"])
 
     @property
-    def active(self):
+    def employee(self):
         """
         Return current and only employeeid
         """

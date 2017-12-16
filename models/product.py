@@ -37,14 +37,14 @@ class Product:
             self.q.execute(sql)
 
     @property
-    def active(self):
+    def product(self):
         """
         Return active product
         """
         return self._product
 
-    @active.setter
-    def active(self, product_id):
+    @product.setter
+    def product(self, product_id):
         """
         Set current product
         Args:
@@ -53,7 +53,7 @@ class Product:
         self.by_id(product_id)
 
     @property
-    def product_list(self):
+    def list_(self):
         """
         ProductList
         Returns:

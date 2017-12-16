@@ -40,7 +40,7 @@ class Settings:
             self.get()
 
     @property
-    def item(self):
+    def setting(self):
         """
         current
         Returns:
@@ -53,8 +53,8 @@ class Settings:
 
         return self._settings
 
-    @item.setter
-    def item(self, settings):
+    @setting.setter
+    def setting(self, settings):
         """
         Pushing new current settings
         Args:

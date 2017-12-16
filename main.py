@@ -32,7 +32,7 @@ from models.settings import Settings
 from models.visit import Visit
 from resources.main_window_rc import Ui_mainWindow
 from resources import splash_rc
-from util import utils
+from util import utils, printFn as p
 from util.rules import check_settings
 
 __appname__ = "Eordre NG"
@@ -107,21 +107,21 @@ class MainWindow(QMainWindow, Ui_mainWindow):
         self.widgetVisitDetails.setColumnWidth(4, 60)
         self.widgetVisitDetails.setColumnWidth(5, 40)
         # load report for workdate if exist
-        self._reports.__load_report(self.txtWorkdate.text())
+        self._reports.report(workdate=self.txtWorkdate.text())
         # display customerlist
         self.populate_customer_list()
         # set latest customer active
-        if self._customers.lookup_by_id(self._settings.item["cust_idx"]):
+        if self._customers.lookup_by_id(self._settings.setting["cust_idx"]):
             try:
-                phone = self._customers.item["phone1"]
+                phone = self._customers.customer["phone1"]
                 self.widgetCustomerList.setCurrentIndex(
                     self.widgetCustomerList.indexFromItem(
                         self.widgetCustomerList.findItems(phone, Qt.MatchExactly, column=0)[0]))
             except KeyError:
                 pass
         # set last info page used
-        if self._settings.item["page_idx"]:
-            self.widgetCustomerInfo.setCurrentIndex(self._settings.item["page_idx"])
+        if self._settings.setting["page_idx"]:
+            self.widgetCustomerInfo.setCurrentIndex(self._settings.setting["page_idx"])
 
     def closeEvent(self, event):
         """
@@ -142,12 +142,12 @@ class MainWindow(QMainWindow, Ui_mainWindow):
         """
         # customer id
         try:
-            self._settings.item["cust_idx"] = self._customers.item["customer_id"]
+            self._settings.setting["cust_idx"] = self._customers.customer["customer_id"]
         except KeyError:
-            self._settings.item["cust_idx"] = 0
+            self._settings.setting["cust_idx"] = 0
         # customer info page
-        if not self._settings.item["page_idx"]:
-            self._settings.item["page_idx"] = self.widgetCustomerInfo.currentIndex()
+        if not self._settings.setting["page_idx"]:
+            self._settings.setting["page_idx"] = self.widgetCustomerInfo.currentIndex()
         # save setttings
         self._settings.update()
         app.quit()
@@ -156,10 +156,10 @@ class MainWindow(QMainWindow, Ui_mainWindow):
         """
         Update status fields
         """
-        self.txtCustLocal.setText(self._settings.item["lsc"])
-        self.txtCustServer.setText(self._settings.item["sac"])
-        self.txtProdLocal.setText(self._settings.item["lsp"])
-        self.txtProdServer.setText(self._settings.item["sap"])
+        self.txtCustLocal.setText(self._settings.setting["lsc"])
+        self.txtCustServer.setText(self._settings.setting["sac"])
+        self.txtProdLocal.setText(self._settings.setting["lsp"])
+        self.txtProdServer.setText(self._settings.setting["sap"])
 
     def populate_contact_list(self):
         """
@@ -169,8 +169,8 @@ class MainWindow(QMainWindow, Ui_mainWindow):
         self.widgetContactList.clear()
         items = []
         try:
-            self._contacts.list = self._customers.item["customer_id"]
-            for c in self._contacts.list:
+            self._contacts.list_ = self._customers.customer["customer_id"]
+            for c in self._contacts.list_:
                 item = QTreeWidgetItem([c["name"],
                                         c["department"],
                                         c["phone"],
@@ -193,7 +193,7 @@ class MainWindow(QMainWindow, Ui_mainWindow):
                                                  "Firma"])
         items = []  # temporary list
         try:
-            for c in self._customers.customer_list:
+            for c in self._customers.list_:
                 item = QTreeWidgetItem([c["phone1"],
                                         c["company"]])
                 items.append(item)
@@ -254,7 +254,7 @@ class MainWindow(QMainWindow, Ui_mainWindow):
         self.widgetVisitList.setColumnWidth(0, 0)
         items = []
         try:
-            self._visits.visit_list_customer = self._customers.item["customer_id"]
+            self._visits.visit_list_customer = self._customers.customer["customer_id"]
             for visit in self._visits.visit_list_customer:
                 item = QTreeWidgetItem([str(visit["visit_id"]),
                                         visit["visit_date"],
@@ -284,10 +284,10 @@ class MainWindow(QMainWindow, Ui_mainWindow):
         Setup database and basic configuration
         """
         # basic settings must be done
-        is_set = check_settings(self._settings.item)
+        is_set = check_settings(self._settings.setting)
         if is_set:
             try:
-                _ = self._employees.active["fullname"]
+                _ = self._employees.employee["fullname"]
             except KeyError:
                 msgbox = QMessageBox()
                 msgbox.about(self,
@@ -302,11 +302,11 @@ class MainWindow(QMainWindow, Ui_mainWindow):
             self.show_settings_dialog()
 
         # if requested check server data
-        if utils.int2bool(self._settings.item["sc"]):
+        if utils.int2bool(self._settings.setting["sc"]):
             # update sync status
             status = utils.refresh_sync_status(self._settings)
-            self._settings.item["sac"] = status[0][1].split()[0]
-            self._settings.item["sap"] = status[1][1].split()[0]
+            self._settings.setting["sac"] = status[0][1].split()[0]
+            self._settings.setting["sap"] = status[1][1].split()[0]
             self._settings.update()
 
         # display known sync data
@@ -341,7 +341,7 @@ class MainWindow(QMainWindow, Ui_mainWindow):
         """
         Slot for updateCustomer triggered signal
         """
-        if not self._customers.item:
+        if not self._customers.customer:
             # msgbox triggered if no current is selected
             msgbox = QMessageBox()
             msgbox.information(self,
@@ -350,18 +350,18 @@ class MainWindow(QMainWindow, Ui_mainWindow):
                                QMessageBox.Ok)
             return False
         # assign input field values to current object
-        self._customers.item["company"] = self.txtCompany.text()
-        self._customers.item["address1"] = self.txtAddress1.text()
-        self._customers.item["address2"] = self.txtAddress2.text()
-        self._customers.item["zipcode"] = self.txtZipCode.text()
-        self._customers.item["city"] = self.txtCityName.text()
-        self._customers.item["phone1"] = self.txtPhone1.text()
-        self._customers.item["phone2"] = self.txtPhone2.text()
-        self._customers.item["email"] = self.txtEmail.text()
-        self._customers.item["factor"] = self.txtFactor.text()
-        self._customers.item["infotext"] = self.txtCustomerInfoText.toPlainText()
-        self._customers.item["modified"] = 1
-        self._customers.update()
+        self._customers.customer["company"] = self.txtCompany.text()
+        self._customers.customer["address1"] = self.txtAddress1.text()
+        self._customers.customer["address2"] = self.txtAddress2.text()
+        self._customers.customer["zipcode"] = self.txtZipCode.text()
+        self._customers.customer["city"] = self.txtCityName.text()
+        self._customers.customer["phone1"] = self.txtPhone1.text()
+        self._customers.customer["phone2"] = self.txtPhone2.text()
+        self._customers.customer["email"] = self.txtEmail.text()
+        self._customers.customer["factor"] = self.txtFactor.text()
+        self._customers.customer["infotext"] = self.txtCustomerInfoText.toPlainText()
+        self._customers.customer["modified"] = 1
+        self._customers.update_()
 
     @pyqtSlot(name="create_customer")
     def create_customer(self):
@@ -401,17 +401,17 @@ class MainWindow(QMainWindow, Ui_mainWindow):
             # load customer
             self._customers.lookup(phone, company)
             # fields to line edits
-            self.txtAccount.setText(self._customers.item["account"])
-            self.txtCompany.setText(self._customers.item["company"])
-            self.txtAddress1.setText(self._customers.item["address1"])
-            self.txtAddress2.setText(self._customers.item["address2"])
-            self.txtZipCode.setText(self._customers.item["zipcode"])
-            self.txtCityName.setText(self._customers.item["city"])
-            self.txtPhone1.setText(self._customers.item["phone1"])
-            self.txtPhone2.setText(self._customers.item["phone2"])
-            self.txtEmail.setText(self._customers.item["email"])
-            self.txtFactor.setText(str(self._customers.item["factor"]))
-            self.txtCustomerInfoText.setText(self._customers.item["infotext"])
+            self.txtAccount.setText(self._customers.customer["account"])
+            self.txtCompany.setText(self._customers.customer["company"])
+            self.txtAddress1.setText(self._customers.customer["address1"])
+            self.txtAddress2.setText(self._customers.customer["address2"])
+            self.txtZipCode.setText(self._customers.customer["zipcode"])
+            self.txtCityName.setText(self._customers.customer["city"])
+            self.txtPhone1.setText(self._customers.customer["phone1"])
+            self.txtPhone2.setText(self._customers.customer["phone2"])
+            self.txtEmail.setText(self._customers.customer["email"])
+            self.txtFactor.setText(str(self._customers.customer["factor"]))
+            self.txtCustomerInfoText.setText(self._customers.customer["infotext"])
         except AttributeError:
             pass
         except KeyError:
@@ -436,7 +436,7 @@ class MainWindow(QMainWindow, Ui_mainWindow):
         self.populate_customer_list()
         lsc = datetime.date.today().isoformat()
         self.txtCustLocal.setText(lsc)
-        self._settings.item["lsc"] = lsc
+        self._settings.setting["lsc"] = lsc
         self._settings.update()
 
     @pyqtSlot(name="on_products_done")
@@ -447,7 +447,7 @@ class MainWindow(QMainWindow, Ui_mainWindow):
         self._products.all()
         lsp = datetime.date.today().isoformat()
         self.txtProdLocal.setText(lsp)
-        self._settings.item["lsp"] = lsp
+        self._settings.setting["lsp"] = lsp
         self._settings.update()
 
     @pyqtSlot(name="on_settings_changed")
@@ -457,7 +457,7 @@ class MainWindow(QMainWindow, Ui_mainWindow):
         :return:
         """
         self._settings.get()
-        self._employees.load(self._settings.item["usermail"])
+        self._employees.load(self._settings.setting["usermail"])
 
     @pyqtSlot(QTreeWidgetItem, QTreeWidgetItem, name="on_visit_changed")
     def on_visit_changed(self, current, previous):
@@ -551,7 +551,7 @@ class MainWindow(QMainWindow, Ui_mainWindow):
                     infotext = "Eksisterende rapport hentet: {}".format(self.txtWorkdate.text())
                 except KeyError:
                     # create the report
-                    self._reports.create(self._employees.active, self.txtWorkdate.text())
+                    self._reports.create(self._employees.employee, self.txtWorkdate.text())
                     infotext = "Rapport oprettet for: {}".format(self.txtWorkdate.text())
                 msgbox = QMessageBox()
                 msgbox.information(self, __appname__, infotext, QMessageBox.Ok)
@@ -569,7 +569,7 @@ class MainWindow(QMainWindow, Ui_mainWindow):
         """
         Slot for fileImport triggered signal
         """
-        if self._customers.customer_list:
+        if self._customers.list_:
             msgbox = QMessageBox()
             msgbox.warning(self,
                            __appname__,
@@ -654,7 +654,7 @@ class MainWindow(QMainWindow, Ui_mainWindow):
             self._reports.__load_report(self.txtWorkdate.text())
             try:
                 # do we have a customer
-                _ = self._customers.item["company"]
+                _ = self._customers.customer["company"]
             except KeyError:
                 msgbox = QMessageBox()
                 msgbox.information(self,
@@ -687,10 +687,10 @@ class MainWindow(QMainWindow, Ui_mainWindow):
         self.populate_visit_list()
         self.populate_customer_list()
 
-        self._settings.item["lsc"] = ""
-        self._settings.item["sac"] = ""
-        self._settings.item["lsp"] = ""
-        self._settings.item["sap"] = ""
+        self._settings.setting["lsc"] = ""
+        self._settings.setting["sac"] = ""
+        self._settings.setting["lsp"] = ""
+        self._settings.setting["sap"] = ""
         self._settings.update()
         self.display_sync_status()
 

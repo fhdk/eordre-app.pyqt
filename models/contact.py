@@ -33,15 +33,15 @@ class Contact:
             self.q.execute(sql)
 
     @property
-    def item(self):
+    def contact(self):
         """
         Active contact
         :return:
         """
         return self._contact
 
-    @item.setter
-    def item(self, contact_id):
+    @contact.setter
+    def contact(self, contact_id):
         """
         Set contact
         :return:

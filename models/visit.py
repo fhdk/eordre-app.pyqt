@@ -50,7 +50,7 @@ class Visit:
             self.q.execute(sql)
 
     @property
-    def item(self):
+    def visit(self):
         """
         Visit
         Returns:
@@ -58,8 +58,8 @@ class Visit:
         """
         return self._visit
 
-    @item.setter
-    def item(self, visit_id):
+    @visit.setter
+    def visit(self, visit_id):
         """
         Set a visit
         :param visit_id:
