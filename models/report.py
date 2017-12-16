@@ -56,14 +56,13 @@ class Report:
         """
         Report
         Returns:
-            Active report
+            Current report
         """
         return self._report
 
-    @report.setter
-    def report(self, workdate):
+    def get_(self, workdate: str):
         """
-        Set reportid to workdate
+        Set current report to workdate
         Args:
             workdate:
         """

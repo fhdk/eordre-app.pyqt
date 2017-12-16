@@ -107,7 +107,7 @@ class MainWindow(QMainWindow, Ui_mainWindow):
         self.widgetVisitDetails.setColumnWidth(4, 60)
         self.widgetVisitDetails.setColumnWidth(5, 40)
         # load report for workdate if exist
-        self._reports.report(workdate=self.txtWorkdate.text())
+        self._reports.get_(workdate=self.txtWorkdate.text())
         # display customerlist
         self.populate_customer_list()
         # set latest customer active
