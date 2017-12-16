@@ -54,7 +54,8 @@ class Contact:
 
     @list.setter
     def list(self, customer_id):
-        self.load_for_customer(customer_id=customer_id)
+        self.clear()
+        self._load(customer_id=customer_id)
 
     @property
     def csv_record_length(self):
@@ -79,7 +80,7 @@ class Contact:
             info:
         """
         values = (None, name, department, email, phone, info)
-        new_id = self.insert(values)
+        new_id = self._insert(values)
         return self.get(new_id)
 
     def delete(self, contact_id):
@@ -125,9 +126,9 @@ class Contact:
             row:
         """
         new_row = (row[0], row[1], row[2].strip(), row[3].strip(), row[4].strip(), row[5].strip(), row[7].strip())
-        self.insert(new_row)
+        self._insert(new_row)
 
-    def insert(self, values):
+    def _insert(self, values):
         """
         Insert items
         Args:
@@ -141,7 +142,7 @@ class Contact:
             return data
         return False
 
-    def load_for_customer(self, customer_id):
+    def _load(self, customer_id):
         """
         Load contacts for current
         Args:
