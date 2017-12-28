@@ -188,14 +188,12 @@ class MainWindow(QMainWindow, Ui_mainWindow):
         Populate customer list
         """
         self.widgetCustomerList.clear()  # shake the tree for leaves
-        self.widgetCustomerList.setColumnCount(2)  # set columns
-        self.widgetCustomerList.setHeaderLabels(["Telefon",
-                                                 "Firma"])
+        self.widgetCustomerList.setColumnCount(4)  # set columns
+        self.widgetCustomerList.setHeaderLabels(["Telefon", "Firma", "Post", "Bynavn"])
         items = []  # temporary list
         try:
             for c in self._customers.list_:
-                item = QTreeWidgetItem([c["phone1"],
-                                        c["company"]])
+                item = QTreeWidgetItem([c["phone1"], c["company"], c["zipcode"], c["city"]])
                 items.append(item)
         except (IndexError, KeyError):
             pass
