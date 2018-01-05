@@ -1,22 +1,22 @@
 <RCC>
   <qresource prefix="/">
-    <file>system/factories.png</file>
-    <file>system/mailbox.png</file>
-    <file>system/pdf.png</file>
-    <file>system/data-security.png</file>
-    <file>system/import.png</file>
-    <file>system/export.png</file>
-    <file>system/login.png</file>
-    <file>system/refresh.png</file>
-    <file>system/contacts.png</file>
-    <file>system/logout.png</file>
-    <file>system/download.png</file>
-    <file>system/credentials.png</file>
-    <file>system/companies.png</file>
-    <file>system/home.png</file>
-    <file>system/products.png</file>
-    <file>system/network.png</file>
     <file>system/config.png</file>
+    <file>system/logout.png</file>
+    <file>system/export.png</file>
+    <file>system/refresh.png</file>
+    <file>system/factories.png</file>
+    <file>system/home.png</file>
+    <file>system/mailbox.png</file>
+    <file>system/data-security.png</file>
+    <file>system/credentials.png</file>
+    <file>system/products.png</file>
+    <file>system/contacts.png</file>
+    <file>system/import.png</file>
+    <file>system/network.png</file>
+    <file>system/pdf.png</file>
+    <file>system/download.png</file>
+    <file>system/companies.png</file>
+    <file>system/login.png</file>
     <file>system/reports.png</file>
   </qresource>
 </RCC>

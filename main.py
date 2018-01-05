@@ -63,49 +63,49 @@ class MainWindow(QMainWindow, Ui_mainWindow):
         self._visits = Visit()  # Initialize Visit object
         self._settings = Settings()  # Initialize Settings object
 
-        # # connect menu trigger signals
-        # self.actionAboutQt.triggered.connect(self.show_about_qt)
-        # self.actionAboutSoftware.triggered.connect(self.show_about_software)
-        # self.actionArchiveChanges.triggered.connect(self.archive_customer)
-        # self.actionContactsInfo.triggered.connect(self.show_contact_data_page)
-        # self.actionCreateCustomer.triggered.connect(self.create_customer)
-        # self.actionCreateVisit.triggered.connect(self.show_visit_dialog)
-        # self.actionImportCsvFiles.triggered.connect(self.show_csv_import_dialog)
-        # self.actionExit.triggered.connect(self.app_exit_slot)
-        # self.actionGetCatalogHttp.triggered.connect(self.show_http_products_dialog)
-        # self.actionGetCustomersHttp.triggered.connect(self.show_http_customers_dialog)
-        # self.actionMasterInfo.triggered.connect(self.show_master_data_page)
-        # self.actionReport.triggered.connect(self.show_create_report_dialog)
-        # self.actionReportList.triggered.connect(self.show_reports_dialog)
-        # self.actionSettings.triggered.connect(self.show_settings_dialog)
-        # self.actionVisitsInfo.triggered.connect(self.show_visit_data_page)
-        # self.actionZeroDatabase.triggered.connect(self.zero_database)
-        # # buttons on top
-        # self.btnAddCustomer.clicked.connect(self.create_customer)
-        # self.btnCreateReportDialog.clicked.connect(self.show_create_report_dialog)
-        # # buttons for paging data
+        # connect menu trigger signals
+        self.actionAboutQt.triggered.connect(self.show_about_qt)
+        self.actionAboutSoftware.triggered.connect(self.show_about_software)
+        self.actionArchiveChanges.triggered.connect(self.archive_customer)
+        self.actionContactsInfo.triggered.connect(self.show_contact_data_page)
+        self.actionCreateCustomer.triggered.connect(self.create_customer)
+        self.actionCreateVisit.triggered.connect(self.show_visit_dialog)
+        self.actionImportCsvFiles.triggered.connect(self.show_csv_import_dialog)
+        self.actionExit.triggered.connect(self.app_exit_slot)
+        self.actionGetCatalogHttp.triggered.connect(self.show_http_products_dialog)
+        self.actionGetCustomersHttp.triggered.connect(self.show_http_customers_dialog)
+        self.actionMasterInfo.triggered.connect(self.show_master_data_page)
+        self.actionReport.triggered.connect(self.show_create_report_dialog)
+        self.actionReportList.triggered.connect(self.show_reports_dialog)
+        self.actionSettings.triggered.connect(self.show_settings_dialog)
+        self.actionVisitsInfo.triggered.connect(self.show_visit_data_page)
+        self.actionZeroDatabase.triggered.connect(self.zero_database)
+        # buttons on top
+        self.btnAddCustomer.clicked.connect(self.create_customer)
+        self.btnCreateReportDialog.clicked.connect(self.show_create_report_dialog)
+        # buttons for paging data
         # self.btnShowContacts.clicked.connect(self.show_contact_data_page)
         # self.btnShowMasterdata.clicked.connect(self.show_master_data_page)
         # self.btnShowVisits.clicked.connect(self.show_visit_data_page)
-        # # button on master data page
-        # self.btnArchiveMasterdata.clicked.connect(self.archive_customer)
-        # # buttons on contacts data page
-        # self.btnArchiveContacts.clicked.connect(self.archive_contacts_slot)
-        # self.btnAddContact.clicked.connect(self.add_contact_slot)
-        # # button visit data page
-        # self.btnVisitDialog.clicked.connect(self.show_visit_dialog)
-        # # connect list changes
-        # self.widgetCustomerList.currentItemChanged.connect(self.on_customer_changed)
-        # self.widgetVisitList.currentItemChanged.connect(self.on_visit_changed)
-        # # Hide the id column on visit list
-        # self.widgetVisitList.setColumnHidden(0, True)
-        # # Set header on visit details
-        # self.widgetVisitDetails.setColumnWidth(0, 30)
-        # self.widgetVisitDetails.setColumnWidth(1, 30)
-        # self.widgetVisitDetails.setColumnWidth(2, 100)
-        # self.widgetVisitDetails.setColumnWidth(3, 150)
-        # self.widgetVisitDetails.setColumnWidth(4, 60)
-        # self.widgetVisitDetails.setColumnWidth(5, 40)
+        # button on master data page
+        self.btnArchiveMasterdata.clicked.connect(self.archive_customer)
+        # buttons on contacts data page
+        self.btnArchiveContacts.clicked.connect(self.archive_contacts_slot)
+        self.btnAddContact.clicked.connect(self.add_contact_slot)
+        # button visit data page
+        self.btnVisitDialog.clicked.connect(self.show_visit_dialog)
+        # connect list changes
+        self.widgetCustomerList.currentItemChanged.connect(self.on_customer_changed)
+        self.widgetVisitList.currentItemChanged.connect(self.on_visit_changed)
+        # Hide the id column on visit list
+        self.widgetVisitList.setColumnHidden(0, True)
+        # Set header on visit details
+        self.widgetVisitDetails.setColumnWidth(0, 30)
+        self.widgetVisitDetails.setColumnWidth(1, 30)
+        self.widgetVisitDetails.setColumnWidth(2, 100)
+        self.widgetVisitDetails.setColumnWidth(3, 150)
+        self.widgetVisitDetails.setColumnWidth(4, 60)
+        self.widgetVisitDetails.setColumnWidth(5, 40)
         # load report for workdate if exist
         self._reports.load_report(self.txtWorkdate.text())
         # display customerlist
@@ -116,7 +116,7 @@ class MainWindow(QMainWindow, Ui_mainWindow):
                 phone = self._customers.customer["phone1"]
                 self.widgetCustomerList.setCurrentIndex(
                     self.widgetCustomerList.indexFromItem(
-                        self.widgetCustomerList.findItems(phone, Qt.MatchExactly, column=0)[0]))
+                        self.widgetCustomerList.findItems(phone, Qt.MatchExactly, column=1)[0]))
             except KeyError:
                 pass
         # set last info page used
@@ -189,11 +189,11 @@ class MainWindow(QMainWindow, Ui_mainWindow):
         """
         self.widgetCustomerList.clear()  # shake the tree for leaves
         self.widgetCustomerList.setColumnCount(4)  # set columns
-        self.widgetCustomerList.setHeaderLabels(["Telefon", "Firma", "Post", "Bynavn"])
+        self.widgetCustomerList.setHeaderLabels(["Konto", "Telefon", "Telefon", "Firma", "Post", "Bynavn"])
         items = []  # temporary list
         try:
             for c in self._customers.list_:
-                item = QTreeWidgetItem([c["phone1"], c["company"], c["zipcode"], c["city"]])
+                item = QTreeWidgetItem([c["account"], c["phone1"], c["phone2"], c["company"], c["zipcode"], c["city"]])
                 items.append(item)
         except (IndexError, KeyError):
             pass

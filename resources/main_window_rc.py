@@ -436,7 +436,7 @@ class Ui_mainWindow(object):
         self.verticalLayout.addLayout(self.mainGrid)
         mainWindow.setCentralWidget(self.centralwidget)
         self.menubar = QtWidgets.QMenuBar(mainWindow)
-        self.menubar.setGeometry(QtCore.QRect(0, 0, 800, 24))
+        self.menubar.setGeometry(QtCore.QRect(0, 0, 800, 21))
         font = QtGui.QFont()
         font.setPointSize(10)
         self.menubar.setFont(font)
@@ -561,7 +561,7 @@ class Ui_mainWindow(object):
         self.toolBar.addAction(self.actionExit)
 
         self.retranslateUi(mainWindow)
-        self.widgetCustomerInfo.setCurrentIndex(3)
+        self.widgetCustomerInfo.setCurrentIndex(0)
         self.tabWidget.setCurrentIndex(0)
         QtCore.QMetaObject.connectSlotsByName(mainWindow)
         mainWindow.setTabOrder(self.txtNewCompany, self.txtNewPhone1)
