@@ -241,7 +241,7 @@ class Customer:
         sql = self.q.build("select", self.model, filters=filters)
         success, data = self.q.execute(sql, values=values)
         if not success:
-            filters = [("account", "=", "and"), ("phone1", "="), ("company", "=", "and")]
+            filters = [("account", "=", "and"), ("company", "=", "and"), ("phone1", "=")]
             values = ("NY", phone, company)
             sql = self.q.build("select", self.model, filters=filters)
             success, data = self.q.execute(sql, values=values)
