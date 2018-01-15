@@ -511,14 +511,11 @@ class MainWindow(QMainWindow, Ui_mainWindow):
                                    "Ingen valgt kunde! Besøg kan ikke oprettes.",
                                    QMessageBox.Ok)
                 return
-            # Launch the visit dialog
-            visit_dialog = VisitDialog(customers=self._customers,
-                                       employees=self._employees,
-                                       products=self._products,
-                                       reports=self._reports,
-                                       visits=self._visits)
-            if visit_dialog.exec_():
-                pass
+            self.widgetAppPages.setCurrentIndex(8)
+            if self.textVisitCompany.text() is not "":
+                return
+            self.textVisitDate.setText(self.textWorkdate.text())
+            self.textVisitCompany.setText(self._customers.customer["company"])
 
     @pyqtSlot(QTreeWidgetItem, name="on_customer_clicked")
     def on_customer_double_clicked(self, current):

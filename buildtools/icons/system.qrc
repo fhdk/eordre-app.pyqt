@@ -1,6 +1,7 @@
 <RCC>
   <qresource prefix="/">
     <file>system/config.png</file>
+    <file>system/add.png</file>
     <file>system/faq.png</file>
     <file>system/contact.png</file>
     <file>system/male-user-help.png</file>
@@ -200,7 +201,6 @@
     <file>system/warehouses.png</file>
     <file>system/help-file.png</file>
     <file>system/login.png</file>
-    <file>system/add248.png</file>
     <file>system/communication-recive.png</file>
     <file>system/phone-yellow.png</file>
     <file>system/faq-grey.png</file>

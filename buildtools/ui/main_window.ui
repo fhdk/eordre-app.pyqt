@@ -82,7 +82,7 @@
      </font>
     </property>
     <property name="currentIndex">
-     <number>0</number>
+     <number>8</number>
     </property>
     <widget class="QWidget" name="widgetPageCustomers">
      <widget class="QTreeWidget" name="widgetAppCustomers">
@@ -1763,95 +1763,138 @@ QToolButton:hover:checked {
      </widget>
     </widget>
     <widget class="QWidget" name="widgetPageVisit">
-     <widget class="QTableWidget" name="widgetVisit">
+     <widget class="QWidget" name="gridLayoutWidget">
       <property name="geometry">
        <rect>
-        <x>10</x>
-        <y>320</y>
-        <width>780</width>
-        <height>180</height>
+        <x>420</x>
+        <y>10</y>
+        <width>370</width>
+        <height>35</height>
        </rect>
       </property>
-      <property name="editTriggers">
-       <set>QAbstractItemView::AllEditTriggers</set>
+      <property name="font">
+       <font>
+        <pointsize>10</pointsize>
+       </font>
       </property>
-      <property name="selectionMode">
-       <enum>QAbstractItemView::SingleSelection</enum>
-      </property>
-      <attribute name="horizontalHeaderDefaultSectionSize">
-       <number>70</number>
-      </attribute>
-      <attribute name="horizontalHeaderMinimumSectionSize">
-       <number>10</number>
-      </attribute>
-      <attribute name="verticalHeaderStretchLastSection">
-       <bool>true</bool>
-      </attribute>
-      <column>
-       <property name="text">
-        <string>*</string>
-       </property>
-      </column>
-      <column>
-       <property name="text">
-        <string>Antal</string>
-       </property>
-      </column>
-      <column>
-       <property name="text">
-        <string>Produkt</string>
-       </property>
-      </column>
-      <column>
-       <property name="text">
-        <string>Varenr</string>
-       </property>
-      </column>
-      <column>
-       <property name="text">
-        <string>Tekst</string>
-       </property>
-      </column>
-      <column>
-       <property name="text">
-        <string>Pris</string>
-       </property>
-      </column>
-      <column>
-       <property name="text">
-        <string>%</string>
-       </property>
-      </column>
-      <column>
-       <property name="text">
-        <string>Beløb</string>
-       </property>
-      </column>
-      <column>
-       <property name="text">
-        <string>SAS</string>
-       </property>
-      </column>
-      <column>
-       <property name="text">
-        <string>Note</string>
-       </property>
-      </column>
+      <layout class="QGridLayout" name="gridTotals">
+       <item row="1" column="0">
+        <widget class="QLabel" name="labelSale">
+         <property name="font">
+          <font>
+           <pointsize>10</pointsize>
+          </font>
+         </property>
+         <property name="text">
+          <string>Salg</string>
+         </property>
+        </widget>
+       </item>
+       <item row="1" column="2">
+        <widget class="QLabel" name="labelSas">
+         <property name="font">
+          <font>
+           <pointsize>10</pointsize>
+          </font>
+         </property>
+         <property name="text">
+          <string>SAS</string>
+         </property>
+        </widget>
+       </item>
+       <item row="1" column="1">
+        <widget class="QLineEdit" name="textVisitSale">
+         <property name="enabled">
+          <bool>true</bool>
+         </property>
+         <property name="font">
+          <font>
+           <pointsize>10</pointsize>
+          </font>
+         </property>
+         <property name="readOnly">
+          <bool>true</bool>
+         </property>
+        </widget>
+       </item>
+       <item row="1" column="3">
+        <widget class="QLineEdit" name="textVisitSas">
+         <property name="enabled">
+          <bool>true</bool>
+         </property>
+         <property name="font">
+          <font>
+           <pointsize>10</pointsize>
+          </font>
+         </property>
+         <property name="readOnly">
+          <bool>true</bool>
+         </property>
+        </widget>
+       </item>
+       <item row="1" column="4">
+        <widget class="QLabel" name="labelTotal">
+         <property name="font">
+          <font>
+           <pointsize>10</pointsize>
+          </font>
+         </property>
+         <property name="text">
+          <string>Total</string>
+         </property>
+        </widget>
+       </item>
+       <item row="1" column="5">
+        <widget class="QLineEdit" name="textVisitTotal">
+         <property name="enabled">
+          <bool>true</bool>
+         </property>
+         <property name="font">
+          <font>
+           <pointsize>10</pointsize>
+          </font>
+         </property>
+         <property name="readOnly">
+          <bool>true</bool>
+         </property>
+        </widget>
+       </item>
+      </layout>
      </widget>
-     <widget class="QWidget" name="formLayoutWidget">
+     <widget class="QWidget" name="gridLayoutWidget_4">
       <property name="geometry">
        <rect>
         <x>10</x>
         <y>50</y>
-        <width>320</width>
-        <height>180</height>
+        <width>380</width>
+        <height>171</height>
        </rect>
       </property>
-      <layout class="QFormLayout" name="formVisit">
-       <item row="0" column="1">
+      <layout class="QGridLayout" name="widgetVisitHead">
+       <item row="3" column="0">
+        <widget class="QLineEdit" name="textProductDemo">
+         <property name="font">
+          <font>
+           <pointsize>10</pointsize>
+          </font>
+         </property>
+         <property name="readOnly">
+          <bool>true</bool>
+         </property>
+         <property name="placeholderText">
+          <string>Produkt demo</string>
+         </property>
+        </widget>
+       </item>
+       <item row="0" column="0">
         <widget class="QLineEdit" name="textVisitDate">
          <property name="enabled">
           <bool>true</bool>
+         </property>
+         <property name="font">
+          <font>
+           <pointsize>10</pointsize>
+          </font>
          </property>
          <property name="readOnly">
           <bool>true</bool>
@@ -1861,32 +1904,61 @@ QToolButton:hover:checked {
          </property>
         </widget>
        </item>
-       <item row="1" column="1">
-        <widget class="QLineEdit" name="textOrderBuyer">
+       <item row="2" column="1">
+        <widget class="QLineEdit" name="textPoAddress2">
+         <property name="font">
+          <font>
+           <pointsize>10</pointsize>
+          </font>
+         </property>
          <property name="placeholderText">
-          <string>Indkøber</string>
+          <string>Lev. adresse 2</string>
          </property>
         </widget>
        </item>
-       <item row="2" column="1">
-        <widget class="QLineEdit" name="textOrderPo">
+       <item row="2" column="0">
+        <widget class="QLineEdit" name="textPoNumber">
+         <property name="font">
+          <font>
+           <pointsize>10</pointsize>
+          </font>
+         </property>
          <property name="placeholderText">
           <string>Rekvisition</string>
          </property>
         </widget>
        </item>
-       <item row="3" column="1">
-        <widget class="QLineEdit" name="textVisitProductDemo">
-         <property name="readOnly">
-          <bool>true</bool>
+       <item row="1" column="1">
+        <widget class="QLineEdit" name="textPoAddress1">
+         <property name="font">
+          <font>
+           <pointsize>10</pointsize>
+          </font>
          </property>
          <property name="placeholderText">
-          <string>Produkt demo</string>
+          <string>Lev. adresse 1</string>
          </property>
         </widget>
        </item>
-       <item row="4" column="1">
-        <widget class="QLineEdit" name="textVisitProductSale">
+       <item row="0" column="1">
+        <widget class="QLineEdit" name="textPoCompany">
+         <property name="font">
+          <font>
+           <pointsize>10</pointsize>
+          </font>
+         </property>
+         <property name="placeholderText">
+          <string>Lev. til</string>
+         </property>
+        </widget>
+       </item>
+       <item row="4" column="0">
+        <widget class="QLineEdit" name="textProductSale">
+         <property name="font">
+          <font>
+           <pointsize>10</pointsize>
+          </font>
+         </property>
          <property name="readOnly">
           <bool>true</bool>
          </property>
@@ -1895,176 +1967,237 @@ QToolButton:hover:checked {
          </property>
         </widget>
        </item>
-       <item row="5" column="1">
-        <widget class="QLineEdit" name="textOrderNote">
-         <property name="placeholderText">
-          <string>Ordre notat</string>
+       <item row="4" column="1">
+        <widget class="QLineEdit" name="textPoPostoffice">
+         <property name="font">
+          <font>
+           <pointsize>10</pointsize>
+          </font>
          </property>
-        </widget>
-       </item>
-      </layout>
-     </widget>
-     <widget class="Line" name="vertialLine">
-      <property name="geometry">
-       <rect>
-        <x>330</x>
-        <y>50</y>
-        <width>16</width>
-        <height>180</height>
-       </rect>
-      </property>
-      <property name="orientation">
-       <enum>Qt::Vertical</enum>
-      </property>
-     </widget>
-     <widget class="QWidget" name="formLayoutWidget_2">
-      <property name="geometry">
-       <rect>
-        <x>339</x>
-        <y>50</y>
-        <width>291</width>
-        <height>181</height>
-       </rect>
-      </property>
-      <layout class="QFormLayout" name="widgetDeliveryAddress">
-       <item row="0" column="1">
-        <widget class="QLineEdit" name="textPoCompany">
          <property name="placeholderText">
-          <string>Leveres til</string>
-         </property>
-        </widget>
-       </item>
-       <item row="1" column="1">
-        <widget class="QLineEdit" name="textPoAddress1">
-         <property name="placeholderText">
-          <string>Leverings adresse 1</string>
-         </property>
-        </widget>
-       </item>
-       <item row="2" column="1">
-        <widget class="QLineEdit" name="textPoAddress2">
-         <property name="placeholderText">
-          <string>Leverings adresse 2</string>
+          <string>Lev. bynavn</string>
          </property>
         </widget>
        </item>
        <item row="3" column="1">
-        <widget class="QLineEdit" name="textPoZip">
+        <widget class="QLineEdit" name="textPoPostcode">
+         <property name="font">
+          <font>
+           <pointsize>10</pointsize>
+          </font>
+         </property>
          <property name="placeholderText">
-          <string>Leverings adresse postnummer</string>
-         </property>
-        </widget>
-       </item>
-       <item row="4" column="1">
-        <widget class="QLineEdit" name="textPoCity">
-         <property name="placeholderText">
-          <string>Leverings adresse bynavn</string>
-         </property>
-        </widget>
-       </item>
-       <item row="5" column="1">
-        <widget class="QLineEdit" name="textPoCountry">
-         <property name="placeholderText">
-          <string>Leverings adresse land</string>
-         </property>
-        </widget>
-       </item>
-      </layout>
-     </widget>
-     <widget class="QWidget" name="gridLayoutWidget">
-      <property name="geometry">
-       <rect>
-        <x>640</x>
-        <y>150</y>
-        <width>151</width>
-        <height>86</height>
-       </rect>
-      </property>
-      <layout class="QGridLayout" name="widgetTotals">
-       <item row="2" column="1">
-        <widget class="QLineEdit" name="textVisitSas">
-         <property name="enabled">
-          <bool>true</bool>
-         </property>
-         <property name="readOnly">
-          <bool>true</bool>
+          <string>Lev. postnummer</string>
          </property>
         </widget>
        </item>
        <item row="1" column="0">
-        <widget class="QLabel" name="labelVisitSale">
-         <property name="text">
-          <string>Salg</string>
+        <widget class="QLineEdit" name="textPoBuyer">
+         <property name="font">
+          <font>
+           <pointsize>10</pointsize>
+          </font>
          </property>
-        </widget>
-       </item>
-       <item row="1" column="1">
-        <widget class="QLineEdit" name="textVisitSale">
-         <property name="enabled">
-          <bool>true</bool>
-         </property>
-         <property name="readOnly">
-          <bool>true</bool>
-         </property>
-        </widget>
-       </item>
-       <item row="2" column="0">
-        <widget class="QLabel" name="labelVisitSas">
-         <property name="text">
-          <string>SAS</string>
-         </property>
-        </widget>
-       </item>
-       <item row="3" column="0">
-        <widget class="QLabel" name="labelVisitTotal">
-         <property name="text">
-          <string>Total</string>
-         </property>
-        </widget>
-       </item>
-       <item row="3" column="1">
-        <widget class="QLineEdit" name="textOrderTotal">
-         <property name="enabled">
-          <bool>true</bool>
-         </property>
-         <property name="readOnly">
-          <bool>true</bool>
+         <property name="placeholderText">
+          <string>Indkøber</string>
          </property>
         </widget>
        </item>
       </layout>
+     </widget>
+     <widget class="QTableWidget" name="widgetVisitDetails">
+      <property name="geometry">
+       <rect>
+        <x>10</x>
+        <y>330</y>
+        <width>780</width>
+        <height>170</height>
+       </rect>
+      </property>
+      <property name="font">
+       <font>
+        <pointsize>10</pointsize>
+       </font>
+      </property>
+      <property name="locale">
+       <locale language="Danish" country="Denmark"/>
+      </property>
+      <property name="editTriggers">
+       <set>QAbstractItemView::AllEditTriggers</set>
+      </property>
+      <property name="alternatingRowColors">
+       <bool>true</bool>
+      </property>
+      <property name="selectionMode">
+       <enum>QAbstractItemView::SingleSelection</enum>
+      </property>
+      <property name="selectionBehavior">
+       <enum>QAbstractItemView::SelectRows</enum>
+      </property>
+      <property name="cornerButtonEnabled">
+       <bool>false</bool>
+      </property>
+      <property name="columnCount">
+       <number>11</number>
+      </property>
+      <attribute name="horizontalHeaderCascadingSectionResizes">
+       <bool>true</bool>
+      </attribute>
+      <attribute name="horizontalHeaderDefaultSectionSize">
+       <number>60</number>
+      </attribute>
+      <attribute name="horizontalHeaderMinimumSectionSize">
+       <number>10</number>
+      </attribute>
+      <attribute name="horizontalHeaderStretchLastSection">
+       <bool>true</bool>
+      </attribute>
+      <attribute name="verticalHeaderMinimumSectionSize">
+       <number>30</number>
+      </attribute>
+      <attribute name="verticalHeaderStretchLastSection">
+       <bool>false</bool>
+      </attribute>
+      <column>
+       <property name="text">
+        <string>*</string>
+       </property>
+       <property name="font">
+        <font>
+         <pointsize>10</pointsize>
+        </font>
+       </property>
+       <property name="textAlignment">
+        <set>AlignCenter</set>
+       </property>
+      </column>
+      <column>
+       <property name="text">
+        <string>Antal</string>
+       </property>
+       <property name="font">
+        <font>
+         <pointsize>10</pointsize>
+        </font>
+       </property>
+       <property name="textAlignment">
+        <set>AlignCenter</set>
+       </property>
+      </column>
+      <column>
+       <property name="text">
+        <string>Produkt</string>
+       </property>
+       <property name="font">
+        <font>
+         <pointsize>10</pointsize>
+        </font>
+       </property>
+       <property name="textAlignment">
+        <set>AlignCenter</set>
+       </property>
+      </column>
+      <column>
+       <property name="text">
+        <string>Varenr</string>
+       </property>
+       <property name="font">
+        <font>
+         <pointsize>10</pointsize>
+        </font>
+       </property>
+       <property name="textAlignment">
+        <set>AlignCenter</set>
+       </property>
+      </column>
+      <column>
+       <property name="text">
+        <string>Tekst</string>
+       </property>
+       <property name="font">
+        <font>
+         <pointsize>10</pointsize>
+        </font>
+       </property>
+       <property name="textAlignment">
+        <set>AlignCenter</set>
+       </property>
+      </column>
+      <column>
+       <property name="text">
+        <string>Pris</string>
+       </property>
+       <property name="font">
+        <font>
+         <pointsize>10</pointsize>
+        </font>
+       </property>
+       <property name="textAlignment">
+        <set>AlignCenter</set>
+       </property>
+      </column>
+      <column>
+       <property name="text">
+        <string>%</string>
+       </property>
+       <property name="font">
+        <font>
+         <pointsize>10</pointsize>
+        </font>
+       </property>
+       <property name="textAlignment">
+        <set>AlignCenter</set>
+       </property>
+      </column>
+      <column>
+       <property name="text">
+        <string>Beløb</string>
+       </property>
+       <property name="font">
+        <font>
+         <pointsize>10</pointsize>
+        </font>
+       </property>
+       <property name="textAlignment">
+        <set>AlignCenter</set>
+       </property>
+      </column>
+      <column>
+       <property name="text">
+        <string>SAS</string>
+       </property>
+       <property name="font">
+        <font>
+         <pointsize>10</pointsize>
+        </font>
+       </property>
+       <property name="textAlignment">
+        <set>AlignCenter</set>
+       </property>
+      </column>
+      <column/>
+      <column/>
      </widget>
      <widget class="QWidget" name="gridLayoutWidget_2">
       <property name="geometry">
        <rect>
         <x>10</x>
         <y>10</y>
-        <width>621</width>
+        <width>380</width>
         <height>35</height>
        </rect>
       </property>
-      <layout class="QGridLayout" name="widgetCustomerVisitDetails">
+      <property name="font">
+       <font>
+        <pointsize>10</pointsize>
+       </font>
+      </property>
+      <layout class="QGridLayout" name="gridCustomerVisit">
        <item row="0" column="0">
-        <widget class="QLabel" name="labelCompany">
-         <property name="font">
-          <font>
-           <pointsize>12</pointsize>
-           <weight>75</weight>
-           <bold>true</bold>
-          </font>
-         </property>
-         <property name="text">
-          <string>Kunde</string>
-         </property>
-        </widget>
-       </item>
-       <item row="0" column="1">
         <widget class="QLineEdit" name="textVisitCompany">
          <property name="font">
           <font>
-           <pointsize>12</pointsize>
-           <weight>75</weight>
-           <bold>true</bold>
+           <pointsize>10</pointsize>
           </font>
          </property>
          <property name="readOnly">
@@ -2074,89 +2207,468 @@ QToolButton:hover:checked {
        </item>
       </layout>
      </widget>
-     <widget class="QPushButton" name="buttonInsertDemo">
+     <widget class="QWidget" name="gridLayoutWidget_5">
       <property name="geometry">
        <rect>
-        <x>640</x>
-        <y>10</y>
-        <width>150</width>
-        <height>60</height>
+        <x>10</x>
+        <y>270</y>
+        <width>781</width>
+        <height>59</height>
        </rect>
       </property>
-      <property name="text">
-       <string>Indsæt demo</string>
+      <property name="font">
+       <font>
+        <pointsize>10</pointsize>
+       </font>
       </property>
-      <property name="icon">
-       <iconset resource="../icons/system.qrc">
-        <normaloff>:/system/item-configuration.png</normaloff>:/system/item-configuration.png</iconset>
-      </property>
-      <property name="iconSize">
-       <size>
-        <width>48</width>
-        <height>48</height>
-       </size>
-      </property>
+      <layout class="QGridLayout" name="widgetCreateOrderLine" columnstretch="0,0,0,0,0,0,0,0,0,0">
+       <property name="spacing">
+        <number>2</number>
+       </property>
+       <item row="1" column="2">
+        <widget class="QComboBox" name="comboProduct">
+         <property name="enabled">
+          <bool>false</bool>
+         </property>
+         <property name="minimumSize">
+          <size>
+           <width>80</width>
+           <height>30</height>
+          </size>
+         </property>
+         <property name="maximumSize">
+          <size>
+           <width>80</width>
+           <height>30</height>
+          </size>
+         </property>
+         <property name="font">
+          <font>
+           <pointsize>10</pointsize>
+          </font>
+         </property>
+         <property name="editable">
+          <bool>true</bool>
+         </property>
+        </widget>
+       </item>
+       <item row="0" column="5">
+        <widget class="QLabel" name="labelPrice">
+         <property name="font">
+          <font>
+           <pointsize>10</pointsize>
+          </font>
+         </property>
+         <property name="text">
+          <string>Pris</string>
+         </property>
+         <property name="alignment">
+          <set>Qt::AlignCenter</set>
+         </property>
+        </widget>
+       </item>
+       <item row="1" column="1">
+        <widget class="QLineEdit" name="textPcs">
+         <property name="enabled">
+          <bool>false</bool>
+         </property>
+         <property name="minimumSize">
+          <size>
+           <width>0</width>
+           <height>30</height>
+          </size>
+         </property>
+         <property name="maximumSize">
+          <size>
+           <width>40</width>
+           <height>30</height>
+          </size>
+         </property>
+         <property name="font">
+          <font>
+           <pointsize>10</pointsize>
+          </font>
+         </property>
+         <property name="maxLength">
+          <number>4</number>
+         </property>
+         <property name="alignment">
+          <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+         </property>
+        </widget>
+       </item>
+       <item row="0" column="1">
+        <widget class="QLabel" name="labelPcs">
+         <property name="font">
+          <font>
+           <pointsize>10</pointsize>
+          </font>
+         </property>
+         <property name="text">
+          <string>Antal</string>
+         </property>
+         <property name="alignment">
+          <set>Qt::AlignCenter</set>
+         </property>
+        </widget>
+       </item>
+       <item row="1" column="0">
+        <widget class="QComboBox" name="comboLineType">
+         <property name="minimumSize">
+          <size>
+           <width>60</width>
+           <height>30</height>
+          </size>
+         </property>
+         <property name="maximumSize">
+          <size>
+           <width>0</width>
+           <height>30</height>
+          </size>
+         </property>
+         <property name="font">
+          <font>
+           <pointsize>10</pointsize>
+          </font>
+         </property>
+         <property name="toolTip">
+          <string>Demo|Ny|Salg|Tekst</string>
+         </property>
+         <property name="editable">
+          <bool>true</bool>
+         </property>
+         <property name="currentText">
+          <string notr="true">T</string>
+         </property>
+         <property name="currentIndex">
+          <number>3</number>
+         </property>
+         <property name="maxCount">
+          <number>4</number>
+         </property>
+         <property name="sizeAdjustPolicy">
+          <enum>QComboBox::AdjustToContentsOnFirstShow</enum>
+         </property>
+         <property name="minimumContentsLength">
+          <number>1</number>
+         </property>
+         <item>
+          <property name="text">
+           <string>D</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>N</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>S</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>T</string>
+          </property>
+         </item>
+        </widget>
+       </item>
+       <item row="0" column="0">
+        <widget class="QLabel" name="labelDemoNotSold">
+         <property name="font">
+          <font>
+           <pointsize>10</pointsize>
+          </font>
+         </property>
+         <property name="text">
+          <string>D.N.S.T</string>
+         </property>
+         <property name="alignment">
+          <set>Qt::AlignCenter</set>
+         </property>
+        </widget>
+       </item>
+       <item row="1" column="3">
+        <widget class="QComboBox" name="comboSku">
+         <property name="enabled">
+          <bool>false</bool>
+         </property>
+         <property name="minimumSize">
+          <size>
+           <width>120</width>
+           <height>30</height>
+          </size>
+         </property>
+         <property name="maximumSize">
+          <size>
+           <width>120</width>
+           <height>30</height>
+          </size>
+         </property>
+         <property name="font">
+          <font>
+           <pointsize>10</pointsize>
+          </font>
+         </property>
+         <property name="editable">
+          <bool>true</bool>
+         </property>
+        </widget>
+       </item>
+       <item row="0" column="3">
+        <widget class="QLabel" name="labelSku">
+         <property name="font">
+          <font>
+           <pointsize>10</pointsize>
+          </font>
+         </property>
+         <property name="text">
+          <string>Varenr</string>
+         </property>
+         <property name="alignment">
+          <set>Qt::AlignCenter</set>
+         </property>
+        </widget>
+       </item>
+       <item row="0" column="2">
+        <widget class="QLabel" name="labelProduct">
+         <property name="font">
+          <font>
+           <pointsize>10</pointsize>
+          </font>
+         </property>
+         <property name="text">
+          <string>Produkt</string>
+         </property>
+         <property name="alignment">
+          <set>Qt::AlignCenter</set>
+         </property>
+        </widget>
+       </item>
+       <item row="1" column="6">
+        <widget class="QLineEdit" name="textLineDiscount">
+         <property name="enabled">
+          <bool>false</bool>
+         </property>
+         <property name="minimumSize">
+          <size>
+           <width>0</width>
+           <height>30</height>
+          </size>
+         </property>
+         <property name="maximumSize">
+          <size>
+           <width>50</width>
+           <height>30</height>
+          </size>
+         </property>
+         <property name="alignment">
+          <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+         </property>
+        </widget>
+       </item>
+       <item row="1" column="4">
+        <widget class="QLineEdit" name="textLineText">
+         <property name="minimumSize">
+          <size>
+           <width>0</width>
+           <height>30</height>
+          </size>
+         </property>
+         <property name="maximumSize">
+          <size>
+           <width>150</width>
+           <height>30</height>
+          </size>
+         </property>
+         <property name="font">
+          <font>
+           <pointsize>10</pointsize>
+          </font>
+         </property>
+        </widget>
+       </item>
+       <item row="0" column="4">
+        <widget class="QLabel" name="labelText">
+         <property name="font">
+          <font>
+           <pointsize>10</pointsize>
+          </font>
+         </property>
+         <property name="text">
+          <string>Tekst</string>
+         </property>
+         <property name="alignment">
+          <set>Qt::AlignCenter</set>
+         </property>
+        </widget>
+       </item>
+       <item row="1" column="5">
+        <widget class="QLineEdit" name="textLinePrice">
+         <property name="enabled">
+          <bool>false</bool>
+         </property>
+         <property name="minimumSize">
+          <size>
+           <width>0</width>
+           <height>30</height>
+          </size>
+         </property>
+         <property name="maximumSize">
+          <size>
+           <width>60</width>
+           <height>30</height>
+          </size>
+         </property>
+         <property name="font">
+          <font>
+           <pointsize>10</pointsize>
+          </font>
+         </property>
+         <property name="alignment">
+          <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+         </property>
+        </widget>
+       </item>
+       <item row="1" column="7">
+        <widget class="QCheckBox" name="checkSas">
+         <property name="enabled">
+          <bool>false</bool>
+         </property>
+         <property name="minimumSize">
+          <size>
+           <width>20</width>
+           <height>25</height>
+          </size>
+         </property>
+         <property name="maximumSize">
+          <size>
+           <width>20</width>
+           <height>25</height>
+          </size>
+         </property>
+         <property name="text">
+          <string/>
+         </property>
+        </widget>
+       </item>
+       <item row="0" column="7">
+        <widget class="QLabel" name="labelCheckSas">
+         <property name="font">
+          <font>
+           <pointsize>10</pointsize>
+          </font>
+         </property>
+         <property name="text">
+          <string>Sas</string>
+         </property>
+        </widget>
+       </item>
+       <item row="0" column="6">
+        <widget class="QLabel" name="labelDiscount">
+         <property name="font">
+          <font>
+           <pointsize>10</pointsize>
+          </font>
+         </property>
+         <property name="text">
+          <string>%</string>
+         </property>
+         <property name="alignment">
+          <set>Qt::AlignCenter</set>
+         </property>
+        </widget>
+       </item>
+       <item row="1" column="8">
+        <widget class="QToolButton" name="toolButtonAppendLine">
+         <property name="text">
+          <string>...</string>
+         </property>
+         <property name="icon">
+          <iconset resource="../icons/system.qrc">
+           <normaloff>:/system/add.png</normaloff>:/system/add.png</iconset>
+         </property>
+         <property name="iconSize">
+          <size>
+           <width>32</width>
+           <height>32</height>
+          </size>
+         </property>
+        </widget>
+       </item>
+       <item row="1" column="9">
+        <widget class="QToolButton" name="toolButtonClearLine">
+         <property name="text">
+          <string>...</string>
+         </property>
+         <property name="icon">
+          <iconset resource="../icons/system.qrc">
+           <normaloff>:/system/delete.png</normaloff>:/system/delete.png</iconset>
+         </property>
+         <property name="iconSize">
+          <size>
+           <width>32</width>
+           <height>32</height>
+          </size>
+         </property>
+        </widget>
+       </item>
+      </layout>
      </widget>
-     <widget class="QPushButton" name="buttonInsertSale">
+     <widget class="QLineEdit" name="textOrderInfo">
       <property name="geometry">
        <rect>
-        <x>640</x>
-        <y>80</y>
-        <width>150</width>
-        <height>60</height>
+        <x>10</x>
+        <y>230</y>
+        <width>380</width>
+        <height>24</height>
        </rect>
       </property>
-      <property name="text">
-       <string>Indsæt salg</string>
+      <property name="maxLength">
+       <number>100</number>
       </property>
-      <property name="icon">
-       <iconset resource="../icons/system.qrc">
-        <normaloff>:/system/product.png</normaloff>:/system/product.png</iconset>
-      </property>
-      <property name="iconSize">
-       <size>
-        <width>48</width>
-        <height>48</height>
-       </size>
-      </property>
-      <property name="default">
-       <bool>true</bool>
+      <property name="placeholderText">
+       <string>Ordre note</string>
       </property>
      </widget>
      <widget class="QPushButton" name="buttonArchiveVisit">
       <property name="geometry">
        <rect>
-        <x>640</x>
-        <y>250</y>
-        <width>150</width>
-        <height>60</height>
+        <x>420</x>
+        <y>60</y>
+        <width>370</width>
+        <height>70</height>
        </rect>
+      </property>
+      <property name="font">
+       <font>
+        <pointsize>10</pointsize>
+       </font>
       </property>
       <property name="text">
        <string>Arkiver</string>
       </property>
-      <property name="icon">
-       <iconset resource="../icons/system.qrc">
-        <normaloff>:/system/save.png</normaloff>:/system/save.png</iconset>
-      </property>
-      <property name="iconSize">
-       <size>
-        <width>48</width>
-        <height>48</height>
-       </size>
+      <property name="autoDefault">
+       <bool>false</bool>
       </property>
      </widget>
-     <widget class="QTextEdit" name="textVisitNotes">
+     <widget class="QTextEdit" name="txtVisitInfo">
       <property name="geometry">
        <rect>
-        <x>10</x>
-        <y>230</y>
-        <width>620</width>
-        <height>80</height>
+        <x>420</x>
+        <y>140</y>
+        <width>370</width>
+        <height>110</height>
        </rect>
       </property>
+      <property name="font">
+       <font>
+        <pointsize>10</pointsize>
+       </font>
+      </property>
       <property name="placeholderText">
-       <string>Besøgs notat</string>
+       <string>Besøgs note</string>
       </property>
      </widget>
     </widget>
@@ -2214,7 +2726,7 @@ QToolButton:hover:checked {
       <string>Dagens rapport</string>
      </property>
      <property name="text">
-      <string>...</string>
+      <string>Rapport</string>
      </property>
      <property name="icon">
       <iconset resource="../icons/system.qrc">
@@ -2235,6 +2747,9 @@ QToolButton:hover:checked {
      <property name="autoExclusive">
       <bool>true</bool>
      </property>
+     <property name="toolButtonStyle">
+      <enum>Qt::ToolButtonTextUnderIcon</enum>
+     </property>
     </widget>
     <widget class="QToolButton" name="toolButtonCustomers">
      <property name="geometry">
@@ -2249,7 +2764,7 @@ QToolButton:hover:checked {
       <string>Kunder</string>
      </property>
      <property name="text">
-      <string>...</string>
+      <string>Kunder</string>
      </property>
      <property name="icon">
       <iconset resource="../icons/system.qrc">
@@ -2267,6 +2782,9 @@ QToolButton:hover:checked {
      <property name="autoExclusive">
       <bool>true</bool>
      </property>
+     <property name="toolButtonStyle">
+      <enum>Qt::ToolButtonTextUnderIcon</enum>
+     </property>
     </widget>
     <widget class="QToolButton" name="toolButtonCustomer">
      <property name="geometry">
@@ -2281,7 +2799,7 @@ QToolButton:hover:checked {
       <string>Kunde</string>
      </property>
      <property name="text">
-      <string>...</string>
+      <string>Kunde</string>
      </property>
      <property name="icon">
       <iconset resource="../icons/system.qrc">
@@ -2299,6 +2817,9 @@ QToolButton:hover:checked {
      <property name="autoExclusive">
       <bool>true</bool>
      </property>
+     <property name="toolButtonStyle">
+      <enum>Qt::ToolButtonTextUnderIcon</enum>
+     </property>
     </widget>
     <widget class="QToolButton" name="toolButtonCustomerVisits">
      <property name="geometry">
@@ -2313,7 +2834,7 @@ QToolButton:hover:checked {
       <string>Kundebesøg</string>
      </property>
      <property name="text">
-      <string>...</string>
+      <string>Besøg</string>
      </property>
      <property name="icon">
       <iconset resource="../icons/system.qrc">
@@ -2331,6 +2852,9 @@ QToolButton:hover:checked {
      <property name="autoExclusive">
       <bool>true</bool>
      </property>
+     <property name="toolButtonStyle">
+      <enum>Qt::ToolButtonTextUnderIcon</enum>
+     </property>
     </widget>
     <widget class="QToolButton" name="toolButtonPricelist">
      <property name="geometry">
@@ -2345,7 +2869,7 @@ QToolButton:hover:checked {
       <string>Prisliste</string>
      </property>
      <property name="text">
-      <string>...</string>
+      <string>Prisliste</string>
      </property>
      <property name="icon">
       <iconset resource="../icons/system.qrc">
@@ -2363,69 +2887,8 @@ QToolButton:hover:checked {
      <property name="autoExclusive">
       <bool>true</bool>
      </property>
-    </widget>
-    <widget class="QToolButton" name="toolButtonSettings">
-     <property name="geometry">
-      <rect>
-       <x>580</x>
-       <y>10</y>
-       <width>70</width>
-       <height>70</height>
-      </rect>
-     </property>
-     <property name="toolTip">
-      <string>Indstillinger</string>
-     </property>
-     <property name="text">
-      <string>...</string>
-     </property>
-     <property name="icon">
-      <iconset resource="../icons/system.qrc">
-       <normaloff>:/system/settings.png</normaloff>:/system/settings.png</iconset>
-     </property>
-     <property name="iconSize">
-      <size>
-       <width>48</width>
-       <height>48</height>
-      </size>
-     </property>
-     <property name="checkable">
-      <bool>true</bool>
-     </property>
-     <property name="autoExclusive">
-      <bool>true</bool>
-     </property>
-    </widget>
-    <widget class="QToolButton" name="toolButtonExit">
-     <property name="geometry">
-      <rect>
-       <x>720</x>
-       <y>10</y>
-       <width>70</width>
-       <height>70</height>
-      </rect>
-     </property>
-     <property name="toolTip">
-      <string>Afslut</string>
-     </property>
-     <property name="text">
-      <string>...</string>
-     </property>
-     <property name="icon">
-      <iconset resource="../icons/system.qrc">
-       <normaloff>:/system/logout.png</normaloff>:/system/logout.png</iconset>
-     </property>
-     <property name="iconSize">
-      <size>
-       <width>48</width>
-       <height>48</height>
-      </size>
-     </property>
-     <property name="checkable">
-      <bool>true</bool>
-     </property>
-     <property name="autoExclusive">
-      <bool>true</bool>
+     <property name="toolButtonStyle">
+      <enum>Qt::ToolButtonTextUnderIcon</enum>
      </property>
     </widget>
     <widget class="QToolButton" name="toolButtonReports">
@@ -2441,7 +2904,7 @@ QToolButton:hover:checked {
       <string>Rapporter</string>
      </property>
      <property name="text">
-      <string>...</string>
+      <string>Rapporter</string>
      </property>
      <property name="icon">
       <iconset resource="../icons/system.qrc">
@@ -2459,6 +2922,9 @@ QToolButton:hover:checked {
      <property name="autoExclusive">
       <bool>true</bool>
      </property>
+     <property name="toolButtonStyle">
+      <enum>Qt::ToolButtonTextUnderIcon</enum>
+     </property>
     </widget>
     <widget class="QToolButton" name="toolButtonInfo">
      <property name="geometry">
@@ -2473,7 +2939,7 @@ QToolButton:hover:checked {
       <string>Info</string>
      </property>
      <property name="text">
-      <string>...</string>
+      <string>Info</string>
      </property>
      <property name="icon">
       <iconset resource="../icons/system.qrc">
@@ -2490,6 +2956,79 @@ QToolButton:hover:checked {
      </property>
      <property name="autoExclusive">
       <bool>true</bool>
+     </property>
+     <property name="toolButtonStyle">
+      <enum>Qt::ToolButtonTextUnderIcon</enum>
+     </property>
+    </widget>
+    <widget class="QToolButton" name="toolButtonSettings">
+     <property name="geometry">
+      <rect>
+       <x>580</x>
+       <y>10</y>
+       <width>70</width>
+       <height>70</height>
+      </rect>
+     </property>
+     <property name="toolTip">
+      <string>Indstillinger</string>
+     </property>
+     <property name="text">
+      <string>Indstillinger</string>
+     </property>
+     <property name="icon">
+      <iconset resource="../icons/system.qrc">
+       <normaloff>:/system/settings.png</normaloff>:/system/settings.png</iconset>
+     </property>
+     <property name="iconSize">
+      <size>
+       <width>48</width>
+       <height>48</height>
+      </size>
+     </property>
+     <property name="checkable">
+      <bool>true</bool>
+     </property>
+     <property name="autoExclusive">
+      <bool>true</bool>
+     </property>
+     <property name="toolButtonStyle">
+      <enum>Qt::ToolButtonTextUnderIcon</enum>
+     </property>
+    </widget>
+    <widget class="QToolButton" name="toolButtonExit">
+     <property name="geometry">
+      <rect>
+       <x>720</x>
+       <y>10</y>
+       <width>70</width>
+       <height>70</height>
+      </rect>
+     </property>
+     <property name="toolTip">
+      <string>Afslut</string>
+     </property>
+     <property name="text">
+      <string>Afslut</string>
+     </property>
+     <property name="icon">
+      <iconset resource="../icons/system.qrc">
+       <normaloff>:/system/logout.png</normaloff>:/system/logout.png</iconset>
+     </property>
+     <property name="iconSize">
+      <size>
+       <width>48</width>
+       <height>48</height>
+      </size>
+     </property>
+     <property name="checkable">
+      <bool>true</bool>
+     </property>
+     <property name="autoExclusive">
+      <bool>true</bool>
+     </property>
+     <property name="toolButtonStyle">
+      <enum>Qt::ToolButtonTextUnderIcon</enum>
      </property>
     </widget>
    </widget>
