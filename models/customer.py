@@ -32,7 +32,7 @@ class Customer:
             "types": ("INTEGER PRIMARY KEY NOT NULL", "TEXT NOT NULL", "TEXT NOT NULL",
                       "TEXT", "TEXT", "TEXT", "TEXT", "TEXT",
                       "TEXT NOT NULL", "TEXT", "TEXT", "TEXT", "INTEGER DEFAULT 0", "INTEGER DEFAULT 0",
-                      "TEXT", "TEXT", "TEXT", "TEXT", "REAL DEFAULT 0",
+                      "TEXT", "TEXT", "TEXT", "TEXT", "REAL",
                       "INTEGER DEFAULT 0", "INTEGER DEFAULT 0", "INTEGER DEFAULT 0", "INTEGER DEFAULT 0")
         }
         self._customers = []
