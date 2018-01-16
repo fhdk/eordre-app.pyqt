@@ -46,7 +46,7 @@ def arg2bool(arg):
     """
     if type(arg) == int:
         arg = str(arg)
-    return str(arg.lower() in ["sand", "true", "1", "ok"])
+    return arg.lower() in ["sand", "true", "1", "ok"]
 
 
 def int2bool(arg):
