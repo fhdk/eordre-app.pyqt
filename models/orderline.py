@@ -100,7 +100,7 @@ class OrderLine:
             line_type:
         """
         line_type = line_type.upper()
-        values = (None, visit_id, "", "", "", "", "", "", line_type, "")
+        values = (None, visit_id, "", "", "", "", "", "", line_type, "", "")
         new_id = self.insert(values)
         self.find(new_id)
 
@@ -155,7 +155,7 @@ class OrderLine:
         """
         # translate bool text to integer col 6
         field_6 = utils.bool2int(utils.arg2bool(row[6]))
-        new_row = (row[0], row[1], row[2], row[3].strip(), row[4].strip(), row[5], field_6, row[7], "S", None)
+        new_row = (row[0], row[1], row[2], row[3].strip(), row[4].strip(), row[5], field_6, row[7], "S", "", "")
         self.insert(new_row)
 
     def insert(self, values):
