@@ -74,7 +74,7 @@ def bool2int(arg):
     return 0
 
 
-def int2str_dk(arg):
+def int2strdk(arg):
     """
     Convert bool to string
     Args:
