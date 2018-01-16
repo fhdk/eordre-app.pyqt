@@ -26,10 +26,12 @@ class OrderLine:
         self.model = {
             "name": "orderlines",
             "id": "line_id",
-            "fields": ("line_id", "visit_id", "pcs", "sku", "text", "price", "sas", "discount",
-                       "linetype", "extra"),
-            "types": ("INTEGER PRIMARY KEY NOT NULL", "INTEGER NOT NULL", "INTEGER DEFAULT 0",
-                      "TEXT", "TEXT", "REAL", "INTEGER DEFAULT 0", "REAL DEFAULT 0", "TEXT", "TEXT")
+            "fields": ("line_id", "visit_id",
+                       "pcs", "sku", "text", "price", "sas", "discount",
+                       "linetype", "linenote", "item"),
+            "types": ("INTEGER PRIMARY KEY NOT NULL", "INTEGER NOT NULL",
+                      "INTEGER", "TEXT", "TEXT", "REAL", "INTEGER DEFAULT 0", "REAL DEFAULT 0",
+                      "TEXT", "TEXT", "TEXT")
         }
         self._line = {}
         self._lines = []
