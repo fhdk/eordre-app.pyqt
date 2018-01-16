@@ -49,7 +49,7 @@ class VisitDialog(QDialog, Ui_visitDialog):
         self._visits.clear()
         try:
             """
-            load visits for workdata
+            load visits for workdate
             """
             self._visits.load_for_customer(self._customerid, self._workdate)
             _ = self._visits.visit["visit_id"]
@@ -133,23 +133,15 @@ class VisitDialog(QDialog, Ui_visitDialog):
         self.widgetVisitDetails.setColumnWidth(7, 60)   # amount
         self.widgetVisitDetails.setColumnWidth(8, 30)   # SAS
 
-    @pyqtSlot(name="button_add_line_action")
-    def button_add_line_action(self):
-        """
-        Slot for Add Demo button clicked
-        """
-        new_row = self.widgetVisitDetails.rowCount() + 1
-        self.widgetVisitDetails.setRowCount(new_row)
-        self.widgetVisitDetails.setRowHeight(new_row, 20)
-
     @pyqtSlot(name="button_clear_line_action")
     def button_clear_line_action(self):
         """
         Slot for Add Demo button clicked
         """
+        pass
 
-    @pyqtSlot(name="button_save_visit_action")
-    def button_save_visit_action(self):
+    @pyqtSlot(name="archive_visit")
+    def archive_visit(self):
         """
         Slot for saving the visit
         """

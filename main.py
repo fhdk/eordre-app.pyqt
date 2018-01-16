@@ -13,14 +13,14 @@ import sys
 
 from PyQt5.QtCore import QTimer, Qt, QThread, pyqtSlot
 from PyQt5.QtGui import QPixmap
-from PyQt5.QtWidgets import QApplication, QMainWindow, QMessageBox, QSplashScreen, QTreeWidgetItem
+from PyQt5.QtWidgets import QApplication, QMainWindow, QMessageBox, QSplashScreen, \
+    QTreeWidgetItem, QTableWidgetItem
 
 from configuration import config, configfn
 from dialogs.csv_import_dialog import CsvFileImportDialog
 from dialogs.http_customers_dialog import GetCustomersHttpDialog
 from dialogs.http_products_dialog import GetProductsHttpDialog
 from dialogs.create_report_dialog import ReportDialogCreate
-from dialogs.visit_dialog import VisitDialog
 from models.contact import Contact
 from models.customer import Customer
 from models.orderline import OrderLine
@@ -33,11 +33,21 @@ from resources.main_window_rc import Ui_mainWindow
 from resources import splash_rc
 from util import utils
 from util import passwdFn
-from util import printFn
+# from util import printFn
 from util.rules import check_settings
 
 __appname__ = "Eordre NG"
 __module__ = "main.py"
+
+PAGE_CUSTOMERS = 0
+PAGE_CUSTOMER = 1
+PAGE_CUSTOMER_VISITS = 2
+PAGE_PRICELIST = 3
+PAGE_REPORT = 4
+PAGE_REPORTS = 5
+PAGE_SETTINGS = 6
+PAGE_INFO = 7
+PAGE_VISIT = 8
 
 
 class MainWindow(QMainWindow, Ui_mainWindow):
@@ -73,6 +83,7 @@ class MainWindow(QMainWindow, Ui_mainWindow):
         self.toolButtonReport.clicked.connect(self.show_page_report)
         self.toolButtonReports.clicked.connect(self.show_page_reports)
         self.toolButtonSettings.clicked.connect(self.show_page_settings)
+        self.toolButtonVisit.clicked.connect(self.create_visit)
 
         self.toolButtonImportCsvData.clicked.connect(self.show_csv_import_dialog)
         self.toolButtonDeleteSalesData.clicked.connect(self.zero_database)
@@ -129,22 +140,6 @@ class MainWindow(QMainWindow, Ui_mainWindow):
         # TODO handle close event
         self.app_exit()
 
-    @pyqtSlot(name="app_exit")
-    def app_exit(self):
-        """
-        Exit - save current customer
-        """
-        # customer id
-        try:
-            self._settings.setting["cust_idx"] = self._customers.customer["customer_id"]
-        except KeyError:
-            self._settings.setting["cust_idx"] = 0
-        # if not self._settings.setting["page_idx"]:
-        #     self._settings.setting["page_idx"] = self.widgetAppPages.currentIndex()
-        # save setttings
-        self._settings.update()
-        app.quit()
-
     def display_sync_status(self):
         """
         Update status fields
@@ -153,6 +148,16 @@ class MainWindow(QMainWindow, Ui_mainWindow):
         self.textCustomerServerDate.setText(self._settings.setting["sac"])
         self.textPricelistLocalDate.setText(self._settings.setting["lsp"])
         self.textPricelistServerDate.setText(self._settings.setting["sap"])
+
+    def load_items(self):
+        """Load ITEMS into product combo"""
+        for item in self._products.list_:
+            self.cboProduct.addItem(item["item"], item["sku"])
+
+    def load_sku(self):
+        """Load SKU into sku combo"""
+        for item in self._products.list_:
+            self.cboProduct.addItem(item["sku"], item["name1"])
 
     def populate_contact_list(self):
         """
@@ -345,7 +350,7 @@ class MainWindow(QMainWindow, Ui_mainWindow):
         # display known sync data
         self.display_sync_status()
 
-    def update_page_settings(self, button: str):
+    def set_indexes(self, button: str):
         """
         Save page index to settings
         :param button:
@@ -361,17 +366,53 @@ class MainWindow(QMainWindow, Ui_mainWindow):
         self._settings.setting["toolbutton"] = button
         self._settings.update()
 
-    @pyqtSlot(name="create_contact")
-    def create_contact(self):
+    def set_input_enabled(self, arg: bool):
+        """Enable inputs"""
+        self.textPcs.setEnabled(arg)
+        self.comboProduct.setEnabled(arg)
+        self.comboSku.setEnabled(arg)
+        self.textLinePrice.setEnabled(arg)
+        self.textLineDiscount.setEnabled(arg)
+        self.checkSas.setEnabled(arg)
+
+    @pyqtSlot(name="app_exit")
+    def app_exit(self):
         """
-        Save changes made to contacts
+        Exit - save current customer
         """
-        # TODO add new contact
-        msgbox = QMessageBox()
-        msgbox.information(self,
-                           __appname__,
-                           "# TODO add new contact",
-                           QMessageBox.Ok)
+        # customer id
+        try:
+            self._settings.setting["cust_idx"] = self._customers.customer["customer_id"]
+        except KeyError:
+            self._settings.setting["cust_idx"] = 0
+        # if not self._settings.setting["page_idx"]:
+        #     self._settings.setting["page_idx"] = self.widgetAppPages.currentIndex()
+        # save setttings
+        self._settings.update()
+        app.quit()
+
+    @pyqtSlot(name="archive_visit")
+    def archive_visit(self):
+        """
+        Slot for saving the visit
+        """
+        # save visit head contents
+        self._visits.visit["po_buyer"] = self.txtPoBuyer.text()
+        self._visits.visit["po_number"] = self.txtPoNumber.text()
+        self._visits.visit["po_company"] = self.txtPoCompany.text()
+        self._visits.visit["po_address1"] = self.txtPoAddress1.text()
+        self._visits.visit["po_address2"] = self.txtPoAddress2.text()
+        self._visits.visit["po_postcode"] = self.txtPoPostcode.text()
+        self._visits.visit["po_postofffice"] = self.txtPoPostoffice.text()
+        self._visits.visit["po_country"] = self.txtPoCountry.text()
+        self._visits.visit["info_text"] = self.txtInfoText.toPlainText()
+        self._visits.visit["prod_demo"] = self.txtProductDemo.text()
+        self._visits.visit["prod_sale"] = self.txtProductSale.text()
+        self._visits.visit["sas"] = self.txtVisitSas.text()
+        self._visits.visit["sale"] = self.txtVisitSale.text()
+        self._visits.visit["total"] = self.txtVisitTotal.text()
+
+        # TODO: save visitdetails
 
     @pyqtSlot(name="archive_contacts")
     def archive_contacts(self):
@@ -467,6 +508,18 @@ class MainWindow(QMainWindow, Ui_mainWindow):
         # self._settings.load()
         self._employees.load(self._settings.setting["usermail"])
 
+    @pyqtSlot(name="create_contact")
+    def create_contact(self):
+        """
+        Save changes made to contacts
+        """
+        # TODO add new contact
+        msgbox = QMessageBox()
+        msgbox.information(self,
+                           __appname__,
+                           "# TODO add new contact",
+                           QMessageBox.Ok)
+
     @pyqtSlot(name="create_customer")
     def create_customer(self):
         """
@@ -486,153 +539,6 @@ class MainWindow(QMainWindow, Ui_mainWindow):
                                self.textNewCompany.text() + "\n" +
                                self.textNewPhone1.text(),
                                QMessageBox.Ok)
-
-    @pyqtSlot(name="create_visit")
-    def create_visit(self):
-        """
-        Slot for launching the visit dialog
-        """
-        try:
-            # do we have a report
-            _ = self._reports.report["rep_date"]
-            active_report = True
-        except KeyError:
-            active_report = self.create_report()
-
-        if active_report:
-            self._reports.load_report(self.textWorkdate.text())
-            try:
-                # do we have a customer
-                _ = self._customers.customer["company"]
-            except KeyError:
-                msgbox = QMessageBox()
-                msgbox.information(self,
-                                   __appname__,
-                                   "Ingen valgt kunde! Besøg kan ikke oprettes.",
-                                   QMessageBox.Ok)
-                return
-            self.widgetAppPages.setCurrentIndex(8)
-            if self.textVisitCompany.text() is not "":
-                return
-            self.textVisitDate.setText(self.textWorkdate.text())
-            self.textVisitCompany.setText(self._customers.customer["company"])
-
-    @pyqtSlot(QTreeWidgetItem, name="on_customer_clicked")
-    def on_customer_double_clicked(self, current):
-        """
-        Customer selected in
-        :param current:
-        :return:
-        """
-        self.toolButtonCustomer.click()
-
-    @pyqtSlot(QTreeWidgetItem, QTreeWidgetItem, name="on_customer_changed")
-    def on_customer_changed(self, current, previous):
-        """
-        Slot for treewidget current item changed signal
-        Used to respond to changes in the customer list
-        and update the related customer info
-
-        Args:
-            current: currently selected item
-            previous: previous selected item
-        """
-        try:
-            # account = current.text(0)
-            phone = current.text(1)
-            company = current.text(3)
-            # move current customer
-            # load customer
-            self._customers.lookup(phone, company)
-            # fields to line edits
-            self.textAccount.setText(self._customers.customer["account"])
-            self.textCompany.setText(self._customers.customer["company"])
-            self.textAddress1.setText(self._customers.customer["address1"])
-            self.textAddress2.setText(self._customers.customer["address2"])
-            self.textZipCode.setText(self._customers.customer["zipcode"])
-            self.textCityName.setText(self._customers.customer["city"])
-            self.textPhone1.setText(self._customers.customer["phone1"])
-            self.textPhone2.setText(self._customers.customer["phone2"])
-            self.textEmail.setText(self._customers.customer["email"])
-            self.textFactor.setText(str(self._customers.customer["factor"]))
-            self.textCustomerInfoText.setText(self._customers.customer["infotext"])
-        except AttributeError:
-            pass
-        except KeyError:
-            pass
-        # load customer infos
-        self.populate_contact_list()
-        self.populate_visit_list()
-        self.populate_visit_details_list()
-
-    @pyqtSlot(name="on_csv_import_done")
-    def on_csv_import_done(self):
-        """
-        Slog for csv import done signal
-        """
-        self.populate_customer_list()
-
-    @pyqtSlot(name="on_customers_done")
-    def on_customers_done(self):
-        """
-        Slot for getCustomers finished signal
-        """
-        self.populate_customer_list()
-        lsc = datetime.date.today().isoformat()
-        self.textCustomerLocalDate.setText(lsc)
-        self._settings.setting["lsc"] = lsc
-        self._settings.update()
-
-    @pyqtSlot(name="on_products_done")
-    def on_products_done(self):
-        """
-        Slot for getProducts finished signal
-        """
-        self._products.all()
-        lsp = datetime.date.today().isoformat()
-        self.textPricelistLocalDate.setText(lsp)
-        self._settings.setting["lsp"] = lsp
-        self._settings.update()
-
-    @pyqtSlot(QTreeWidgetItem, QTreeWidgetItem, name="on_visit_changed")
-    def on_visit_changed(self, current, previous):
-        """
-        Response to current visit changed
-        Args:
-            current:
-            previous:
-        """
-        try:
-            self._visits.visit = current.text(0)
-        except AttributeError:
-            pass
-        except KeyError:
-            pass
-        self.populate_visit_details_list()
-
-    @pyqtSlot(name="data_export")
-    def data_export(self):
-        """
-        Export Database backup file
-        """
-        # TODO: Opret CSV data backup
-        msgbox = QMessageBox()
-        msgbox.information(self,
-                           __appname__,
-                           "TODO: Create Database Backup File",
-                           QMessageBox.Ok)
-
-    @pyqtSlot(name="data_import")
-    def data_import(self):
-        """
-        Import Database backup file
-        """
-        # TODO: Opret CSV data backup
-        msgbox = QMessageBox()
-        msgbox.information(self,
-                           __appname__,
-                           "TODO: Import Database Backup File",
-                           QMessageBox.Ok)
 
     @pyqtSlot(name="create_report")
     def create_report(self):
@@ -686,26 +592,150 @@ class MainWindow(QMainWindow, Ui_mainWindow):
                                    QMessageBox.Ok)
                 return False
 
-    @pyqtSlot(name="shoq_csv_import_dialog")
-    def show_csv_import_dialog(self):
+    @pyqtSlot(name="create_visit")
+    def create_visit(self):
         """
-        Slot for fileImport triggered signal
+        Slot for launching the visit dialog
         """
-        if self._customers.list_:
-            msgbox = QMessageBox()
-            msgbox.warning(self,
+        try:
+            # do we have a report
+            _ = self._reports.report["rep_date"]
+            active_report = True
+        except KeyError:
+            active_report = self.create_report()
+
+        if active_report:
+            self._reports.load_report(self.textWorkdate.text())
+            try:
+                # do we have a customer
+                _ = self._customers.customer["company"]
+            except KeyError:
+                msgbox = QMessageBox()
+                msgbox.information(self,
+                                   __appname__,
+                                   "Ingen valgt kunde! Besøg kan ikke oprettes.",
+                                   QMessageBox.Ok)
+                return
+
+        self.widgetAppPages.setCurrentIndex(PAGE_VISIT)
+        visits = self._visits
+        visits.clear()
+
+        products = self._products
+        workdate = self.textWorkdate.text()
+        customerid = self._customers.customer["customer_id"]
+        reportid = self._reports.report["report_id"]
+        employeeid = self._employees.employee["employee_id"]
+        self.textVisitDate.setText(self.textWorkdate.text())
+        self.textVisitCompany.setText(self._customers.customer["company"])
+
+        try:
+            """
+            load visits for workdate
+            """
+            visits.load_for_customer(customerid, workdate)
+            _ = visits.visit["visit_id"]
+
+        except KeyError:
+            visits.add(reportid, employeeid, customerid, workdate)
+            visits.visit["visit_type"] = "R"
+            if self._customers.customer["account"] == "NY":
+                visits.visit["visit_type"] = "N"
+
+        self._orderlines = OrderLine()
+        self._orderlines.load_visit(visits.visit["visit_id"])
+        for idx, detail in enumerate(self._orderlines.list_):
+            # "pcs", "sku", "text", "price", "sas", "discount", "linetype", "extra"
+            row_count = idx + 1
+            self.widgetVisitDetails.setRowCount(row_count)
+            self.widgetVisitDetails.setRowHeight(row_count, 20)
+            w = QTableWidgetItem()
+            w.setText(detail["linetype"])
+            self.widgetVisitDetails.setItem(row_count, 0, w)
+            w.setText(str(detail["pcs"]))
+            self.widgetVisitDetails.setItem(row_count, 1, w)
+            w.setText(detail["item"])
+            self.widgetVisitDetails.setItem(row_count, 2, w)
+            w.setText(detail["sku"])
+            self.widgetVisitDetails.setItem(row_count, 3, w)
+            w.setText(detail["text"])
+            self.widgetVisitDetails.setItem(row_count, 4, w)
+            w.setText(str(detail["price"]))
+            self.widgetVisitDetails.setItem(row_count, 5, w)
+            w.setText(str(detail["discount"]))
+            self.widgetVisitDetails.setItem(row_count, 6, w)
+            w.setText(str(detail["amount"]))
+            self.widgetVisitDetails.setItem(row_count, 7, w)
+            w.setText(utils.int2str_dk(detail["sas"]))
+            self.widgetVisitDetails.setItem(row_count, 8, w)
+            w.setText(detail["extra"])
+            self.widgetVisitDetails.setItem(row_count, 9, w)
+
+        # If customer needs special settings on prices
+        factor = self._customers.customer["factor"]
+        if factor > 0.0:
+            for item in products.list_:
+                item["price"] = item["price"] * factor
+                if not item["d2"] == 0.0:
+                    item["d2"] = item["d2"] * factor
+                if not item["d3"] == 0.0:
+                    item["d3"] = item["d3"] * factor
+                if not item["d4"] == 0.0:
+                    item["d4"] = item["d4"] * factor
+                if not item["d6"] == 0.0:
+                    item["d6"] = item["d6"] * factor
+                if not item["d8"] == 0.0:
+                    item["d8"] = item["d8"] * factor
+                if not item["d12"] == 0.0:
+                    item["d12"] = item["d12"] * factor
+                if not item["d24"] == 0.0:
+                    item["d24"] = item["d24"] * factor
+                if not item["d2"] == 0.0:
+                    item["d48"] = item["d48"] * factor
+                if not item["d96"] == 0.0:
+                    item["d96"] = item["d96"] * factor
+                if not item["min"] == 0.0:
+                    item["min"] = item["min"] * factor
+                if not item["net"] == 0.0:
+                    item["net"] = item["net"] * factor
+        # connect to signals
+        self.toolButtonAppendLine.clicked.connect(self.visit_add_line)
+        self.toolButtonClearLine.clicked.connect(self.visit_clear_line)
+        self.buttonArchiveVisit.clicked.connect(self.archive_visit)
+        self.comboLineType.currentIndexChanged.connect(self.visit_line_type_changed)
+        self.widgetVisitDetails.setColumnWidth(0, 43)   # line_type D/N/S
+        self.widgetVisitDetails.setColumnWidth(1, 44)   # pcs
+        self.widgetVisitDetails.setColumnWidth(2, 83)   # product
+        self.widgetVisitDetails.setColumnWidth(3, 123)  # sku
+        self.widgetVisitDetails.setColumnWidth(4, 153)  # text
+        self.widgetVisitDetails.setColumnWidth(5, 60)   # price
+        self.widgetVisitDetails.setColumnWidth(6, 50)   # discount
+        self.widgetVisitDetails.setColumnWidth(7, 60)   # amount
+        self.widgetVisitDetails.setColumnWidth(8, 30)   # SAS
+
+    @pyqtSlot(name="data_export")
+    def data_export(self):
+        """
+        Export Database backup file
+        """
+        # TODO: Opret CSV data backup
+        msgbox = QMessageBox()
+        msgbox.information(self,
                            __appname__,
-                           "<strong>Ved import slettes alle eksisterende data</strong>!<br/><br/>"
-                           "Det er alt eller intet af hensyn til datas sammenhæng.<br/>"
-                           "Du <strong>SKAL</strong> importere <strong>ALLE<strong> tabeller fra listen!<br/><br/>"
-                           "<strong>Gør du ikke det giver det uløselige problemer</strong>!",
+                           "TODO: Create Database Backup File",
                            QMessageBox.Ok)
-        # app, contact, customer, detail, employee, report, visit, tables
-        import_dialog = CsvFileImportDialog(app, contacts=self._contacts, customers=self._customers,
-                                            employees=self._employees, orderlines=self._orderlines,
-                                            reports=self._reports, tables=config.CSV_TABLES, visits=self._visits)
-        import_dialog.sig_done.connect(self.on_csv_import_done)
-        import_dialog.exec_()
+
+    @pyqtSlot(name="data_import")
+    def data_import(self):
+        """
+        Import Database backup file
+        """
+        # TODO: Opret CSV data backup
+        msgbox = QMessageBox()
+        msgbox.information(self,
+                           __appname__,
+                           "TODO: Import Database Backup File",
+                           QMessageBox.Ok)
 
     @pyqtSlot(name="get_customers")
     def get_customers(self):
@@ -730,70 +760,236 @@ class MainWindow(QMainWindow, Ui_mainWindow):
         import_product.sig_done.connect(self.on_products_done)
         import_product.exec_()
 
-    @pyqtSlot(name="show_page_customers")
-    def show_page_customers(self):
+    @pyqtSlot(QTreeWidgetItem, QTreeWidgetItem, name="on_customer_changed")
+    def on_customer_changed(self, current, previous):
         """
-        Show page with customer list
+        Slot for treewidget current item changed signal
+        Used to respond to changes in the customer list
+        and update the related customer info
+
+        Args:
+            current: currently selected item
+            previous: previous selected item
         """
-        self.update_page_settings(button="toolButtonCustomers")
-        self.widgetAppPages.setCurrentIndex(0)
+        try:
+            # account = current.text(0)
+            phone = current.text(1)
+            company = current.text(3)
+            # move current customer
+            # load customer
+            self._customers.lookup(phone, company)
+            # fields to line edits
+            self.textAccount.setText(self._customers.customer["account"])
+            self.textCompany.setText(self._customers.customer["company"])
+            self.textAddress1.setText(self._customers.customer["address1"])
+            self.textAddress2.setText(self._customers.customer["address2"])
+            self.textZipCode.setText(self._customers.customer["zipcode"])
+            self.textCityName.setText(self._customers.customer["city"])
+            self.textPhone1.setText(self._customers.customer["phone1"])
+            self.textPhone2.setText(self._customers.customer["phone2"])
+            self.textEmail.setText(self._customers.customer["email"])
+            self.textFactor.setText(str(self._customers.customer["factor"]))
+            self.textCustomerInfoText.setText(self._customers.customer["infotext"])
+        except AttributeError:
+            pass
+        except KeyError:
+            pass
+        # load customer infos
+        self.populate_contact_list()
+        self.populate_visit_list()
+        self.populate_visit_details_list()
+
+    @pyqtSlot(name="on_csv_import_done")
+    def on_csv_import_done(self):
+        """
+        Slog for csv import done signal
+        """
+        self.populate_customer_list()
+
+    @pyqtSlot(QTreeWidgetItem, name="on_customer_clicked")
+    def on_customer_double_clicked(self, current):
+        """
+        Customer selected in
+        :param current:
+        :return:
+        """
+        self.toolButtonCustomer.click()
+
+    @pyqtSlot(name="on_customers_done")
+    def on_customers_done(self):
+        """
+        Slot for getCustomers finished signal
+        """
+        self.populate_customer_list()
+        lsc = datetime.date.today().isoformat()
+        self.textCustomerLocalDate.setText(lsc)
+        self._settings.setting["lsc"] = lsc
+        self._settings.update()
+
+    @pyqtSlot(name="on_products_done")
+    def on_products_done(self):
+        """
+        Slot for getProducts finished signal
+        """
+        self._products.all()
+        lsp = datetime.date.today().isoformat()
+        self.textPricelistLocalDate.setText(lsp)
+        self._settings.setting["lsp"] = lsp
+        self._settings.update()
+
+    @pyqtSlot(QTreeWidgetItem, QTreeWidgetItem, name="on_visit_changed")
+    def on_visit_changed(self, current, previous):
+        """
+        Response to current visit changed
+        Args:
+            current:
+            previous:
+        """
+        try:
+            self._visits.visit = current.text(0)
+        except AttributeError:
+            pass
+        except KeyError:
+            pass
+        self.populate_visit_details_list()
+
+    @pyqtSlot(name="on_visit_item_changed")
+    def on_visit_item_changed(self):
+        """Update SKU combo when item changes"""
+        self.cboSku.setCurrentText(self.cboProduct.itemData(self.cboProduct.currentIndex()))
+
+    @pyqtSlot(name="on_visit_sku_changed")
+    def on_visit_sku_changed(self):
+        """Update ITEM combo when sku changes"""
+        self.txtLineText.setText(self.cboSku.itemData(self.cboSku.currentIndex()))
+        self.cboProduct.setCurrentText(self.cboProduct.currentText())
+
+    @pyqtSlot(name="shoq_csv_import_dialog")
+    def show_csv_import_dialog(self):
+        """
+        Slot for fileImport triggered signal
+        """
+        if self._customers.list_:
+            msgbox = QMessageBox()
+            msgbox.warning(self,
+                           __appname__,
+                           "<strong>Ved import slettes alle eksisterende data</strong>!<br/><br/>"
+                           "Det er alt eller intet af hensyn til datas sammenhæng.<br/>"
+                           "Du <strong>SKAL</strong> importere <strong>ALLE<strong> tabeller fra listen!<br/><br/>"
+                           "<strong>Gør du ikke det giver det uløselige problemer</strong>!",
+                           QMessageBox.Ok)
+        # app, contact, customer, detail, employee, report, visit, tables
+        import_dialog = CsvFileImportDialog(app, contacts=self._contacts, customers=self._customers,
+                                            employees=self._employees, orderlines=self._orderlines,
+                                            reports=self._reports, tables=config.CSV_TABLES, visits=self._visits)
+        import_dialog.sig_done.connect(self.on_csv_import_done)
+        import_dialog.exec_()
 
     @pyqtSlot(name="show_page_customer")
     def show_page_customer(self):
         """
         Show page with customer
         """
-        self.update_page_settings(button="toolButtonCustomer")
-        self.widgetAppPages.setCurrentIndex(1)
+        self.set_indexes(button="toolButtonCustomer")
+        self.widgetAppPages.setCurrentIndex(PAGE_CUSTOMER)
 
     @pyqtSlot(name="show_page_customer_visits")
     def show_page_customer_visits(self):
         """
         Show page with customer visits and orders
         """
-        self.update_page_settings(button="toolButtonCustomerVisits")
-        self.widgetAppPages.setCurrentIndex(2)
+        self.set_indexes(button="toolButtonCustomerVisits")
+        self.widgetAppPages.setCurrentIndex(PAGE_CUSTOMER_VISITS)
 
-    @pyqtSlot(name="show_page_pricelist")
-    def show_page_pricelist(self):
+    @pyqtSlot(name="show_page_customers")
+    def show_page_customers(self):
         """
-        Show page with pricelist
+        Show page with customer list
         """
-        self.update_page_settings(button="toolButtonPricelist")
-        self.widgetAppPages.setCurrentIndex(3)
-
-    @pyqtSlot(name="show_page_report")
-    def show_page_report(self):
-        """
-        Slot for masterData triggered signal
-        """
-        self.update_page_settings(button="toolButtonReport")
-        self.widgetAppPages.setCurrentIndex(4)
-
-    @pyqtSlot(name="show_page_reports")
-    def show_page_reports(self):
-        """
-        Show page with a report list
-        """
-        self.update_page_settings(button="toolButtonReports")
-        self.widgetAppPages.setCurrentIndex(5)
-
-    @pyqtSlot(name="show_page_settings")
-    def show_page_settings(self):
-        """
-        Show page with settings
-        """
-        self.update_page_settings(button="toolButtonSettings")
-        self.populate_settings_page()
-        self.widgetAppPages.setCurrentIndex(6)
+        self.set_indexes(button="toolButtonCustomers")
+        self.widgetAppPages.setCurrentIndex(PAGE_CUSTOMERS)
 
     @pyqtSlot(name="show_page_info")
     def show_page_info(self):
         """
         Show page with about Qt and Eordre
         """
-        self.update_page_settings(button="toolButtonInfo")
-        self.widgetAppPages.setCurrentIndex(7)
+        self.set_indexes(button="toolButtonInfo")
+        self.widgetAppPages.setCurrentIndex(PAGE_INFO)
+
+    @pyqtSlot(name="show_page_pricelist")
+    def show_page_pricelist(self):
+        """
+        Show page with pricelist
+        """
+        self.set_indexes(button="toolButtonPricelist")
+        self.widgetAppPages.setCurrentIndex(PAGE_PRICELIST)
+
+    @pyqtSlot(name="show_page_report")
+    def show_page_report(self):
+        """
+        Slot for masterData triggered signal
+        """
+        self.set_indexes(button="toolButtonReport")
+        self.widgetAppPages.setCurrentIndex(PAGE_REPORT)
+
+    @pyqtSlot(name="show_page_reports")
+    def show_page_reports(self):
+        """
+        Show page with a report list
+        """
+        self.set_indexes(button="toolButtonReports")
+        self.widgetAppPages.setCurrentIndex(PAGE_REPORTS)
+
+    @pyqtSlot(name="show_page_settings")
+    def show_page_settings(self):
+        """
+        Show page with settings
+        """
+        self.set_indexes(button="toolButtonSettings")
+        self.populate_settings_page()
+        self.widgetAppPages.setCurrentIndex(PAGE_SETTINGS)
+
+    # @pyqtSlot(name="show_page_visit")
+    # def show_page_visit(self):
+    #     """
+    #     Show page with visit
+    #     """
+    #     self.set_indexes(button="toolButtonVisit")
+    #     self.widgetAppPages.setCurrentIndex(PAGE_VISIT)
+
+    @pyqtSlot(name="visit_add_line")
+    def visit_add_line(self):
+        """
+        Slot for Add Demo button clicked
+        """
+        new_row = self.widgetVisitDetails.rowCount() + 1
+        self.widgetVisitDetails.setRowCount(new_row)
+        self.widgetVisitDetails.setRowHeight(new_row, 20)
+
+    @pyqtSlot(name="visit_clear_line")
+    def visit_clear_line(self):
+        """
+        Clear visit line
+        """
+        # TODO clear the add visit line
+        msgbox = QMessageBox()
+        msgbox.information(self,
+                           __appname__,
+                           "# TODO clear the add visit line",
+                           QMessageBox.Ok)
+
+    @pyqtSlot(name="visit_line_type_changed")
+    def visit_line_type_changed(self):
+        """
+        Changed linetype
+        `D`emo `N`ysalg `S`alg `T`ekst
+        :return: nothing
+        """
+        if self.comboLineType.currentText() == "T":
+            self.set_input_enabled(False)
+            return
+        self.set_input_enabled(True)
 
     @pyqtSlot(name="zero_database")
     def zero_database(self):
