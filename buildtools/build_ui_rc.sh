@@ -17,9 +17,5 @@ echo "Building Product Http Dialog resource ..."
 pyuic5 --from-imports get_products_http_dialog.ui -o ${targetdir}/http_products_dialog_rc.py
 echo "Building Main Window resource ..."
 pyuic5 --from-imports main_window.ui -o ${targetdir}/main_window_rc.py
-echo "Building Settings Dialog resource ..."
-pyuic5 --from-imports settings_dialog.ui -o ${targetdir}/settings_dialog_rc.py
-echo "Building Visit Dialog resource ..."
-pyuic5 --from-imports visit_dialog.ui -o ${targetdir}/visit_dialog_rc.py
 echo "   Done!"
 cd ${builddir}

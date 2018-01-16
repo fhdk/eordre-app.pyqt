@@ -628,6 +628,11 @@
         <string>Salg</string>
        </property>
       </column>
+      <column>
+       <property name="text">
+        <string>Ordre note</string>
+       </property>
+      </column>
      </widget>
      <widget class="QTreeWidget" name="widgetSingleVisitDetails">
       <property name="geometry">
@@ -691,7 +696,7 @@
       </column>
       <column>
        <property name="text">
-        <string>Ekstra</string>
+        <string>Linje note</string>
        </property>
       </column>
      </widget>
@@ -1872,7 +1877,7 @@ QToolButton:hover:checked {
       </property>
       <layout class="QGridLayout" name="widgetVisitHead">
        <item row="3" column="0">
-        <widget class="QLineEdit" name="textProductDemo">
+        <widget class="QLineEdit" name="textVisitProductDemo">
          <property name="font">
           <font>
            <pointsize>10</pointsize>
@@ -1905,7 +1910,7 @@ QToolButton:hover:checked {
         </widget>
        </item>
        <item row="2" column="1">
-        <widget class="QLineEdit" name="textPoAddress2">
+        <widget class="QLineEdit" name="textVisitDelAddress2">
          <property name="font">
           <font>
            <pointsize>10</pointsize>
@@ -1917,7 +1922,7 @@ QToolButton:hover:checked {
         </widget>
        </item>
        <item row="2" column="0">
-        <widget class="QLineEdit" name="textPoNumber">
+        <widget class="QLineEdit" name="textVisitPoNumber">
          <property name="font">
           <font>
            <pointsize>10</pointsize>
@@ -1929,7 +1934,7 @@ QToolButton:hover:checked {
         </widget>
        </item>
        <item row="1" column="1">
-        <widget class="QLineEdit" name="textPoAddress1">
+        <widget class="QLineEdit" name="textVisitDelAddress1">
          <property name="font">
           <font>
            <pointsize>10</pointsize>
@@ -1941,7 +1946,7 @@ QToolButton:hover:checked {
         </widget>
        </item>
        <item row="0" column="1">
-        <widget class="QLineEdit" name="textPoCompany">
+        <widget class="QLineEdit" name="textVisitDelCompany">
          <property name="font">
           <font>
            <pointsize>10</pointsize>
@@ -1953,7 +1958,7 @@ QToolButton:hover:checked {
         </widget>
        </item>
        <item row="4" column="0">
-        <widget class="QLineEdit" name="textProductSale">
+        <widget class="QLineEdit" name="textVisitProductSale">
          <property name="font">
           <font>
            <pointsize>10</pointsize>
@@ -1968,7 +1973,7 @@ QToolButton:hover:checked {
         </widget>
        </item>
        <item row="4" column="1">
-        <widget class="QLineEdit" name="textPoPostoffice">
+        <widget class="QLineEdit" name="textVisitDelCity">
          <property name="font">
           <font>
            <pointsize>10</pointsize>
@@ -1980,7 +1985,7 @@ QToolButton:hover:checked {
         </widget>
        </item>
        <item row="3" column="1">
-        <widget class="QLineEdit" name="textPoPostcode">
+        <widget class="QLineEdit" name="textVisitDelZip">
          <property name="font">
           <font>
            <pointsize>10</pointsize>
@@ -1992,7 +1997,7 @@ QToolButton:hover:checked {
         </widget>
        </item>
        <item row="1" column="0">
-        <widget class="QLineEdit" name="textPoBuyer">
+        <widget class="QLineEdit" name="textVisitBuyer">
          <property name="font">
           <font>
            <pointsize>10</pointsize>
@@ -2005,7 +2010,7 @@ QToolButton:hover:checked {
        </item>
       </layout>
      </widget>
-     <widget class="QTableWidget" name="widgetVisitDetails">
+     <widget class="QTableWidget" name="widgetVisitOrderLines">
       <property name="geometry">
        <rect>
         <x>10</x>
@@ -2018,6 +2023,9 @@ QToolButton:hover:checked {
        <font>
         <pointsize>10</pointsize>
        </font>
+      </property>
+      <property name="toolTip">
+       <string>Demo </string>
       </property>
       <property name="locale">
        <locale language="Danish" country="Denmark"/>
@@ -2038,7 +2046,7 @@ QToolButton:hover:checked {
        <bool>false</bool>
       </property>
       <property name="columnCount">
-       <number>11</number>
+       <number>9</number>
       </property>
       <attribute name="horizontalHeaderCascadingSectionResizes">
        <bool>true</bool>
@@ -2081,20 +2089,7 @@ QToolButton:hover:checked {
         </font>
        </property>
        <property name="textAlignment">
-        <set>AlignCenter</set>
-       </property>
-      </column>
-      <column>
-       <property name="text">
-        <string>Produkt</string>
-       </property>
-       <property name="font">
-        <font>
-         <pointsize>10</pointsize>
-        </font>
-       </property>
-       <property name="textAlignment">
-        <set>AlignCenter</set>
+        <set>AlignLeading|AlignVCenter</set>
        </property>
       </column>
       <column>
@@ -2107,7 +2102,7 @@ QToolButton:hover:checked {
         </font>
        </property>
        <property name="textAlignment">
-        <set>AlignCenter</set>
+        <set>AlignLeading|AlignVCenter</set>
        </property>
       </column>
       <column>
@@ -2120,7 +2115,7 @@ QToolButton:hover:checked {
         </font>
        </property>
        <property name="textAlignment">
-        <set>AlignCenter</set>
+        <set>AlignLeading|AlignVCenter</set>
        </property>
       </column>
       <column>
@@ -2133,7 +2128,7 @@ QToolButton:hover:checked {
         </font>
        </property>
        <property name="textAlignment">
-        <set>AlignCenter</set>
+        <set>AlignTrailing|AlignVCenter</set>
        </property>
       </column>
       <column>
@@ -2159,7 +2154,7 @@ QToolButton:hover:checked {
         </font>
        </property>
        <property name="textAlignment">
-        <set>AlignCenter</set>
+        <set>AlignTrailing|AlignVCenter</set>
        </property>
       </column>
       <column>
@@ -2175,8 +2170,11 @@ QToolButton:hover:checked {
         <set>AlignCenter</set>
        </property>
       </column>
-      <column/>
-      <column/>
+      <column>
+       <property name="text">
+        <string>Linje note</string>
+       </property>
+      </column>
      </widget>
      <widget class="QWidget" name="gridLayoutWidget_2">
       <property name="geometry">
@@ -2205,6 +2203,53 @@ QToolButton:hover:checked {
          </property>
         </widget>
        </item>
+       <item row="0" column="2">
+        <widget class="QLineEdit" name="textVisitId">
+         <property name="enabled">
+          <bool>true</bool>
+         </property>
+         <property name="sizePolicy">
+          <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+           <horstretch>0</horstretch>
+           <verstretch>0</verstretch>
+          </sizepolicy>
+         </property>
+         <property name="maximumSize">
+          <size>
+           <width>50</width>
+           <height>16777215</height>
+          </size>
+         </property>
+         <property name="text">
+          <string/>
+         </property>
+         <property name="alignment">
+          <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+         </property>
+         <property name="readOnly">
+          <bool>true</bool>
+         </property>
+        </widget>
+       </item>
+       <item row="0" column="1">
+        <widget class="QLineEdit" name="textVisitCustomerId">
+         <property name="sizePolicy">
+          <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+           <horstretch>0</horstretch>
+           <verstretch>0</verstretch>
+          </sizepolicy>
+         </property>
+         <property name="maximumSize">
+          <size>
+           <width>50</width>
+           <height>16777215</height>
+          </size>
+         </property>
+         <property name="alignment">
+          <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+         </property>
+        </widget>
+       </item>
       </layout>
      </widget>
      <widget class="QWidget" name="gridLayoutWidget_5">
@@ -2226,7 +2271,7 @@ QToolButton:hover:checked {
         <number>2</number>
        </property>
        <item row="1" column="2">
-        <widget class="QComboBox" name="comboProduct">
+        <widget class="QComboBox" name="comboVisitItem">
          <property name="enabled">
           <bool>false</bool>
          </property>
@@ -2253,7 +2298,7 @@ QToolButton:hover:checked {
         </widget>
        </item>
        <item row="0" column="5">
-        <widget class="QLabel" name="labelPrice">
+        <widget class="QLabel" name="labelVisitPrice">
          <property name="font">
           <font>
            <pointsize>10</pointsize>
@@ -2268,7 +2313,7 @@ QToolButton:hover:checked {
         </widget>
        </item>
        <item row="1" column="1">
-        <widget class="QLineEdit" name="textPcs">
+        <widget class="QLineEdit" name="textVisitPcs">
          <property name="enabled">
           <bool>false</bool>
          </property>
@@ -2298,7 +2343,7 @@ QToolButton:hover:checked {
         </widget>
        </item>
        <item row="0" column="1">
-        <widget class="QLabel" name="labelPcs">
+        <widget class="QLabel" name="labelVisitPcs">
          <property name="font">
           <font>
            <pointsize>10</pointsize>
@@ -2313,7 +2358,7 @@ QToolButton:hover:checked {
         </widget>
        </item>
        <item row="1" column="0">
-        <widget class="QComboBox" name="comboLineType">
+        <widget class="QComboBox" name="comboVisitLineType">
          <property name="minimumSize">
           <size>
            <width>60</width>
@@ -2375,14 +2420,17 @@ QToolButton:hover:checked {
         </widget>
        </item>
        <item row="0" column="0">
-        <widget class="QLabel" name="labelDemoNotSold">
+        <widget class="QLabel" name="labelVisitDemoNotSoldPhone">
          <property name="font">
           <font>
            <pointsize>10</pointsize>
           </font>
          </property>
+         <property name="toolTip">
+          <string>Demo Ikke Solgt Telefon</string>
+         </property>
          <property name="text">
-          <string>D.N.S.T</string>
+          <string>D.I.S.T</string>
          </property>
          <property name="alignment">
           <set>Qt::AlignCenter</set>
@@ -2390,7 +2438,7 @@ QToolButton:hover:checked {
         </widget>
        </item>
        <item row="1" column="3">
-        <widget class="QComboBox" name="comboSku">
+        <widget class="QComboBox" name="comboVisitSku">
          <property name="enabled">
           <bool>false</bool>
          </property>
@@ -2417,7 +2465,7 @@ QToolButton:hover:checked {
         </widget>
        </item>
        <item row="0" column="3">
-        <widget class="QLabel" name="labelSku">
+        <widget class="QLabel" name="labelVisitSku">
          <property name="font">
           <font>
            <pointsize>10</pointsize>
@@ -2432,7 +2480,7 @@ QToolButton:hover:checked {
         </widget>
        </item>
        <item row="0" column="2">
-        <widget class="QLabel" name="labelProduct">
+        <widget class="QLabel" name="labelVisitProduct">
          <property name="font">
           <font>
            <pointsize>10</pointsize>
@@ -2447,7 +2495,7 @@ QToolButton:hover:checked {
         </widget>
        </item>
        <item row="1" column="6">
-        <widget class="QLineEdit" name="textLineDiscount">
+        <widget class="QLineEdit" name="textVisitLineDiscount">
          <property name="enabled">
           <bool>false</bool>
          </property>
@@ -2469,7 +2517,7 @@ QToolButton:hover:checked {
         </widget>
        </item>
        <item row="1" column="4">
-        <widget class="QLineEdit" name="textLineText">
+        <widget class="QLineEdit" name="textVisitLineText">
          <property name="minimumSize">
           <size>
            <width>0</width>
@@ -2490,7 +2538,7 @@ QToolButton:hover:checked {
         </widget>
        </item>
        <item row="0" column="4">
-        <widget class="QLabel" name="labelText">
+        <widget class="QLabel" name="labelVisitText">
          <property name="font">
           <font>
            <pointsize>10</pointsize>
@@ -2505,7 +2553,7 @@ QToolButton:hover:checked {
         </widget>
        </item>
        <item row="1" column="5">
-        <widget class="QLineEdit" name="textLinePrice">
+        <widget class="QLineEdit" name="textVisitLinePrice">
          <property name="enabled">
           <bool>false</bool>
          </property>
@@ -2532,7 +2580,7 @@ QToolButton:hover:checked {
         </widget>
        </item>
        <item row="1" column="7">
-        <widget class="QCheckBox" name="checkSas">
+        <widget class="QCheckBox" name="checkVisitSas">
          <property name="enabled">
           <bool>false</bool>
          </property>
@@ -2554,7 +2602,7 @@ QToolButton:hover:checked {
         </widget>
        </item>
        <item row="0" column="7">
-        <widget class="QLabel" name="labelCheckSas">
+        <widget class="QLabel" name="labelVisitCheckSas">
          <property name="font">
           <font>
            <pointsize>10</pointsize>
@@ -2566,7 +2614,7 @@ QToolButton:hover:checked {
         </widget>
        </item>
        <item row="0" column="6">
-        <widget class="QLabel" name="labelDiscount">
+        <widget class="QLabel" name="labelVisitDiscount">
          <property name="font">
           <font>
            <pointsize>10</pointsize>
@@ -2581,7 +2629,7 @@ QToolButton:hover:checked {
         </widget>
        </item>
        <item row="1" column="8">
-        <widget class="QToolButton" name="toolButtonAppendLine">
+        <widget class="QToolButton" name="toolButtonVisitAppendLine">
          <property name="text">
           <string>...</string>
          </property>
@@ -2598,7 +2646,7 @@ QToolButton:hover:checked {
         </widget>
        </item>
        <item row="1" column="9">
-        <widget class="QToolButton" name="toolButtonClearLine">
+        <widget class="QToolButton" name="toolButtonVisitClearLine">
          <property name="text">
           <string>...</string>
          </property>
@@ -2616,7 +2664,7 @@ QToolButton:hover:checked {
        </item>
       </layout>
      </widget>
-     <widget class="QLineEdit" name="textOrderInfo">
+     <widget class="QLineEdit" name="textVisitOrderNote">
       <property name="geometry">
        <rect>
         <x>10</x>
@@ -2656,7 +2704,7 @@ QToolButton:hover:checked {
        <bool>false</bool>
       </property>
      </widget>
-     <widget class="QTextEdit" name="txtVisitInfo">
+     <widget class="QTextEdit" name="textVisitNote">
       <property name="geometry">
        <rect>
         <x>420</x>
@@ -2719,10 +2767,10 @@ QToolButton:hover:checked {
     <widget class="QToolButton" name="toolButtonReport">
      <property name="geometry">
       <rect>
-       <x>360</x>
-       <y>10</y>
-       <width>70</width>
-       <height>70</height>
+       <x>400</x>
+       <y>5</y>
+       <width>80</width>
+       <height>80</height>
       </rect>
      </property>
      <property name="toolTip">
@@ -2757,10 +2805,10 @@ QToolButton:hover:checked {
     <widget class="QToolButton" name="toolButtonCustomers">
      <property name="geometry">
       <rect>
-       <x>10</x>
-       <y>10</y>
-       <width>70</width>
-       <height>70</height>
+       <x>0</x>
+       <y>5</y>
+       <width>80</width>
+       <height>80</height>
       </rect>
      </property>
      <property name="toolTip">
@@ -2793,9 +2841,9 @@ QToolButton:hover:checked {
      <property name="geometry">
       <rect>
        <x>80</x>
-       <y>10</y>
-       <width>70</width>
-       <height>70</height>
+       <y>5</y>
+       <width>80</width>
+       <height>80</height>
       </rect>
      </property>
      <property name="toolTip">
@@ -2827,10 +2875,10 @@ QToolButton:hover:checked {
     <widget class="QToolButton" name="toolButtonCustomerVisits">
      <property name="geometry">
       <rect>
-       <x>150</x>
-       <y>10</y>
-       <width>70</width>
-       <height>70</height>
+       <x>160</x>
+       <y>5</y>
+       <width>80</width>
+       <height>80</height>
       </rect>
      </property>
      <property name="toolTip">
@@ -2862,10 +2910,10 @@ QToolButton:hover:checked {
     <widget class="QToolButton" name="toolButtonPricelist">
      <property name="geometry">
       <rect>
-       <x>290</x>
-       <y>10</y>
-       <width>70</width>
-       <height>70</height>
+       <x>320</x>
+       <y>5</y>
+       <width>80</width>
+       <height>80</height>
       </rect>
      </property>
      <property name="toolTip">
@@ -2897,10 +2945,10 @@ QToolButton:hover:checked {
     <widget class="QToolButton" name="toolButtonReports">
      <property name="geometry">
       <rect>
-       <x>430</x>
-       <y>10</y>
-       <width>70</width>
-       <height>70</height>
+       <x>480</x>
+       <y>5</y>
+       <width>80</width>
+       <height>80</height>
       </rect>
      </property>
      <property name="toolTip">
@@ -2932,10 +2980,10 @@ QToolButton:hover:checked {
     <widget class="QToolButton" name="toolButtonInfo">
      <property name="geometry">
       <rect>
-       <x>620</x>
-       <y>10</y>
-       <width>70</width>
-       <height>70</height>
+       <x>640</x>
+       <y>5</y>
+       <width>80</width>
+       <height>80</height>
       </rect>
      </property>
      <property name="toolTip">
@@ -2967,10 +3015,10 @@ QToolButton:hover:checked {
     <widget class="QToolButton" name="toolButtonSettings">
      <property name="geometry">
       <rect>
-       <x>550</x>
-       <y>10</y>
-       <width>70</width>
-       <height>70</height>
+       <x>560</x>
+       <y>5</y>
+       <width>80</width>
+       <height>80</height>
       </rect>
      </property>
      <property name="toolTip">
@@ -3003,9 +3051,9 @@ QToolButton:hover:checked {
      <property name="geometry">
       <rect>
        <x>720</x>
-       <y>10</y>
-       <width>70</width>
-       <height>70</height>
+       <y>5</y>
+       <width>80</width>
+       <height>80</height>
       </rect>
      </property>
      <property name="toolTip">
@@ -3034,20 +3082,23 @@ QToolButton:hover:checked {
       <enum>Qt::ToolButtonTextUnderIcon</enum>
      </property>
     </widget>
-    <widget class="QToolButton" name="toolButtonVisit">
+    <widget class="QToolButton" name="toolButtonCustomerVisit">
+     <property name="enabled">
+      <bool>false</bool>
+     </property>
      <property name="geometry">
       <rect>
-       <x>220</x>
-       <y>10</y>
-       <width>70</width>
-       <height>70</height>
+       <x>240</x>
+       <y>5</y>
+       <width>80</width>
+       <height>80</height>
       </rect>
      </property>
      <property name="toolTip">
-      <string>Rapporter</string>
+      <string>Åben ordre/besøg</string>
      </property>
      <property name="text">
-      <string>Besøg</string>
+      <string>Besøg/Ordre</string>
      </property>
      <property name="icon">
       <iconset resource="../icons/system.qrc">

@@ -33,7 +33,7 @@ from resources.main_window_rc import Ui_mainWindow
 from resources import splash_rc
 from util import utils
 from util import passwdFn
-# from util import printFn
+from util import printFn
 from util.rules import check_settings
 
 __appname__ = "Eordre NG"
@@ -61,18 +61,34 @@ class MainWindow(QMainWindow, Ui_mainWindow):
         """
         super(MainWindow, self).__init__(parent)
         self.setupUi(self)
-        QThread.currentThread().setObjectName(__appname__)
+        thread = QThread()
+        thread.currentThread().setObjectName(__appname__)
         configfn.check_config_folder()  # Check appdata folder in users home
 
         self.textWorkdate.setText(datetime.date.today().isoformat())  # initialize workdate to current date
+
+        self._archivedOrderlines = OrderLine()  # Initialize Detail object
+        self._archivedVisits = Visit()  # Initialize Visit object
         self._contacts = Contact()  # Initialize Contact object
         self._customers = Customer()  # Initialize Customer object
-        self._orderlines = OrderLine()  # Initialize Detail object
         self._employees = Employee()  # Initialize Employee object
+        self._orderLines = OrderLine()
         self._products = Product()  # Initialize Product object
         self._reports = Report()  # Initialize Report object
-        self._visits = Visit()  # Initialize Visit object
         self._settings = Settings()  # Initialize Settings object
+        self._visits = Visit()
+
+        self.buttonArchiveContacts.clicked.connect(self.archive_contacts)
+        self.buttonArchiveCustomer.clicked.connect(self.archive_customer)
+        self.buttonArchiveVisit.clicked.connect(self.archive_visit)
+
+        self.buttonCreateContact.clicked.connect(self.create_contact)
+        self.buttonCreateCustomer.clicked.connect(self.create_customer)
+        self.buttonCreateReport.clicked.connect(self.create_report)
+        self.buttonCreateVisit.clicked.connect(self.create_visit)
+
+        self.buttonGetCustomers.clicked.connect(self.get_customers)
+        self.buttonGetPricelist.clicked.connect(self.get_pricelist)
 
         self.toolButtonCustomer.clicked.connect(self.show_page_customer)
         self.toolButtonCustomers.clicked.connect(self.show_page_customers)
@@ -83,25 +99,16 @@ class MainWindow(QMainWindow, Ui_mainWindow):
         self.toolButtonReport.clicked.connect(self.show_page_report)
         self.toolButtonReports.clicked.connect(self.show_page_reports)
         self.toolButtonSettings.clicked.connect(self.show_page_settings)
-        # self.toolButtonVisit.clicked.connect(self.create_visit)
+        self.toolButtonCustomerVisit.clicked.connect(self.show_page_visit)
 
-        self.toolButtonImportCsvData.clicked.connect(self.show_csv_import_dialog)
         self.toolButtonDeleteSalesData.clicked.connect(self.zero_database)
         self.toolButtonExportDatabase.clicked.connect(self.data_export)
+        self.toolButtonImportCsvData.clicked.connect(self.show_csv_import_dialog)
         self.toolButtonImportDatabase.clicked.connect(self.data_import)
-
-        self.buttonGetCustomers.clicked.connect(self.get_customers)
-        self.buttonGetPricelist.clicked.connect(self.get_pricelist)
-        self.buttonCreateReport.clicked.connect(self.create_report)
-
-        self.buttonArchiveContacts.clicked.connect(self.archive_contacts)
-        self.buttonArchiveCustomer.clicked.connect(self.archive_customer)
-        self.buttonCreateContact.clicked.connect(self.create_contact)
-        self.buttonCreateCustomer.clicked.connect(self.create_customer)
-        self.buttonCreateVisit.clicked.connect(self.create_visit)
 
         self.widgetAppCustomers.currentItemChanged.connect(self.on_customer_changed)
         self.widgetAppCustomers.itemDoubleClicked.connect(self.on_customer_double_clicked)
+
         self.widgetCustomerVisits.currentItemChanged.connect(self.on_visit_changed)
         self.widgetCustomerVisits.setColumnHidden(0, True)
 
@@ -112,11 +119,10 @@ class MainWindow(QMainWindow, Ui_mainWindow):
         self.widgetSingleVisitDetails.setColumnWidth(4, 60)
         self.widgetSingleVisitDetails.setColumnWidth(5, 40)
 
-        # load report for workdate if exist
         self._reports.load_report(self.textWorkdate.text())
-        # fill customer list
+
         self.populate_customer_list()
-        # set latest customer active
+
         if self._customers.lookup_by_id(self._settings.setting["cust_idx"]):
             try:
                 phone = self._customers.customer["phone1"]
@@ -127,6 +133,7 @@ class MainWindow(QMainWindow, Ui_mainWindow):
                 return
             except KeyError:
                 pass
+
         self.toolButtonCustomers.click()
 
     def closeEvent(self, event):
@@ -209,8 +216,8 @@ class MainWindow(QMainWindow, Ui_mainWindow):
         self.widgetCustomerVisits.setColumnWidth(0, 0)
         items = []
         try:
-            self._visits.list_customer = self._customers.customer["customer_id"]
-            for visit in self._visits.list_customer:
+            self._archivedVisits.list_customer = self._customers.customer["customer_id"]
+            for visit in self._archivedVisits.list_customer:
                 item = QTreeWidgetItem([str(visit["visit_id"]),
                                         visit["visit_date"],
                                         visit["po_buyer"],
@@ -256,17 +263,17 @@ class MainWindow(QMainWindow, Ui_mainWindow):
 
         items = []
         try:
-            self._orderlines.list_ = self._visits.visit["visit_id"]
+            self._archivedOrderlines.list_ = self._archivedVisits.visit["visit_id"]
 
-            self.textArchivePoNumber.setText(self._visits.visit["po_number"])
-            self.textArchiveSas.setText(str(self._visits.visit["po_sas"]))
-            self.textArchiveSale.setText(str(self._visits.visit["po_sale"]))
-            self.textArchiveTotal.setText(str(self._visits.visit["po_total"]))
-            self.labelArchiveSendText.setText(utils.bool2dk(utils.int2bool(self._visits.visit["po_sent"])))
-            self.labelArchiveApprovedText.setText(utils.bool2dk(utils.int2bool(self._visits.visit["po_approved"])))
-            self.textSingleVisitNotes.setText(self._visits.visit["po_note"])
+            self.textArchivePoNumber.setText(self._archivedVisits.visit["po_number"])
+            self.textArchiveSas.setText(str(self._archivedVisits.visit["po_sas"]))
+            self.textArchiveSale.setText(str(self._archivedVisits.visit["po_sale"]))
+            self.textArchiveTotal.setText(str(self._archivedVisits.visit["po_total"]))
+            self.labelArchiveSendText.setText(utils.bool2dk(utils.int2bool(self._archivedVisits.visit["po_sent"])))
+            self.labelArchiveApprovedText.setText(utils.bool2dk(utils.int2bool(self._archivedVisits.visit["po_approved"])))
+            self.textSingleVisitNotes.setText(self._archivedVisits.visit["po_note"])
 
-            for detail in self._orderlines.list_:
+            for detail in self._archivedOrderlines.list_:
                 item = QTreeWidgetItem([detail["linetype"],
                                         str(detail["pcs"]),
                                         detail["sku"],
@@ -292,8 +299,8 @@ class MainWindow(QMainWindow, Ui_mainWindow):
         self.widgetCustomerVisits.setColumnWidth(0, 0)
         items = []
         try:
-            self._visits.list_customer = self._customers.customer["customer_id"]
-            for visit in self._visits.list_customer:
+            self._archivedVisits.list_customer = self._customers.customer["customer_id"]
+            for visit in self._archivedVisits.list_customer:
                 item = QTreeWidgetItem([str(visit["visit_id"]),
                                         visit["visit_date"],
                                         visit["po_buyer"],
@@ -368,12 +375,12 @@ class MainWindow(QMainWindow, Ui_mainWindow):
 
     def set_input_enabled(self, arg: bool):
         """Enable inputs"""
-        self.textPcs.setEnabled(arg)
-        self.comboProduct.setEnabled(arg)
-        self.comboSku.setEnabled(arg)
-        self.textLinePrice.setEnabled(arg)
-        self.textLineDiscount.setEnabled(arg)
-        self.checkSas.setEnabled(arg)
+        self.textVisitPcs.setEnabled(arg)
+        self.comboVisitItem.setEnabled(arg)
+        self.comboVisitSku.setEnabled(arg)
+        self.textVisitLinePrice.setEnabled(arg)
+        self.textVisitLineDiscount.setEnabled(arg)
+        self.checkVisitSas.setEnabled(arg)
 
     @pyqtSlot(name="app_exit")
     def app_exit(self):
@@ -390,29 +397,6 @@ class MainWindow(QMainWindow, Ui_mainWindow):
         # save setttings
         self._settings.update()
         app.quit()
-
-    @pyqtSlot(name="archive_visit")
-    def archive_visit(self):
-        """
-        Slot for saving the visit
-        """
-        # save visit head contents
-        self._visits.visit["po_buyer"] = self.txtPoBuyer.text()
-        self._visits.visit["po_number"] = self.txtPoNumber.text()
-        self._visits.visit["po_company"] = self.txtPoCompany.text()
-        self._visits.visit["po_address1"] = self.txtPoAddress1.text()
-        self._visits.visit["po_address2"] = self.txtPoAddress2.text()
-        self._visits.visit["po_postcode"] = self.txtPoPostcode.text()
-        self._visits.visit["po_postofffice"] = self.txtPoPostoffice.text()
-        self._visits.visit["po_country"] = self.txtPoCountry.text()
-        self._visits.visit["info_text"] = self.txtInfoText.toPlainText()
-        self._visits.visit["prod_demo"] = self.txtProductDemo.text()
-        self._visits.visit["prod_sale"] = self.txtProductSale.text()
-        self._visits.visit["sas"] = self.txtVisitSas.text()
-        self._visits.visit["sale"] = self.txtVisitSale.text()
-        self._visits.visit["total"] = self.txtVisitTotal.text()
-
-        # TODO: save visitdetails
 
     @pyqtSlot(name="archive_contacts")
     def archive_contacts(self):
@@ -507,6 +491,31 @@ class MainWindow(QMainWindow, Ui_mainWindow):
         self._settings.update()
         # self._settings.load()
         self._employees.load(self._settings.setting["usermail"])
+
+    @pyqtSlot(name="archive_visit")
+    def archive_visit(self):
+        """
+        Slot for saving the visit
+        """
+        self.toolButtonCustomerVisit.setEnabled(False)
+        # save visit head contents
+        self._visits.visit["po_buyer"] = self.textVisitBuyer.text()
+        self._visits.visit["po_number"] = self.textVisitPoNumber.text()
+        self._visits.visit["po_company"] = self.textVisitDelCompany.text()
+        self._visits.visit["po_address1"] = self.textDelAddress1.text()
+        self._visits.visit["po_address2"] = self.textDelAddress2.text()
+        self._visits.visit["po_postcode"] = self.textVisitDelZip.text()
+        self._visits.visit["po_postofffice"] = self.textVisitDelCity.text()
+        self._visits.visit["po_country"] = self._employees.employee["country"]
+        self._visits.visit["po_note"] = self.textVisitOrderNote.text()
+        self._visits.visit["prod_demo"] = self.textVisitProductDemo.text()
+        self._visits.visit["prod_sale"] = self.textVisitProductSale.text()
+        self._visits.visit["po_sas"] = self.textVisitSas.text()
+        self._visits.visit["po_sale"] = self.textVisitSale.text()
+        self._visits.visit["po_total"] = self.textVisitTotal.text()
+        self._visits.visit["visit_note"] = self.textVisitInfo.toPlainText()
+
+        # TODO: save visitdetails
 
     @pyqtSlot(name="create_contact")
     def create_contact(self):
@@ -617,15 +626,27 @@ class MainWindow(QMainWindow, Ui_mainWindow):
                                    QMessageBox.Ok)
                 return
 
-        self.widgetAppPages.setCurrentIndex(PAGE_VISIT)
-        visits = self._visits
-        visits.clear()
+        if self.textVisitCustomerId.text() is not "" and \
+                self.textVisitCustomerId.text() is not self._customers.customer["customer_id"]:
+            confirm = QMessageBox()
+            val = confirm.question(self, __appname__,
+                                   "Du har en uafsluttet sag på {}.<br/>Vil du slette den?".format(
+                                       self.textVisitCompany.text()),
+                                   confirm.Yes | confirm.No)
+            if val == confirm.No:
+                self._customers.lookup_by_id(self.textVisitCustomerId.text())
+            else:
+                self._archivedVisits.delete(self.textVisitId.text())
 
-        products = self._products
+        self.toolButtonCustomerVisit.setEnabled(True)
+        self.widgetAppPages.setCurrentIndex(PAGE_VISIT)
+
+        customer_pricelist = self._products
         workdate = self.textWorkdate.text()
         customerid = self._customers.customer["customer_id"]
         reportid = self._reports.report["report_id"]
         employeeid = self._employees.employee["employee_id"]
+        self.textVisitCustomerId.setText(str(customerid))
         self.textVisitDate.setText(self.textWorkdate.text())
         self.textVisitCompany.setText(self._customers.customer["company"])
 
@@ -633,48 +654,72 @@ class MainWindow(QMainWindow, Ui_mainWindow):
             """
             load visits for workdate
             """
-            visits.load_for_customer(customerid, workdate)
-            _ = visits.visit["visit_id"]
-
+            self._visits.load_for_customer(customerid, workdate)
+            self.textVisitId.setText(str(self._visits.visit["visit_id"]))
         except KeyError:
-            visits.add(reportid, employeeid, customerid, workdate)
-            visits.visit["visit_type"] = "R"
+            self.textVisitId.setText(str(self._visits.add(reportid, employeeid, customerid, workdate)))
+            self._visits.visit["visit_type"] = "R"
             if self._customers.customer["account"] == "NY":
-                visits.visit["visit_type"] = "N"
+                self._visits.visit["visit_type"] = "N"
+        visit_id = self.textVisitId.text()
+        self._orderLines = OrderLine()
+        self._orderLines.load_visit(visit_id)
 
-        self._orderlines = OrderLine()
-        self._orderlines.load_visit(visits.visit["visit_id"])
-        for idx, detail in enumerate(self._orderlines.list_):
-            # "pcs", "sku", "text", "price", "sas", "discount", "linetype", "extra"
-            row_count = idx + 1
-            self.widgetVisitDetails.setRowCount(row_count)
-            self.widgetVisitDetails.setRowHeight(row_count, 20)
-            w = QTableWidgetItem()
-            w.setText(detail["linetype"])
-            self.widgetVisitDetails.setItem(row_count, 0, w)
-            w.setText(str(detail["pcs"]))
-            self.widgetVisitDetails.setItem(row_count, 1, w)
-            w.setText(detail["item"])
-            self.widgetVisitDetails.setItem(row_count, 2, w)
-            w.setText(detail["sku"])
-            self.widgetVisitDetails.setItem(row_count, 3, w)
-            w.setText(detail["text"])
-            self.widgetVisitDetails.setItem(row_count, 4, w)
-            w.setText(str(detail["price"]))
-            self.widgetVisitDetails.setItem(row_count, 5, w)
-            w.setText(str(detail["discount"]))
-            self.widgetVisitDetails.setItem(row_count, 6, w)
-            w.setText(str(detail["amount"]))
-            self.widgetVisitDetails.setItem(row_count, 7, w)
-            w.setText(utils.int2str_dk(detail["sas"]))
-            self.widgetVisitDetails.setItem(row_count, 8, w)
-            w.setText(detail["extra"])
-            self.widgetVisitDetails.setItem(row_count, 9, w)
+        self.widgetVisitOrderLines.setColumnWidth(0, 43)   # line_type D/N/S
+        self.widgetVisitOrderLines.setColumnWidth(1, 44)   # pcs
+        self.widgetVisitOrderLines.setColumnWidth(2, 44)   # item
+        self.widgetVisitOrderLines.setColumnWidth(3, 123)  # sku
+        self.widgetVisitOrderLines.setColumnWidth(4, 153)  # text
+        self.widgetVisitOrderLines.setColumnWidth(5, 60)   # price
+        self.widgetVisitOrderLines.setColumnWidth(6, 50)   # discount
+        self.widgetVisitOrderLines.setColumnWidth(6, 60)   # amount
+        self.widgetVisitOrderLines.setColumnWidth(7, 30)   # SAS
+
+        lines = self._orderLines.list_
+        self.widgetVisitOrderLines.setRowCount(len(lines) - 1)
+        for idx, detail in enumerate(lines):
+            # "line_id", "visit_id",
+            # "pcs", "sku", "text", "price", "sas", "discount",
+            # "linetype", "linenote", "item"
+            amount = float(detail["pcs"]) * detail["price"] * detail["discount"] / 100
+            row_number = idx + 1
+            # self.widgetVisitOrderLines.setRowCount(row_number)
+            # self.widgetVisitOrderLines.setRowHeight(row_number, 12)
+            c1 = QTableWidgetItem()
+            c1.setText(detail["linetype"])
+            self.widgetVisitOrderLines.setItem(row_number, 0, c1)
+            c2 = QTableWidgetItem()
+            c2.setText(str(detail["pcs"]))
+            self.widgetVisitOrderLines.setItem(row_number, 1, c2)
+            c3 = QTableWidgetItem()
+            c3.setText(str(detail["item"]))
+            self.widgetVisitOrderLines.setItem(row_number, 2, c3)
+            c4 = QTableWidgetItem()
+            c4.setText(detail["sku"])
+            self.widgetVisitOrderLines.setItem(row_number, 3, c4)
+            c5 = QTableWidgetItem()
+            c5.setText(detail["text"])
+            self.widgetVisitOrderLines.setItem(row_number, 4, c5)
+            c6 = QTableWidgetItem()
+            c6.setText(str(detail["price"]))
+            self.widgetVisitOrderLines.setItem(row_number, 5, c6)
+            c7 = QTableWidgetItem()
+            c6.setText(str(detail["discount"]))
+            self.widgetVisitOrderLines.setItem(row_number, 6, c7)
+            c8 = QTableWidgetItem()
+            c8.setText(str(amount))
+            self.widgetVisitOrderLines.setItem(row_number, 7, c8)
+            c9 = QTableWidgetItem()
+            c9.setText(utils.int2str_dk(detail["sas"]))
+            self.widgetVisitOrderLines.setItem(row_number, 8, c9)
+            c10 = QTableWidgetItem()
+            c10.setText(detail["linenote"])
+            self.widgetVisitOrderLines.setItem(row_number, 9, c10)
 
         # If customer needs special settings on prices
         factor = self._customers.customer["factor"]
         if factor > 0.0:
-            for item in products.list_:
+            for item in customer_pricelist.list_:
                 item["price"] = item["price"] * factor
                 if not item["d2"] == 0.0:
                     item["d2"] = item["d2"] * factor
@@ -699,19 +744,10 @@ class MainWindow(QMainWindow, Ui_mainWindow):
                 if not item["net"] == 0.0:
                     item["net"] = item["net"] * factor
         # connect to signals
-        self.toolButtonAppendLine.clicked.connect(self.visit_add_line)
-        self.toolButtonClearLine.clicked.connect(self.visit_clear_line)
+        self.toolButtonVisitAppendLine.clicked.connect(self.visit_add_line)
+        self.toolButtonVisitClearLine.clicked.connect(self.visit_clear_line)
         self.buttonArchiveVisit.clicked.connect(self.archive_visit)
-        self.comboLineType.currentIndexChanged.connect(self.visit_line_type_changed)
-        self.widgetVisitDetails.setColumnWidth(0, 43)   # line_type D/N/S
-        self.widgetVisitDetails.setColumnWidth(1, 44)   # pcs
-        self.widgetVisitDetails.setColumnWidth(2, 83)   # product
-        self.widgetVisitDetails.setColumnWidth(3, 123)  # sku
-        self.widgetVisitDetails.setColumnWidth(4, 153)  # text
-        self.widgetVisitDetails.setColumnWidth(5, 60)   # price
-        self.widgetVisitDetails.setColumnWidth(6, 50)   # discount
-        self.widgetVisitDetails.setColumnWidth(7, 60)   # amount
-        self.widgetVisitDetails.setColumnWidth(8, 30)   # SAS
+        self.comboVisitLineType.currentIndexChanged.connect(self.visit_line_type_changed)
 
     @pyqtSlot(name="data_export")
     def data_export(self):
@@ -846,7 +882,7 @@ class MainWindow(QMainWindow, Ui_mainWindow):
             previous:
         """
         try:
-            self._visits.visit = current.text(0)
+            self._archivedVisits.visit = current.text(0)
         except AttributeError:
             pass
         except KeyError:
@@ -856,15 +892,21 @@ class MainWindow(QMainWindow, Ui_mainWindow):
     @pyqtSlot(name="on_visit_item_changed")
     def on_visit_item_changed(self):
         """Update SKU combo when item changes"""
-        self.cboSku.setCurrentText(self.cboProduct.itemData(self.cboProduct.currentIndex()))
+        self.comboVisitSku.setCurrentText(
+            self.comboVisitItem.itemData(
+                self.comboVisitItem.currentIndex()))
 
     @pyqtSlot(name="on_visit_sku_changed")
     def on_visit_sku_changed(self):
         """Update ITEM combo when sku changes"""
-        self.txtLineText.setText(self.cboSku.itemData(self.cboSku.currentIndex()))
-        self.cboProduct.setCurrentText(self.cboProduct.currentText())
+        self.txtVisitLineText.setText(
+            self.comboVisitSku.itemData(
+                self.comboVisitSku.currentIndex()))
 
-    @pyqtSlot(name="shoq_csv_import_dialog")
+        self.comboVisitItem.setCurrentText(
+            self.comboVisitItem.currentText())
+
+    @pyqtSlot(name="show_csv_import_dialog")
     def show_csv_import_dialog(self):
         """
         Slot for fileImport triggered signal
@@ -880,8 +922,8 @@ class MainWindow(QMainWindow, Ui_mainWindow):
                            QMessageBox.Ok)
         # app, contact, customer, detail, employee, report, visit, tables
         import_dialog = CsvFileImportDialog(app, contacts=self._contacts, customers=self._customers,
-                                            employees=self._employees, orderlines=self._orderlines,
-                                            reports=self._reports, tables=config.CSV_TABLES, visits=self._visits)
+                                            employees=self._employees, orderlines=self._archivedOrderlines,
+                                            reports=self._reports, tables=config.CSV_TABLES, visits=self._archivedVisits)
         import_dialog.sig_done.connect(self.on_csv_import_done)
         import_dialog.exec_()
 
@@ -950,22 +992,22 @@ class MainWindow(QMainWindow, Ui_mainWindow):
         self.populate_settings_page()
         self.widgetAppPages.setCurrentIndex(PAGE_SETTINGS)
 
-    # @pyqtSlot(name="show_page_visit")
-    # def show_page_visit(self):
-    #     """
-    #     Show page with visit
-    #     """
-    #     self.set_indexes(button="toolButtonVisit")
-    #     self.widgetAppPages.setCurrentIndex(PAGE_VISIT)
+    @pyqtSlot(name="show_page_visit")
+    def show_page_visit(self):
+        """
+        Show page with visit
+        """
+        self.set_indexes(button="toolButtonVisit")
+        self.widgetAppPages.setCurrentIndex(PAGE_VISIT)
 
     @pyqtSlot(name="visit_add_line")
     def visit_add_line(self):
         """
         Slot for Add Demo button clicked
         """
-        new_row = self.widgetVisitDetails.rowCount() + 1
-        self.widgetVisitDetails.setRowCount(new_row)
-        self.widgetVisitDetails.setRowHeight(new_row, 20)
+        new_row = self.widgetVisitOrderLines.rowCount() + 1
+        self.widgetVisitOrderLines.setRowCount(new_row)
+        self.widgetVisitOrderLines.setRowHeight(new_row, 20)
 
     @pyqtSlot(name="visit_clear_line")
     def visit_clear_line(self):
@@ -986,7 +1028,7 @@ class MainWindow(QMainWindow, Ui_mainWindow):
         `D`emo `N`ysalg `S`alg `T`ekst
         :return: nothing
         """
-        if self.comboLineType.currentText() == "T":
+        if self.comboVisitLineType.currentText() == "T":
             self.set_input_enabled(False)
             return
         self.set_input_enabled(True)
@@ -1002,8 +1044,8 @@ class MainWindow(QMainWindow, Ui_mainWindow):
         if val == confirm.Yes:
             self._contacts.recreate_table()
             self._customers.recreate_table()
-            self._orderlines.recreate_table()
-            self._visits.recreate_table()
+            self._archivedOrderlines.recreate_table()
+            self._archivedVisits.recreate_table()
             self._reports.recreate_table()
 
             self.populate_contact_list()
