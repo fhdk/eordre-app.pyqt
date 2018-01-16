@@ -219,7 +219,7 @@ class Visit:
         :return: True / False
         """
         if visit_date:
-            filters = [("customer_id", "="), ("visit_date", "=")]
+            filters = [("customer_id", "=", "AND"), ("visit_date", "=")]
             values = (customer_id, visit_date)
         else:
             filters = [("customer_id", "=")]
