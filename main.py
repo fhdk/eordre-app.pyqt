@@ -109,15 +109,15 @@ class MainWindow(QMainWindow, Ui_mainWindow):
         self.widgetAppCustomers.currentItemChanged.connect(self.on_customer_changed)
         self.widgetAppCustomers.itemDoubleClicked.connect(self.on_customer_double_clicked)
 
-        self.widgetCustomerVisits.currentItemChanged.connect(self.on_visit_changed)
-        self.widgetCustomerVisits.setColumnHidden(0, True)
+        self.widgetArchivedVisits.currentItemChanged.connect(self.on_visit_changed)
+        self.widgetArchivedVisits.setColumnHidden(0, True)
 
-        self.widgetSingleVisitDetails.setColumnWidth(0, 30)
-        self.widgetSingleVisitDetails.setColumnWidth(1, 30)
-        self.widgetSingleVisitDetails.setColumnWidth(2, 100)
-        self.widgetSingleVisitDetails.setColumnWidth(3, 150)
-        self.widgetSingleVisitDetails.setColumnWidth(4, 60)
-        self.widgetSingleVisitDetails.setColumnWidth(5, 40)
+        self.widgetArchivedOrderLines.setColumnWidth(0, 30)
+        self.widgetArchivedOrderLines.setColumnWidth(1, 30)
+        self.widgetArchivedOrderLines.setColumnWidth(2, 100)
+        self.widgetArchivedOrderLines.setColumnWidth(3, 150)
+        self.widgetArchivedOrderLines.setColumnWidth(4, 60)
+        self.widgetArchivedOrderLines.setColumnWidth(5, 40)
 
         self._reports.load_report(self.textWorkdate.text())
 
@@ -212,8 +212,8 @@ class MainWindow(QMainWindow, Ui_mainWindow):
         Populate the visitlist based on the active customer
         """
         # populate visit list table
-        self.widgetCustomerVisits.setHeaderLabels(["Id", "Dato", "Navn", "Demo", "Salg"])
-        self.widgetCustomerVisits.setColumnWidth(0, 0)
+        self.widgetArchivedVisits.setHeaderLabels(["Id", "Dato", "Navn", "Demo", "Salg"])
+        self.widgetArchivedVisits.setColumnWidth(0, 0)
         items = []
         try:
             self._archivedVisits.list_customer = self._customers.customer["customer_id"]
@@ -228,7 +228,7 @@ class MainWindow(QMainWindow, Ui_mainWindow):
             pass
         except KeyError:
             pass
-        self.widgetCustomerVisits.addTopLevelItems(items)
+        self.widgetArchivedVisits.addTopLevelItems(items)
 
     def populate_settings_page(self):
         """
@@ -248,31 +248,31 @@ class MainWindow(QMainWindow, Ui_mainWindow):
         self.textExtMailServerUser.setText(self._settings.setting["mailuser"])
         self.textExtMailServerPass.setText(self._settings.setting["mailpass"])
 
-    def populate_visit_details_list(self):
+    def populate_archived_visit_details(self):
         """
         Populate the details list based on the line visit
         """
-        self.widgetSingleVisitDetails.clear()
-        self.textArchivePoNumber.setText("")
-        self.textArchiveSas.setText("")
-        self.textArchiveSale.setText("")
-        self.textArchiveTotal.setText("")
-        self.labelArchiveApprovedText.setText("")
-        self.labelArchiveSendText.setText("")
-        self.textSingleVisitNotes.setText("")
+        self.widgetArchivedOrderLines.clear()
+
+        self.labelArchivedApprovedText.setText("")
+        self.labelArchivedSendText.setText("")
+        self.textArchivedOrderPoNumber.setText("")
+        self.textArchivedOrderSale.setText("")
+        self.textArchivedOrderSas.setText("")
+        self.textArchivedOrderTotal.setText("")
+        self.textArchivedVisitNote.setText("")
+
+        self.labelArchivedSendText.setText(utils.bool2dk(utils.int2bool(self._archivedVisits.visit["po_sent"])))
+        self.labelArchivedApprovedText.setText(utils.bool2dk(utils.int2bool(self._archivedVisits.visit["po_approved"])))
+        self.textArchivedOrderPoNumber.setText(self._archivedVisits.visit["po_number"])
+        self.textArchivedOrderSale.setText(str(self._archivedVisits.visit["po_sale"]))
+        self.textArchivedOrderSas.setText(str(self._archivedVisits.visit["po_sas"]))
+        self.textArchivedOrderTotal.setText(str(self._archivedVisits.visit["po_total"]))
+        self.textArchivedVisitNote.setText(self._archivedVisits.visit["visit_note"])
 
         items = []
         try:
             self._archivedOrderlines.list_ = self._archivedVisits.visit["visit_id"]
-
-            self.textArchivePoNumber.setText(self._archivedVisits.visit["po_number"])
-            self.textArchiveSas.setText(str(self._archivedVisits.visit["po_sas"]))
-            self.textArchiveSale.setText(str(self._archivedVisits.visit["po_sale"]))
-            self.textArchiveTotal.setText(str(self._archivedVisits.visit["po_total"]))
-            self.labelArchiveSendText.setText(utils.bool2dk(utils.int2bool(self._archivedVisits.visit["po_sent"])))
-            self.labelArchiveApprovedText.setText(utils.bool2dk(utils.int2bool(self._archivedVisits.visit["po_approved"])))
-            self.textSingleVisitNotes.setText(self._archivedVisits.visit["po_note"])
-
             for detail in self._archivedOrderlines.list_:
                 item = QTreeWidgetItem([detail["linetype"],
                                         str(detail["pcs"]),
@@ -280,38 +280,40 @@ class MainWindow(QMainWindow, Ui_mainWindow):
                                         detail["text"],
                                         str(detail["price"]),
                                         str(detail["discount"]),
-                                        detail["extra"]])
+                                        detail["linenote"]])
                 items.append(item)
         except KeyError:
+            print("keyerror: items not found")
             pass
         except IndexError:
+            print("indexerror: items not found")
             pass
-        self.widgetSingleVisitDetails.addTopLevelItems(items)
 
-    def populate_visit_list(self):
+        self.widgetArchivedOrderLines.addTopLevelItems(items)
+
+    def populate_archived_visits(self):
         """
         Populate the visitlist based on the active customer
         """
-        # populate visit list table
-        self.widgetCustomerVisits.clear()
-        # self.widgetCustomerVisits.setColumnCount(5)
-        self.widgetCustomerVisits.setHeaderLabels(["Id", "Dato", "Navn", "Demo", "Salg"])
-        self.widgetCustomerVisits.setColumnWidth(0, 0)
+        self.widgetArchivedVisits.clear()
+        self.widgetArchivedVisits.setHeaderLabels(["Id", "Dato", "Navn", "Demo", "Salg", "Ordre note"])
+        self.widgetArchivedVisits.setColumnWidth(0, 0)
+        self._archivedVisits.list_customer = self._customers.customer["customer_id"]
         items = []
         try:
-            self._archivedVisits.list_customer = self._customers.customer["customer_id"]
             for visit in self._archivedVisits.list_customer:
                 item = QTreeWidgetItem([str(visit["visit_id"]),
                                         visit["visit_date"],
                                         visit["po_buyer"],
                                         visit["prod_demo"],
-                                        visit["prod_sale"]])
+                                        visit["prod_sale"],
+                                        visit["po_note"]])
                 items.append(item)
         except IndexError:
             pass
         except KeyError:
             pass
-        self.widgetCustomerVisits.addTopLevelItems(items)
+        self.widgetArchivedVisits.addTopLevelItems(items)
 
     def resizeEvent(self, event):
         """
@@ -489,7 +491,6 @@ class MainWindow(QMainWindow, Ui_mainWindow):
         self._settings.setting["mailport"] = self.textExtMailServerPort.text()
         self._settings.setting["mailuser"] = self.textExtMailServerUser.text()
         self._settings.update()
-        # self._settings.load()
         self._employees.load(self._settings.setting["usermail"])
 
     @pyqtSlot(name="archive_visit")
@@ -656,6 +657,7 @@ class MainWindow(QMainWindow, Ui_mainWindow):
             """
             self._visits.load_for_customer(customerid, workdate)
             self.textVisitId.setText(str(self._visits.visit["visit_id"]))
+            print(str(self._visits.visit["visit_id"]))
         except KeyError:
             self.textVisitId.setText(str(self._visits.add(reportid, employeeid, customerid, workdate)))
             self._visits.visit["visit_type"] = "R"
@@ -710,7 +712,7 @@ class MainWindow(QMainWindow, Ui_mainWindow):
             c8.setText(str(amount))
             self.widgetVisitOrderLines.setItem(row_number, 7, c8)
             c9 = QTableWidgetItem()
-            c9.setText(utils.int2str_dk(detail["sas"]))
+            c9.setText(utils.int2strdk(detail["sas"]))
             self.widgetVisitOrderLines.setItem(row_number, 8, c9)
             c10 = QTableWidgetItem()
             c10.setText(detail["linenote"])
@@ -832,8 +834,8 @@ class MainWindow(QMainWindow, Ui_mainWindow):
             pass
         # load customer infos
         self.populate_contact_list()
-        self.populate_visit_list()
-        self.populate_visit_details_list()
+        self.populate_archived_visits()
+        self.populate_archived_visit_details()
 
     @pyqtSlot(name="on_csv_import_done")
     def on_csv_import_done(self):
@@ -882,12 +884,12 @@ class MainWindow(QMainWindow, Ui_mainWindow):
             previous:
         """
         try:
-            self._archivedVisits.visit = current.text(0)
+            self._archivedVisits.find(current.text(0))
         except AttributeError:
             pass
         except KeyError:
             pass
-        self.populate_visit_details_list()
+        self.populate_archived_visit_details()
 
     @pyqtSlot(name="on_visit_item_changed")
     def on_visit_item_changed(self):
@@ -1049,8 +1051,8 @@ class MainWindow(QMainWindow, Ui_mainWindow):
             self._reports.recreate_table()
 
             self.populate_contact_list()
-            self.populate_visit_details_list()
-            self.populate_visit_list()
+            self.populate_archived_visit_details()
+            self.populate_archived_visits()
             self.populate_customer_list()
 
             self._settings.setting["lsc"] = ""
