@@ -82,7 +82,7 @@
      </font>
     </property>
     <property name="currentIndex">
-     <number>8</number>
+     <number>2</number>
     </property>
     <widget class="QWidget" name="widgetPageCustomers">
      <widget class="QTreeWidget" name="widgetAppCustomers">
@@ -216,7 +216,7 @@
         <height>190</height>
        </rect>
       </property>
-      <layout class="QGridLayout" name="widgetAppCustomerBaseData" rowstretch="0,0,0,0,0">
+      <layout class="QGridLayout" name="widgetAppCustomer" rowstretch="0,0,0,0,0">
        <item row="4" column="1">
         <widget class="QLineEdit" name="textFactor">
          <property name="font">
@@ -573,7 +573,7 @@
      </widget>
     </widget>
     <widget class="QWidget" name="widgetPageCustomerVisits">
-     <widget class="QTreeWidget" name="widgetCustomerVisits">
+     <widget class="QTreeWidget" name="widgetArchivedVisits">
       <property name="geometry">
        <rect>
         <x>10</x>
@@ -634,11 +634,11 @@
        </property>
       </column>
      </widget>
-     <widget class="QTreeWidget" name="widgetSingleVisitDetails">
+     <widget class="QTreeWidget" name="widgetArchivedOrderLines">
       <property name="geometry">
        <rect>
         <x>10</x>
-        <y>180</y>
+        <y>185</y>
         <width>780</width>
         <height>140</height>
        </rect>
@@ -709,9 +709,9 @@
         <height>160</height>
        </rect>
       </property>
-      <layout class="QGridLayout" name="widgetSingleOrderInfo">
+      <layout class="QGridLayout" name="widgetArchivedOrder">
        <item row="4" column="2">
-        <widget class="QLabel" name="labelArchiveSend">
+        <widget class="QLabel" name="labelArchivedSend">
          <property name="maximumSize">
           <size>
            <width>16777215</width>
@@ -724,7 +724,7 @@
         </widget>
        </item>
        <item row="4" column="3">
-        <widget class="QLabel" name="labelArchiveSendText">
+        <widget class="QLabel" name="labelArchivedSendText">
          <property name="sizePolicy">
           <sizepolicy hsizetype="Preferred" vsizetype="Maximum">
            <horstretch>0</horstretch>
@@ -749,14 +749,14 @@
         </widget>
        </item>
        <item row="1" column="2">
-        <widget class="QLabel" name="labelArchiveOrderSale">
+        <widget class="QLabel" name="labelArchivedOrderSale">
          <property name="text">
           <string>Salg</string>
          </property>
         </widget>
        </item>
        <item row="1" column="3">
-        <widget class="QLineEdit" name="textArchiveSale">
+        <widget class="QLineEdit" name="textArchivedOrderSale">
          <property name="sizePolicy">
           <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
            <horstretch>0</horstretch>
@@ -775,7 +775,7 @@
         </widget>
        </item>
        <item row="2" column="2">
-        <widget class="QLabel" name="labelArchiveSasAmount">
+        <widget class="QLabel" name="labelArchivedSasAmount">
          <property name="maximumSize">
           <size>
            <width>16777215</width>
@@ -788,7 +788,7 @@
         </widget>
        </item>
        <item row="3" column="2">
-        <widget class="QLabel" name="labelArchiveOrderTotal">
+        <widget class="QLabel" name="labelArchivedOrderTotal">
          <property name="maximumSize">
           <size>
            <width>16777215</width>
@@ -801,7 +801,7 @@
         </widget>
        </item>
        <item row="2" column="3">
-        <widget class="QLineEdit" name="textArchiveSas">
+        <widget class="QLineEdit" name="textArchivedOrderSas">
          <property name="sizePolicy">
           <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
            <horstretch>0</horstretch>
@@ -820,7 +820,7 @@
         </widget>
        </item>
        <item row="3" column="3">
-        <widget class="QLineEdit" name="textArchiveTotal">
+        <widget class="QLineEdit" name="textArchivedOrderTotal">
          <property name="sizePolicy">
           <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
            <horstretch>0</horstretch>
@@ -839,7 +839,7 @@
         </widget>
        </item>
        <item row="0" column="3">
-        <widget class="QLineEdit" name="textArchivePoNumber">
+        <widget class="QLineEdit" name="textArchivedOrderPoNumber">
          <property name="sizePolicy">
           <sizepolicy hsizetype="Expanding" vsizetype="Maximum">
            <horstretch>0</horstretch>
@@ -858,7 +858,7 @@
         </widget>
        </item>
        <item row="0" column="2">
-        <widget class="QLabel" name="labelArchivePurchaseOrder">
+        <widget class="QLabel" name="labelArchivedPurchaseOrder">
          <property name="maximumSize">
           <size>
            <width>16777215</width>
@@ -871,14 +871,14 @@
         </widget>
        </item>
        <item row="5" column="2">
-        <widget class="QLabel" name="labelArchiveApproved">
+        <widget class="QLabel" name="labelArchivedApproved">
          <property name="text">
           <string>Godk.</string>
          </property>
         </widget>
        </item>
        <item row="5" column="3">
-        <widget class="QLabel" name="labelArchiveApprovedText">
+        <widget class="QLabel" name="labelArchivedApprovedText">
          <property name="sizePolicy">
           <sizepolicy hsizetype="Preferred" vsizetype="Maximum">
            <horstretch>0</horstretch>
@@ -917,7 +917,7 @@
        <string>Tilføj besøg ...</string>
       </property>
      </widget>
-     <widget class="QTextEdit" name="textSingleVisitNotes">
+     <widget class="QTextEdit" name="textArchivedVisitNote">
       <property name="geometry">
        <rect>
         <x>10</x>
@@ -2767,10 +2767,10 @@ QToolButton:hover:checked {
     <widget class="QToolButton" name="toolButtonReport">
      <property name="geometry">
       <rect>
-       <x>400</x>
-       <y>5</y>
-       <width>80</width>
-       <height>80</height>
+       <x>360</x>
+       <y>10</y>
+       <width>72</width>
+       <height>72</height>
       </rect>
      </property>
      <property name="toolTip">
@@ -2793,7 +2793,7 @@ QToolButton:hover:checked {
       <bool>true</bool>
      </property>
      <property name="checked">
-      <bool>true</bool>
+      <bool>false</bool>
      </property>
      <property name="autoExclusive">
       <bool>true</bool>
@@ -2805,10 +2805,10 @@ QToolButton:hover:checked {
     <widget class="QToolButton" name="toolButtonCustomers">
      <property name="geometry">
       <rect>
-       <x>0</x>
-       <y>5</y>
-       <width>80</width>
-       <height>80</height>
+       <x>10</x>
+       <y>10</y>
+       <width>72</width>
+       <height>72</height>
       </rect>
      </property>
      <property name="toolTip">
@@ -2841,9 +2841,9 @@ QToolButton:hover:checked {
      <property name="geometry">
       <rect>
        <x>80</x>
-       <y>5</y>
-       <width>80</width>
-       <height>80</height>
+       <y>10</y>
+       <width>72</width>
+       <height>72</height>
       </rect>
      </property>
      <property name="toolTip">
@@ -2875,10 +2875,10 @@ QToolButton:hover:checked {
     <widget class="QToolButton" name="toolButtonCustomerVisits">
      <property name="geometry">
       <rect>
-       <x>160</x>
-       <y>5</y>
-       <width>80</width>
-       <height>80</height>
+       <x>150</x>
+       <y>10</y>
+       <width>72</width>
+       <height>72</height>
       </rect>
      </property>
      <property name="toolTip">
@@ -2910,10 +2910,10 @@ QToolButton:hover:checked {
     <widget class="QToolButton" name="toolButtonPricelist">
      <property name="geometry">
       <rect>
-       <x>320</x>
-       <y>5</y>
-       <width>80</width>
-       <height>80</height>
+       <x>290</x>
+       <y>10</y>
+       <width>72</width>
+       <height>72</height>
       </rect>
      </property>
      <property name="toolTip">
@@ -2945,10 +2945,10 @@ QToolButton:hover:checked {
     <widget class="QToolButton" name="toolButtonReports">
      <property name="geometry">
       <rect>
-       <x>480</x>
-       <y>5</y>
-       <width>80</width>
-       <height>80</height>
+       <x>430</x>
+       <y>10</y>
+       <width>72</width>
+       <height>72</height>
       </rect>
      </property>
      <property name="toolTip">
@@ -2980,10 +2980,10 @@ QToolButton:hover:checked {
     <widget class="QToolButton" name="toolButtonInfo">
      <property name="geometry">
       <rect>
-       <x>640</x>
-       <y>5</y>
-       <width>80</width>
-       <height>80</height>
+       <x>650</x>
+       <y>10</y>
+       <width>72</width>
+       <height>72</height>
       </rect>
      </property>
      <property name="toolTip">
@@ -3015,10 +3015,10 @@ QToolButton:hover:checked {
     <widget class="QToolButton" name="toolButtonSettings">
      <property name="geometry">
       <rect>
-       <x>560</x>
-       <y>5</y>
-       <width>80</width>
-       <height>80</height>
+       <x>580</x>
+       <y>10</y>
+       <width>72</width>
+       <height>72</height>
       </rect>
      </property>
      <property name="toolTip">
@@ -3051,9 +3051,9 @@ QToolButton:hover:checked {
      <property name="geometry">
       <rect>
        <x>720</x>
-       <y>5</y>
-       <width>80</width>
-       <height>80</height>
+       <y>10</y>
+       <width>72</width>
+       <height>72</height>
       </rect>
      </property>
      <property name="toolTip">
@@ -3088,17 +3088,17 @@ QToolButton:hover:checked {
      </property>
      <property name="geometry">
       <rect>
-       <x>240</x>
-       <y>5</y>
-       <width>80</width>
-       <height>80</height>
+       <x>220</x>
+       <y>10</y>
+       <width>72</width>
+       <height>72</height>
       </rect>
      </property>
      <property name="toolTip">
       <string>Åben ordre/besøg</string>
      </property>
      <property name="text">
-      <string>Besøg/Ordre</string>
+      <string>Ordre</string>
      </property>
      <property name="icon">
       <iconset resource="../icons/system.qrc">
