@@ -18,8 +18,8 @@ from PyQt5.QtWidgets import QApplication, QMainWindow, QMessageBox, QSplashScree
 
 from configuration import config, configfn
 from dialogs.csv_import_dialog import CsvFileImportDialog
-from dialogs.http_customers_dialog import GetCustomersHttpDialog
-from dialogs.http_products_dialog import GetProductsHttpDialog
+from dialogs.get_customers_dialog import GetCustomersDialog
+from dialogs.get_pricelist_dialog import GetPricelistDialog
 from dialogs.create_report_dialog import ReportDialogCreate
 from models.contact import Contact
 from models.customer import Customer
@@ -83,7 +83,7 @@ class MainWindow(QMainWindow, Ui_mainWindow):
         self.toolButtonReport.clicked.connect(self.show_page_report)
         self.toolButtonReports.clicked.connect(self.show_page_reports)
         self.toolButtonSettings.clicked.connect(self.show_page_settings)
-        self.toolButtonVisit.clicked.connect(self.create_visit)
+        # self.toolButtonVisit.clicked.connect(self.create_visit)
 
         self.toolButtonImportCsvData.clicked.connect(self.show_csv_import_dialog)
         self.toolButtonDeleteSalesData.clicked.connect(self.zero_database)
@@ -742,10 +742,10 @@ class MainWindow(QMainWindow, Ui_mainWindow):
         """
         Slot for getCustomers triggered signal
         """
-        import_customers = GetCustomersHttpDialog(app,
-                                                  customers=self._customers,
-                                                  employees=self._employees,
-                                                  settings=self._settings)
+        import_customers = GetCustomersDialog(app,
+                                              customers=self._customers,
+                                              employees=self._employees,
+                                              settings=self._settings)
         import_customers.sig_done.connect(self.on_customers_done)
         import_customers.exec_()
 
@@ -754,9 +754,9 @@ class MainWindow(QMainWindow, Ui_mainWindow):
         """
         Slot for getProducts triggered signal
         """
-        import_product = GetProductsHttpDialog(app,
-                                               products=self._products,
-                                               settings=self._settings)
+        import_product = GetPricelistDialog(app,
+                                            products=self._products,
+                                            settings=self._settings)
         import_product.sig_done.connect(self.on_products_done)
         import_product.exec_()
 
