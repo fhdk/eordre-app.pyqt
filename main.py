@@ -292,10 +292,8 @@ class MainWindow(QMainWindow, Ui_mainWindow):
                                         line["linenote"]])
                 items.append(item)
         except KeyError:
-            print("keyerror: items not found")
             pass
         except IndexError:
-            print("indexerror: items not found")
             pass
 
         self.widgetArchivedOrderLines.addTopLevelItems(items)
@@ -363,7 +361,6 @@ class MainWindow(QMainWindow, Ui_mainWindow):
         if utils.int2bool(self._settings.setting["sc"]):
             # update sync status
             status = utils.refresh_sync_status(self._settings)
-            print(status)
             self._settings.setting["sac"] = status[0][1].split()[0]
             self._settings.setting["sap"] = status[1][1].split()[0]
             self._settings.update()
@@ -406,9 +403,6 @@ class MainWindow(QMainWindow, Ui_mainWindow):
             self._settings.setting["cust_idx"] = self._customers.customer["customer_id"]
         except KeyError:
             self._settings.setting["cust_idx"] = 0
-        # if not self._settings.setting["page_idx"]:
-        #     self._settings.setting["page_idx"] = self.widgetAppPages.currentIndex()
-        # save setttings
         self._settings.update()
         app.quit()
 
