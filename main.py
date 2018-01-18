@@ -262,25 +262,34 @@ class MainWindow(QMainWindow, Ui_mainWindow):
         self.textArchivedOrderTotal.setText("")
         self.textArchivedVisitNote.setText("")
 
-        self.labelArchivedSendText.setText(utils.bool2dk(utils.int2bool(self._archivedVisits.visit["po_sent"])))
-        self.labelArchivedApprovedText.setText(utils.bool2dk(utils.int2bool(self._archivedVisits.visit["po_approved"])))
-        self.textArchivedOrderPoNumber.setText(self._archivedVisits.visit["po_number"])
-        self.textArchivedOrderSale.setText(str(self._archivedVisits.visit["po_sale"]))
-        self.textArchivedOrderSas.setText(str(self._archivedVisits.visit["po_sas"]))
-        self.textArchivedOrderTotal.setText(str(self._archivedVisits.visit["po_total"]))
-        self.textArchivedVisitNote.setText(self._archivedVisits.visit["visit_note"])
-
         items = []
         try:
+            self.labelArchivedSendText.setText(
+                utils.bool2dk(utils.int2bool(
+                    self._archivedVisits.visit["po_sent"])))
+            self.labelArchivedApprovedText.setText(
+                utils.bool2dk(utils.int2bool(
+                    self._archivedVisits.visit["po_approved"])))
+            self.textArchivedOrderPoNumber.setText(
+                self._archivedVisits.visit["po_number"])
+            self.textArchivedOrderSale.setText(
+                str(self._archivedVisits.visit["po_sale"]))
+            self.textArchivedOrderSas.setText(
+                str(self._archivedVisits.visit["po_sas"]))
+            self.textArchivedOrderTotal.setText(
+                str(self._archivedVisits.visit["po_total"]))
+            self.textArchivedVisitNote.setText(
+                self._archivedVisits.visit["visit_note"])
+
             self._archivedOrderlines.list_ = self._archivedVisits.visit["visit_id"]
-            for detail in self._archivedOrderlines.list_:
-                item = QTreeWidgetItem([detail["linetype"],
-                                        str(detail["pcs"]),
-                                        detail["sku"],
-                                        detail["text"],
-                                        str(detail["price"]),
-                                        str(detail["discount"]),
-                                        detail["linenote"]])
+            for line in self._archivedOrderlines.list_:
+                item = QTreeWidgetItem([line["linetype"],
+                                        str(line["pcs"]),
+                                        line["sku"],
+                                        line["text"],
+                                        str(line["price"]),
+                                        str(line["discount"]),
+                                        line["linenote"]])
                 items.append(item)
         except KeyError:
             print("keyerror: items not found")
@@ -298,9 +307,10 @@ class MainWindow(QMainWindow, Ui_mainWindow):
         self.widgetArchivedVisits.clear()
         self.widgetArchivedVisits.setHeaderLabels(["Id", "Dato", "Navn", "Demo", "Salg", "Ordre note"])
         self.widgetArchivedVisits.setColumnWidth(0, 0)
-        self._archivedVisits.list_customer = self._customers.customer["customer_id"]
         items = []
         try:
+            self._archivedVisits.list_customer = self._customers.customer["customer_id"]
+
             for visit in self._archivedVisits.list_customer:
                 item = QTreeWidgetItem([str(visit["visit_id"]),
                                         visit["visit_date"],
@@ -309,6 +319,7 @@ class MainWindow(QMainWindow, Ui_mainWindow):
                                         visit["prod_sale"],
                                         visit["po_note"]])
                 items.append(item)
+
         except IndexError:
             pass
         except KeyError:
@@ -352,6 +363,7 @@ class MainWindow(QMainWindow, Ui_mainWindow):
         if utils.int2bool(self._settings.setting["sc"]):
             # update sync status
             status = utils.refresh_sync_status(self._settings)
+            print(status)
             self._settings.setting["sac"] = status[0][1].split()[0]
             self._settings.setting["sap"] = status[1][1].split()[0]
             self._settings.update()
