@@ -12,19 +12,6 @@ from util.passwdFn import check_password
 __appname__ = "Eordre NG"
 __module__ = "sanitizeDataFn"
 
-BC = "\033[1;36m"
-EC = "\033[0;1m"
-DBG = True
-
-
-def printit(something):
-    """
-    Print something when debugging
-    Args:
-        something: the string to be printed
-    """
-    print("{}\n{}{}{}".format(__module__, BC, something, EC))
-
 
 def sanitize_customer_data(rawdata, sr):
     """
@@ -35,22 +22,15 @@ def sanitize_customer_data(rawdata, sr):
     Returns:
         List of customers filtered by sr
     """
-    if DBG:
-        printit("rawdata => {}".format(rawdata))
-        printit("sr => {}".format(sr))
     customer_list = []
     if not rawdata:
         return customer_list
     rawdata = rawdata.replace(bytes("\r\n|", "ascii"), bytes("|", "ascii"))
     customer_data = rawdata.split(bytes("\r\n", "ascii"))
-    if DBG:
-        printit(customer_data)
     for data in customer_data:
         if not data:
             continue
         line = data.decode(config.HTTP_ENCODING).split("|")
-        if DBG:
-            printit(line)
         if line[6].strip() == sr:
             customer_data = [line[0].strip(), line[1].strip(), line[2].strip(),
                              line[3].strip(), line[4].strip(), line[5].strip(),
@@ -105,8 +85,6 @@ def sanitize_product_data(rawdata):
         if not data:
             continue
         line = data.decode(config.HTTP_ENCODING).split("|")
-        if DBG:
-            printit(line)
         product = (line[0].strip(), line[1].strip(), line[2].strip(), line[3].strip(), line[4].strip(),
                    line[5], line[6], line[7], line[8], line[9], line[10],
                    line[11], line[12], line[13], line[14], line[15], line[16].strip())
