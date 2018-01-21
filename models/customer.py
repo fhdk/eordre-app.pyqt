@@ -277,8 +277,6 @@ class Customer:
                 self._customer = {}
                 self._customers = []
         return False
-<<<<<<< HEAD
-=======
 
     def lookup_by_id(self, customer_id):
         """
@@ -356,4 +354,3 @@ class Customer:
         if success and data:
             return True
         return False
->>>>>>> version-0.4.1
