@@ -56,27 +56,21 @@ class Report:
         """
         Report
         Returns:
-            Current report
+            Active report
         """
         return self._report
 
-<<<<<<< HEAD
-    def get_(self, workdate: str):
-=======
     @report.setter
     def report(self, workdate):
->>>>>>> version-0.4.1
         """
-        Set current report to workdate
+        Set reportid to workdate
         Args:
             workdate:
         """
         try:
             _ = self._report["rep_date"]
-            if not _ == workdate:
-                self.__load_report(workdate=workdate)
         except KeyError:
-            self.__load_report(workdate=workdate)
+            self.load_report(workdate=workdate)
 
     @property
     def csv_record_length(self):
@@ -100,7 +94,7 @@ class Report:
             year:
             month:
         """
-        self.__load_reports(year=year, month=month)
+        self.load_reports(year=year, month=month)
 
     def clear(self):
         """
@@ -117,7 +111,7 @@ class Report:
             employee: object
             workdate: iso formatted str representing the reportid date
         """
-        # we need to get the number of reports for the month of the supplied date
+        # we need to find the number of reports for the month of the supplied date
         # then init_detail 1 to that number
         # we need to calculate the sums for the previous reportid for month
         # those sums will be stored in seperate table
@@ -206,7 +200,7 @@ class Report:
             return data
         return False
 
-    def translate_row_insert(self, row, employee_id):
+    def import_csv(self, row, employee_id):
         """
         Translate a csv row
         Args:
@@ -225,7 +219,7 @@ class Report:
 
         self.insert(values)
 
-    def __load_report(self, workdate):
+    def load_report(self, workdate):
         """
         Load report for supplied date arg
 
@@ -248,7 +242,7 @@ class Report:
 
         return False
 
-    def __load_reports(self, year=None, month=None):
+    def load_reports(self, year=None, month=None):
         """
         Load reports matching args or all if no args
 

@@ -73,11 +73,7 @@ class Visit:
         return self._csv_record_length
 
     @property
-<<<<<<< HEAD
-    def customer(self):
-=======
     def list_customer(self):
->>>>>>> version-0.4.1
         """
         The list of visits for a customer
         Returns:
@@ -85,13 +81,8 @@ class Visit:
         """
         return self._customer_visits
 
-<<<<<<< HEAD
-    @customer.setter
-    def customer(self, customer_id):
-=======
     @list_customer.setter
     def list_customer(self, customer_id):
->>>>>>> version-0.4.1
         """
         Load the list of visits for a customer_id
         Args:
@@ -100,11 +91,7 @@ class Visit:
         self.get_by_customer(customer_id)
 
     @property
-<<<<<<< HEAD
-    def report(self):
-=======
     def list_report(self):
->>>>>>> version-0.4.1
         """
         Report Visit List
         Returns:
@@ -112,13 +99,8 @@ class Visit:
         """
         return self._report_visits
 
-<<<<<<< HEAD
-    @report.setter
-    def report(self, report_id):
-=======
     @list_report.setter
     def list_report(self, report_id):
->>>>>>> version-0.4.1
         """
         Load visits for the requested report_id
         Args:
@@ -148,12 +130,8 @@ class Visit:
         values = (None, report_id, employee_id, customer_id, workdate, 0,
                   "", "", "", "", "", "", "", "", "", "", "", "", 0.0, 0.0, 0.0, 0, "")
         new_id = self.insert(values)
-<<<<<<< HEAD
-        self.get(new_id)
-=======
         self.find(new_id)
         return new_id
->>>>>>> version-0.4.1
 
     def delete(self, visit_id):
         """

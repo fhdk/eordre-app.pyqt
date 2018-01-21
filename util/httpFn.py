@@ -45,13 +45,8 @@ def get_customers(settings, employee, maxwait=2):
     Returns:
         customers list
     """
-<<<<<<< HEAD
-    active_settings = settings.item_
-    active_employee = employee.item_
-=======
     active_settings = settings.setting
     active_employee = employee.employee
->>>>>>> version-0.4.1
     try:
         # old file
         # req_file = "".join([active_settings["fc"], active_employee["salesrep"], active_settings["sf"]])
@@ -90,11 +85,7 @@ def get_employee_data(settings, maxwait=2):
     Returns:
         current data
     """
-<<<<<<< HEAD
-    s = settings.item_
-=======
     s = settings.setting
->>>>>>> version-0.4.1
     f = "".join([s["pf"], s["fe"], s["sf"]])
     context = ssl.SSLContext(ssl.PROTOCOL_SSLv23)
     data = []
@@ -148,11 +139,7 @@ def get_products(settings, maxwait=2):
     Returns:
         products list
     """
-<<<<<<< HEAD
-    s = settings.item_
-=======
     s = settings.setting
->>>>>>> version-0.4.1
     f = "".join([s["pf"], s["fp"], s["sf"]])
     context = ssl.SSLContext(ssl.PROTOCOL_SSLv23)
     data = []
@@ -197,11 +184,7 @@ def update_last_sync_info(settings):
     Returns:
         Two tuples with target and date time values
     """
-<<<<<<< HEAD
-    s = settings.item_
-=======
     s = settings.setting
->>>>>>> version-0.4.1
     f = "".join([s["pd"], s["fc"], s["sf"]])
     s["sac"] = get_modified_date(s["http"], s["usercountry"], f)
     f = "".join([s["pd"], s["fc"], s["sf"]])
