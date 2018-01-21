@@ -85,7 +85,7 @@ class MainWindow(QMainWindow, Ui_mainWindow):
         self.buttonCreateContact.clicked.connect(self.create_contact)
         self.buttonCreateCustomer.clicked.connect(self.create_customer)
         self.buttonCreateReport.clicked.connect(self.create_report)
-        self.buttonCreateVisit.clicked.connect(self.create_visit)
+        self.buttonCreateVisit.clicked.connect(self.load_visit)
 
         self.buttonGetCustomers.clicked.connect(self.get_customers)
         self.buttonGetPricelist.clicked.connect(self.get_pricelist)
@@ -226,6 +226,8 @@ class MainWindow(QMainWindow, Ui_mainWindow):
                                         visit["prod_sale"],
                                         visit["po_note"]])
                 items.append(item)
+                if visit["visit_date"] == self.textWorkdate.text():
+                    self.toolButtonCustomerVisit.setEnabled(True)
 
         except IndexError:
             pass
@@ -274,28 +276,31 @@ class MainWindow(QMainWindow, Ui_mainWindow):
         self.widgetAppCustomers.addTopLevelItems(items)
         self.widgetAppCustomers.setSortingEnabled(True)  # enable sorting
 
-    def populate_visit_list(self):
-        """
-        Populate
-        """
-        # populate visit list table
-        self.widgetArchivedVisits.setHeaderLabels(["Id", "Dato", "Navn", "Demo", "Salg"])
-        self.widgetArchivedVisits.setColumnWidth(0, 0)
-        items = []
-        try:
-            self._archivedVisits.list_customer = self._customers.customer["customer_id"]
-            for visit in self._archivedVisits.list_customer:
-                item = QTreeWidgetItem([str(visit["visit_id"]),
-                                        visit["visit_date"],
-                                        visit["po_buyer"],
-                                        visit["prod_demo"],
-                                        visit["prod_sale"]])
-                items.append(item)
-        except IndexError:
-            pass
-        except KeyError:
-            pass
-        self.widgetArchivedVisits.addTopLevelItems(items)
+    # def populate_visit_list(self):
+    #     """
+    #     Populate
+    #     """
+    #     # populate visit list table
+    #     self.widgetArchivedVisits.setHeaderLabels(["Id", "Dato", "Navn", "Demo", "Salg"])
+    #     self.widgetArchivedVisits.setColumnWidth(0, 0)
+    #     items = []
+    #     try:
+    #         self._archivedVisits.list_customer = self._customers.customer["customer_id"]
+    #         for visit in self._archivedVisits.list_customer:
+    #             item = QTreeWidgetItem([str(visit["visit_id"]),
+    #                                     visit["visit_date"],
+    #                                     visit["po_buyer"],
+    #                                     visit["prod_demo"],
+    #                                     visit["prod_sale"]])
+    #             items.append(item)
+    #             if visit["visit_date"] == self.textWorkdate.text():
+    #                 self.load_visit()
+    #
+    #     except IndexError:
+    #         pass
+    #     except KeyError:
+    #         pass
+    #     self.widgetArchivedVisits.addTopLevelItems(items)
 
     def populate_settings_page(self):
         """
@@ -496,7 +501,7 @@ class MainWindow(QMainWindow, Ui_mainWindow):
         """
         Slot for saving the visit
         """
-        # self.toolButtonCustomerVisit.setEnabled(False)
+        self.toolButtonCustomerVisit.setEnabled(False)
         # save visit head contents
         self._visits.visit["po_buyer"] = self.textVisitBuyer.text()
         self._visits.visit["po_number"] = self.textVisitPoNumber.text()
@@ -601,7 +606,7 @@ class MainWindow(QMainWindow, Ui_mainWindow):
                 return False
 
     @pyqtSlot(name="create_visit")
-    def create_visit(self):
+    def load_visit(self):
         """
         Slot for launching the visit dialog
         """
@@ -637,7 +642,7 @@ class MainWindow(QMainWindow, Ui_mainWindow):
             else:
                 self._archivedVisits.delete(self.textVisitId.text())
 
-        # self.toolButtonCustomerVisit.setEnabled(True)
+        self.toolButtonCustomerVisit.setEnabled(True)
         self.widgetAppPages.setCurrentIndex(PAGE_VISIT)
 
         customer_pricelist = self._products
@@ -1015,7 +1020,7 @@ class MainWindow(QMainWindow, Ui_mainWindow):
         Slot for masterData triggered signal
         """
         self.set_indexes(button="toolButtonReport")
-        self.widgetAppPags.setCurrentIndex(PAGE_REPORT)
+        self.widgetAppPages.setCurrentIndex(PAGE_REPORT)
 
     @pyqtSlot(name="show_page_reports")
     def show_page_reports(self):
