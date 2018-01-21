@@ -60,7 +60,12 @@ class Report:
         """
         return self._report
 
+<<<<<<< HEAD
     def get_(self, workdate: str):
+=======
+    @report.setter
+    def report(self, workdate):
+>>>>>>> version-0.4.1
         """
         Set current report to workdate
         Args:

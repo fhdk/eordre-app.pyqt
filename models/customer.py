@@ -32,7 +32,7 @@ class Customer:
             "types": ("INTEGER PRIMARY KEY NOT NULL", "TEXT NOT NULL", "TEXT NOT NULL",
                       "TEXT", "TEXT", "TEXT", "TEXT", "TEXT",
                       "TEXT NOT NULL", "TEXT", "TEXT", "TEXT", "INTEGER DEFAULT 0", "INTEGER DEFAULT 0",
-                      "TEXT", "TEXT", "TEXT", "TEXT", "REAL DEFAULT 0",
+                      "TEXT", "TEXT", "TEXT", "TEXT", "REAL",
                       "INTEGER DEFAULT 0", "INTEGER DEFAULT 0", "INTEGER DEFAULT 0", "INTEGER DEFAULT 0")
         }
         self._customers = []
@@ -277,3 +277,83 @@ class Customer:
                 self._customer = {}
                 self._customers = []
         return False
+<<<<<<< HEAD
+=======
+
+    def lookup_by_id(self, customer_id):
+        """
+        Find current by id
+        Args:
+            customer_id
+        Returns:
+            bool
+        """
+        filters = [("customer_id", "=")]
+        values = (customer_id,)
+        sql = self.q.build("select", self.model, filters=filters)
+        success, data = self.q.execute(sql, values=values)
+        if success:
+            try:
+                self._customer = dict(zip(self.model["fields"], data[0]))
+                return True
+            except IndexError:
+                self._customer = {}
+        return False
+
+    def lookup(self, phone, company, account=None):
+        """
+        Look up current
+        Args:
+            account:
+            phone:
+            company:
+        Returns:
+            bool
+        """
+        if account:
+            filters = [("account", "=")]
+            values = (account,)
+        else:
+            filters = [("phone1", "=", "and"), ("company", "=")]
+            values = (phone, company)
+
+        sql = self.q.build("select", self.model, filters=filters)
+        success, data = self.q.execute(sql, values=values)
+        if not success:
+            filters = [("account", "=", "and"), ("company", "=", "and"), ("phone1", "=")]
+            values = ("NY", phone, company)
+            sql = self.q.build("select", self.model, filters=filters)
+            success, data = self.q.execute(sql, values=values)
+        if success:
+            try:
+                self._customer = dict(zip(self.model["fields"], data[0]))
+                return True
+            except IndexError:
+                self._customer = {}
+        return False
+
+    def recreate_table(self):
+        """
+        Drop and create table
+        """
+        sql = self.q.build("drop", self.model)
+        self.q.execute(sql)
+        sql = self.q.build("create", self.model)
+        self.q.execute(sql)
+        self.clear()
+
+    def update(self):
+        """
+        Update customer
+        Returns:
+            bool
+        """
+        fields = list(self.model["fields"])[1:]
+        filters = [(self.model["id"], "=")]
+        values = self.q.values_to_update(self._customer.values())
+        sql = self.q.build("update", self.model, update=fields, filters=filters)
+        success, data = self.q.execute(sql, values=values)
+        if success and data:
+            return True
+        return False
+>>>>>>> version-0.4.1

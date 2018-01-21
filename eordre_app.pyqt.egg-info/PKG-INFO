@@ -1,0 +1,26 @@
+Metadata-Version: 1.1
+Name: eordre-app.pyqt
+Version: 0.3.1
+Summary: Eordre app build with Python 3 and PyQt5
+Home-page: https://github.com/fhdk/eordre-app.pyqt
+Author: Frede Hundewadt
+Author-email: echo "ZmhAdWV4LmRrCg==" | base64 -d
+License: AGPL
+Description-Content-Type: UNKNOWN
+Description: # eordre-app
+        
+        Build with Python 3.6 and PyQt5
+        
+        
+        This file contains notable changes to the project.
+Platform: UNKNOWN
+Classifier: Development Status :: 3 - Alpha
+Classifier: Intended Audience :: End User/Desktop
+Classifier: License :: OSI Approved :: AGPL License
+Classifier: Natural Language :: Danish
+Classifier: Programming Language :: Python :: 3.6
+Classifier: Environment :: GUI
+Classifier: Operating System :: Linux :: Linux
+Classifier: Operating System :: Apple :: macOS
+Classifier: Operating System :: Microsoft :: Windows
+Requires: PyQt5

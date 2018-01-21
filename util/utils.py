@@ -46,7 +46,7 @@ def arg2bool(arg):
     """
     if type(arg) == int:
         arg = str(arg)
-    return str(arg.lower() in ["sand", "true", "1", "ok"])
+    return arg.lower() in ["sand", "true", "1", "ok"]
 
 
 def int2bool(arg):
@@ -74,7 +74,7 @@ def bool2int(arg):
     return 0
 
 
-def int2str_dk(arg):
+def int2strdk(arg):
     """
     Convert bool to string
     Args:
@@ -111,3 +111,32 @@ def bool2str(arg):
     if arg:
         return "True"
     return "False"
+
+
+def item_price(item, pcs):
+    """
+    Extract the correct price for pcs of item
+    :param item:
+    :param pcs:
+    :return: the items price for pcs
+    """
+    num = int(pcs)
+    if num >= 96 and item["d96"] is not 0.0:
+        return item["d96"]
+    if num >= 48 and item["d48"] is not 0.0:
+        return item["d48"]
+    if num >= 24 and item["d24"] is not 0.0:
+        return item["d24"]
+    if num >= 12 and item["d12"] is not 0.0:
+        return item["d12"]
+    if num >= 8 and item["d8"] is not 0.0:
+        return item["d8"]
+    if num >= 6 and item["d6"] is not 0.0:
+        return item["d6"]
+    if num >= 4 and item["d4"] is not 0.0:
+        return item["d4"]
+    if num >= 3 and item["d3"] is not 0.0:
+        return item["d3"]
+    if num >= 2 and item["d2"] is not 0.0:
+        return item["d2"]
+    return item["price"]

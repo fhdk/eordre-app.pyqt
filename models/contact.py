@@ -54,8 +54,12 @@ class Contact:
 
     @list_.setter
     def list_(self, customer_id):
+<<<<<<< HEAD
         self.clear_()
         self._load(customer_id=customer_id)
+=======
+        self.load_for_customer(customer_id=customer_id)
+>>>>>>> version-0.4.1
 
     @property
     def csv_record_length(self):

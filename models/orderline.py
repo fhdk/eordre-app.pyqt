@@ -24,12 +24,14 @@ class OrderLine:
         Initialize OrderLine class
         """
         self.model = {
-            "name": "lines",
+            "name": "orderlines",
             "id": "line_id",
-            "fields": ("line_id", "visit_id", "pcs", "sku", "text", "price", "sas", "discount",
-                       "linetype", "extra"),
-            "types": ("INTEGER PRIMARY KEY NOT NULL", "INTEGER NOT NULL", "INTEGER DEFAULT 0",
-                      "TEXT", "TEXT", "REAL", "INTEGER DEFAULT 0", "REAL DEFAULT 0", "TEXT", "TEXT")
+            "fields": ("line_id", "visit_id",
+                       "pcs", "sku", "text", "price", "sas", "discount",
+                       "linetype", "linenote", "item"),
+            "types": ("INTEGER PRIMARY KEY NOT NULL", "INTEGER NOT NULL",
+                      "INTEGER", "TEXT", "TEXT", "REAL", "INTEGER DEFAULT 0", "REAL DEFAULT 0",
+                      "TEXT", "TEXT", "TEXT")
         }
         self._line = {}
         self._lines = []
@@ -63,7 +65,7 @@ class OrderLine:
             self.find(line_id=line_id)
 
     @property
-    def lines(self):
+    def list_(self):
         """
         All purchase order lines
         Returns:
@@ -71,8 +73,8 @@ class OrderLine:
         """
         return self._lines
 
-    @lines.setter
-    def lines(self, visit_id):
+    @list_.setter
+    def list_(self, visit_id):
         """
         Orderlines setter. Load purchase order lines for visit_id
         Args:
@@ -98,7 +100,7 @@ class OrderLine:
             line_type:
         """
         line_type = line_type.upper()
-        values = (None, visit_id, "", "", "", "", "", "", line_type, "")
+        values = (None, visit_id, "", "", "", "", "", "", line_type, "", "")
         new_id = self.insert(values)
         self.find(new_id)
 
@@ -153,7 +155,7 @@ class OrderLine:
         """
         # translate bool text to integer col 6
         field_6 = utils.bool2int(utils.arg2bool(row[6]))
-        new_row = (row[0], row[1], row[2], row[3].strip(), row[4].strip(), row[5], field_6, row[7], "S", None)
+        new_row = (row[0], row[1], row[2], row[3].strip(), row[4].strip(), row[5], field_6, row[7], "S", "", "")
         self.insert(new_row)
 
     def insert(self, values):
@@ -185,7 +187,7 @@ class OrderLine:
         if success:
             try:
                 self._lines = [dict(zip(self.model["fields"], row)) for row in data]
-                self._line = self.lines[0]
+                self._line = self.list_[0]
                 return True
             except (IndexError, KeyError):
                 self._line = {}

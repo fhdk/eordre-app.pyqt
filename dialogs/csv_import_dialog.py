@@ -146,7 +146,11 @@ class CsvFileImportDialog(QDialog, Ui_csvFileImportDialog, QObject):
                 try:
                     thread.started.connect(
                         worker.import_reports_csv(
+<<<<<<< HEAD
                             self._employees.item_["employee_id"], self._reports, self.selectedFile, header=headers))
+=======
+                            self._employees.employee["employee_id"], self._reports, self.selectedFile, header=headers))
+>>>>>>> version-0.4.1
                     thread.start()
                 except TypeError:
                     pass

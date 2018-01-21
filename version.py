@@ -4,4 +4,4 @@
 # Copyright: Frede Hundewadt <echo "ZmhAdWV4LmRrCg==" | base64 -d>
 # License: GNU AGPL, version 3 or later; http://www.gnu.org/licenses/agpl.html
 
-__version__ = "0.3.1"
+__version__ = "0.4.1"
