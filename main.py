@@ -90,6 +90,7 @@ class MainWindow(QMainWindow, Ui_mainWindow):
         self.buttonGetCustomers.clicked.connect(self.get_customers)
         self.buttonGetPricelist.clicked.connect(self.get_pricelist)
 
+        self.toolButtonArchiveSettings.clicked.connect(self.archive_settings)
         self.toolButtonCustomer.clicked.connect(self.show_page_customer)
         self.toolButtonCustomers.clicked.connect(self.show_page_customers)
         self.toolButtonCustomerVisits.clicked.connect(self.show_page_customer_visits)
@@ -155,98 +156,6 @@ class MainWindow(QMainWindow, Ui_mainWindow):
         self.textCustomerServerDate.setText(self._settings.setting["sac"])
         self.textPricelistLocalDate.setText(self._settings.setting["lsp"])
         self.textPricelistServerDate.setText(self._settings.setting["sap"])
-
-    def load_items(self):
-        """Load ITEMS into product combo"""
-        for item in self._products.list_:
-            self.cboProduct.addItem(item["item"], item["sku"])
-
-    def load_sku(self):
-        """Load SKU into sku combo"""
-        for item in self._products.list_:
-            self.cboProduct.addItem(item["sku"], item["name1"])
-
-    def populate_contact_list(self):
-        """
-        Populate the contactlist based on currently selected customer
-        """
-        # load contacts
-        self.widgetCustomerContacts.clear()
-        items = []
-        try:
-            self._contacts.list_ = self._customers.customer["customer_id"]
-            for c in self._contacts.list_:
-                item = QTreeWidgetItem([c["name"],
-                                        c["department"],
-                                        c["phone"],
-                                        c["email"]])
-                items.append(item)
-        except IndexError:
-            pass
-        except KeyError:
-            pass
-
-        self.widgetCustomerContacts.addTopLevelItems(items)
-
-    def populate_customer_list(self):
-        """
-        Populate customer list
-        """
-
-        self.widgetAppCustomers.clear()  # shake the tree for leaves
-        self.widgetAppCustomers.setColumnCount(6)  # set columns
-        self.widgetAppCustomers.setHeaderLabels(["Konto", "Telefon", "Telefon", "Firma", "Post", "Bynavn"])
-        items = []  # temporary list
-        try:
-            for c in self._customers.list_:
-                item = QTreeWidgetItem([c["account"], c["phone1"], c["phone2"], c["company"], c["zipcode"], c["city"]])
-                items.append(item)
-        except (IndexError, KeyError):
-            pass
-        # assign Widgets to Tree
-        self.widgetAppCustomers.addTopLevelItems(items)
-        self.widgetAppCustomers.setSortingEnabled(True)  # enable sorting
-
-    def populate_price_list(self):
-        """
-        Populate the visitlist based on the active customer
-        """
-        # populate visit list table
-        self.widgetArchivedVisits.setHeaderLabels(["Id", "Dato", "Navn", "Demo", "Salg"])
-        self.widgetArchivedVisits.setColumnWidth(0, 0)
-        items = []
-        try:
-            self._archivedVisits.list_customer = self._customers.customer["customer_id"]
-            for visit in self._archivedVisits.list_customer:
-                item = QTreeWidgetItem([str(visit["visit_id"]),
-                                        visit["visit_date"],
-                                        visit["po_buyer"],
-                                        visit["prod_demo"],
-                                        visit["prod_sale"]])
-                items.append(item)
-        except IndexError:
-            pass
-        except KeyError:
-            pass
-        self.widgetArchivedVisits.addTopLevelItems(items)
-
-    def populate_settings_page(self):
-        """
-        Populate settings page
-        :return: 
-        """
-        self.textAppUserMail.setText(self._settings.setting["usermail"])
-        self.textAppUserPass.setText(self._settings.setting["userpass"])
-        self.textAppUserCountry.setText(self._settings.setting["usercountry"])
-        self.textAppDataServer.setText(self._settings.setting["http"])
-        self.textAppMailServer.setText(self._settings.setting["smtp"])
-        self.textAppMailServerPort.setText(str(self._settings.setting["port"]))
-        self.textAppMailOrderTo.setText(self._settings.setting["mailto"])
-        self.checkServerData.setChecked(utils.int2bool(self._settings.setting["sc"]))
-        self.textExtMailServer.setText(self._settings.setting["mailserver"])
-        self.textExtMailServerPort.setText(str(self._settings.setting["mailport"]))
-        self.textExtMailServerUser.setText(self._settings.setting["mailuser"])
-        self.textExtMailServerPass.setText(self._settings.setting["mailpass"])
 
     def populate_archived_visit_details(self):
         """
@@ -324,6 +233,88 @@ class MainWindow(QMainWindow, Ui_mainWindow):
             pass
         self.widgetArchivedVisits.addTopLevelItems(items)
 
+    def populate_contact_list(self):
+        """
+        Populate the contactlist based on currently selected customer
+        """
+        # load contacts
+        self.widgetCustomerContacts.clear()
+        items = []
+        try:
+            self._contacts.list_ = self._customers.customer["customer_id"]
+            for c in self._contacts.list_:
+                item = QTreeWidgetItem([c["name"],
+                                        c["department"],
+                                        c["phone"],
+                                        c["email"]])
+                items.append(item)
+        except IndexError:
+            pass
+        except KeyError:
+            pass
+
+        self.widgetCustomerContacts.addTopLevelItems(items)
+
+    def populate_customer_list(self):
+        """
+        Populate customer list
+        """
+
+        self.widgetAppCustomers.clear()  # shake the tree for leaves
+        self.widgetAppCustomers.setColumnCount(6)  # set columns
+        self.widgetAppCustomers.setHeaderLabels(["Konto", "Telefon", "Telefon", "Firma", "Post", "Bynavn"])
+        items = []  # temporary list
+        try:
+            for c in self._customers.list_:
+                item = QTreeWidgetItem([c["account"], c["phone1"], c["phone2"], c["company"], c["zipcode"], c["city"]])
+                items.append(item)
+        except (IndexError, KeyError):
+            pass
+        # assign Widgets to Tree
+        self.widgetAppCustomers.addTopLevelItems(items)
+        self.widgetAppCustomers.setSortingEnabled(True)  # enable sorting
+
+    def populate_visit_list(self):
+        """
+        Populate
+        """
+        # populate visit list table
+        self.widgetArchivedVisits.setHeaderLabels(["Id", "Dato", "Navn", "Demo", "Salg"])
+        self.widgetArchivedVisits.setColumnWidth(0, 0)
+        items = []
+        try:
+            self._archivedVisits.list_customer = self._customers.customer["customer_id"]
+            for visit in self._archivedVisits.list_customer:
+                item = QTreeWidgetItem([str(visit["visit_id"]),
+                                        visit["visit_date"],
+                                        visit["po_buyer"],
+                                        visit["prod_demo"],
+                                        visit["prod_sale"]])
+                items.append(item)
+        except IndexError:
+            pass
+        except KeyError:
+            pass
+        self.widgetArchivedVisits.addTopLevelItems(items)
+
+    def populate_settings_page(self):
+        """
+        Populate settings page
+        :return: 
+        """
+        self.textAppUserMail.setText(self._settings.setting["usermail"])
+        self.textAppUserPass.setText(self._settings.setting["userpass"])
+        self.textAppUserCountry.setText(self._settings.setting["usercountry"])
+        self.textAppDataServer.setText(self._settings.setting["http"])
+        self.textAppMailServer.setText(self._settings.setting["smtp"])
+        self.textAppMailServerPort.setText(str(self._settings.setting["port"]))
+        self.textAppMailOrderTo.setText(self._settings.setting["mailto"])
+        self.checkServerData.setChecked(utils.int2bool(self._settings.setting["sc"]))
+        self.textExtMailServer.setText(self._settings.setting["mailserver"])
+        self.textExtMailServerPort.setText(str(self._settings.setting["mailport"]))
+        self.textExtMailServerUser.setText(self._settings.setting["mailuser"])
+        self.textExtMailServerPass.setText(self._settings.setting["mailpass"])
+
     def resizeEvent(self, event):
         """
         Slot for the resize event signal
@@ -386,12 +377,12 @@ class MainWindow(QMainWindow, Ui_mainWindow):
 
     def set_input_enabled(self, arg: bool):
         """Enable inputs"""
+        self.checkVisitSas.setEnabled(arg)
+        self.comboOrderItem.setEnabled(arg)
+        self.comboOrderSku.setEnabled(arg)
         self.textVisitPcs.setEnabled(arg)
-        self.comboVisitItem.setEnabled(arg)
-        self.comboVisitSku.setEnabled(arg)
         self.textVisitLinePrice.setEnabled(arg)
         self.textVisitLineDiscount.setEnabled(arg)
-        self.checkVisitSas.setEnabled(arg)
 
     @pyqtSlot(name="app_exit")
     def app_exit(self):
@@ -475,16 +466,16 @@ class MainWindow(QMainWindow, Ui_mainWindow):
             items.append("Gruppe: Intern -> Dataserver")
             checkok = False
         # inform user about settings validity
+        msgbox = QMessageBox()
         if not checkok:
-            msgbox = QMessageBox()
-            msgbox.warning(self, "Eordre",
+            msgbox.warning(self, __appname__,
                            "Der er mangler i dine indstillinger!\n{}".format("\n".join(items)),
                            QMessageBox.Ok)
             return False
         # update password in settings
         if len(self.textAppUserPass.text()) < 97:
             self._settings.setting["userpass"] = passwdFn.hash_password(self.textAppUserPass.text())
-        if len(self.textExtMailServerPass) < 97:
+        if len(self.textExtMailServerPass.text()) < 97:
             self._settings.setting["mailpass"] = passwdFn.hash_password(self.textExtMailServerPass.text())
         self._settings.setting["usermail"] = self.textAppUserMail.text().lower()
         self._settings.setting["usercountry"] = self.textAppUserCountry.text()
@@ -498,13 +489,14 @@ class MainWindow(QMainWindow, Ui_mainWindow):
         self._settings.setting["mailuser"] = self.textExtMailServerUser.text()
         self._settings.update()
         self._employees.load(self._settings.setting["usermail"])
+        msgbox.information(self, __appname__, "Indstillinger opdateret.", QMessageBox.Ok)
 
     @pyqtSlot(name="archive_visit")
     def archive_visit(self):
         """
         Slot for saving the visit
         """
-        self.toolButtonCustomerVisit.setEnabled(False)
+        # self.toolButtonCustomerVisit.setEnabled(False)
         # save visit head contents
         self._visits.visit["po_buyer"] = self.textVisitBuyer.text()
         self._visits.visit["po_number"] = self.textVisitPoNumber.text()
@@ -633,19 +625,19 @@ class MainWindow(QMainWindow, Ui_mainWindow):
                                    QMessageBox.Ok)
                 return
 
-        if self.textVisitCustomerId.text() is not "" and \
-                self.textVisitCustomerId.text() is not self._customers.customer["customer_id"]:
+        if self.textCustId.text() is not "" and \
+                self.textCustId.text() is not self._customers.customer["customer_id"]:
             confirm = QMessageBox()
             val = confirm.question(self, __appname__,
                                    "Du har en uafsluttet sag på {}.<br/>Vil du slette den?".format(
                                        self.textVisitCompany.text()),
                                    confirm.Yes | confirm.No)
             if val == confirm.No:
-                self._customers.lookup_by_id(self.textVisitCustomerId.text())
+                self._customers.lookup_by_id(self.textCustId.text())
             else:
                 self._archivedVisits.delete(self.textVisitId.text())
 
-        self.toolButtonCustomerVisit.setEnabled(True)
+        # self.toolButtonCustomerVisit.setEnabled(True)
         self.widgetAppPages.setCurrentIndex(PAGE_VISIT)
 
         customer_pricelist = self._products
@@ -653,7 +645,8 @@ class MainWindow(QMainWindow, Ui_mainWindow):
         customerid = self._customers.customer["customer_id"]
         reportid = self._reports.report["report_id"]
         employeeid = self._employees.employee["employee_id"]
-        self.textVisitCustomerId.setText(str(customerid))
+
+        self.textCustId.setText(str(customerid))
         self.textVisitDate.setText(self.textWorkdate.text())
         self.textVisitCompany.setText(self._customers.customer["company"])
 
@@ -663,12 +656,12 @@ class MainWindow(QMainWindow, Ui_mainWindow):
             """
             self._visits.load_for_customer(customerid, workdate)
             self.textVisitId.setText(str(self._visits.visit["visit_id"]))
-            print(str(self._visits.visit["visit_id"]))
         except KeyError:
             self.textVisitId.setText(str(self._visits.add(reportid, employeeid, customerid, workdate)))
             self._visits.visit["visit_type"] = "R"
             if self._customers.customer["account"] == "NY":
                 self._visits.visit["visit_type"] = "N"
+
         visit_id = self.textVisitId.text()
         self._orderLines = OrderLine()
         self._orderLines.load_visit(visit_id)
@@ -724,38 +717,36 @@ class MainWindow(QMainWindow, Ui_mainWindow):
             c10.setText(detail["linenote"])
             self.widgetVisitOrderLines.setItem(row_number, 9, c10)
 
-        # If customer needs special settings on prices
+        # Setup pricelist and selection combos
         factor = self._customers.customer["factor"]
-        if factor > 0.0:
-            for item in customer_pricelist.list_:
+        if not factor:
+            factor = 0.0
+
+        for item in customer_pricelist.list_:
+            if factor is not 0.0:
                 item["price"] = item["price"] * factor
-                if not item["d2"] == 0.0:
-                    item["d2"] = item["d2"] * factor
-                if not item["d3"] == 0.0:
-                    item["d3"] = item["d3"] * factor
-                if not item["d4"] == 0.0:
-                    item["d4"] = item["d4"] * factor
-                if not item["d6"] == 0.0:
-                    item["d6"] = item["d6"] * factor
-                if not item["d8"] == 0.0:
-                    item["d8"] = item["d8"] * factor
-                if not item["d12"] == 0.0:
-                    item["d12"] = item["d12"] * factor
-                if not item["d24"] == 0.0:
-                    item["d24"] = item["d24"] * factor
-                if not item["d2"] == 0.0:
-                    item["d48"] = item["d48"] * factor
-                if not item["d96"] == 0.0:
-                    item["d96"] = item["d96"] * factor
-                if not item["min"] == 0.0:
-                    item["min"] = item["min"] * factor
-                if not item["net"] == 0.0:
-                    item["net"] = item["net"] * factor
+                item["d2"] = item["d2"] * factor
+                item["d3"] = item["d3"] * factor
+                item["d4"] = item["d4"] * factor
+                item["d6"] = item["d6"] * factor
+                item["d8"] = item["d8"] * factor
+                item["d12"] = item["d12"] * factor
+                item["d24"] = item["d24"] * factor
+                item["d48"] = item["d48"] * factor
+                item["d96"] = item["d96"] * factor
+                item["min"] = item["min"] * factor
+                item["net"] = item["net"] * factor
+            self.comboOrderItem.addItem(item["item"], [item["sku"], item["name1"], item])
+            self.comboOrderSku.addItem(item["sku"], [item["item"], item["name1"], item])
+
         # connect to signals
+        self.buttonArchiveVisit.clicked.connect(self.archive_visit)
+        self.comboOrderItem.currentIndexChanged.connect(self.on_order_item_changed)
+        self.comboOrderSku.currentIndexChanged.connect(self.on_order_sku_changed)
+        self.comboOrderSku.editTextChanged.connect(self.on_order_sku_changed)
+        self.comboVisitLineType.currentIndexChanged.connect(self.visit_line_type_changed)
         self.toolButtonVisitAppendLine.clicked.connect(self.visit_add_line)
         self.toolButtonVisitClearLine.clicked.connect(self.visit_clear_line)
-        self.buttonArchiveVisit.clicked.connect(self.archive_visit)
-        self.comboVisitLineType.currentIndexChanged.connect(self.visit_line_type_changed)
 
     @pyqtSlot(name="data_export")
     def data_export(self):
@@ -790,7 +781,7 @@ class MainWindow(QMainWindow, Ui_mainWindow):
                                               customers=self._customers,
                                               employees=self._employees,
                                               settings=self._settings)
-        import_customers.sig_done.connect(self.on_customers_done)
+        import_customers.sig_done.connect(self.on_get_customers_done)
         import_customers.exec_()
 
     @pyqtSlot(name="get_pricelist")
@@ -801,8 +792,40 @@ class MainWindow(QMainWindow, Ui_mainWindow):
         import_product = GetPricelistDialog(app,
                                             products=self._products,
                                             settings=self._settings)
-        import_product.sig_done.connect(self.on_products_done)
+        import_product.sig_done.connect(self.on_get_products_done)
         import_product.exec_()
+
+    @pyqtSlot(name="on_add_demo")
+    def on_add_demo(self):
+        """
+        Add line to product demo table
+        :return:
+        """
+        row_count = self.tableDemo.rowCount()
+        self.tableDemo.setRowCount(row_count + 1)
+
+    @pyqtSlot(name="on_add_sale")
+    def on_add_sale(self):
+        """
+        Add line to product sale table
+        :return:
+        """
+        row_count = self.tableSale.rowCount()
+        self.tableSale.setRowCount(row_count + 1)
+
+    @pyqtSlot(name="on_remove_demo")
+    def on_remove_demo(self):
+        """
+        Remove line from product demo table
+        :return:
+        """
+
+    @pyqtSlot(name="on_remove_sale")
+    def on_remove_sale(self):
+        """
+        Remove line from product sale table
+        :return:
+        """
 
     @pyqtSlot(QTreeWidgetItem, QTreeWidgetItem, name="on_customer_changed")
     def on_customer_changed(self, current, previous):
@@ -859,8 +882,8 @@ class MainWindow(QMainWindow, Ui_mainWindow):
         """
         self.toolButtonCustomer.click()
 
-    @pyqtSlot(name="on_customers_done")
-    def on_customers_done(self):
+    @pyqtSlot(name="on_get_customers_done")
+    def on_get_customers_done(self):
         """
         Slot for getCustomers finished signal
         """
@@ -870,8 +893,8 @@ class MainWindow(QMainWindow, Ui_mainWindow):
         self._settings.setting["lsc"] = lsc
         self._settings.update()
 
-    @pyqtSlot(name="on_products_done")
-    def on_products_done(self):
+    @pyqtSlot(name="on_get_products_done")
+    def on_get_products_done(self):
         """
         Slot for getProducts finished signal
         """
@@ -897,22 +920,32 @@ class MainWindow(QMainWindow, Ui_mainWindow):
             pass
         self.populate_archived_visit_details()
 
-    @pyqtSlot(name="on_visit_item_changed")
-    def on_visit_item_changed(self):
+    @pyqtSlot(name="on_order_item_changed")
+    def on_order_item_changed(self):
         """Update SKU combo when item changes"""
-        self.comboVisitSku.setCurrentText(
-            self.comboVisitItem.itemData(
-                self.comboVisitItem.currentIndex()))
+        self.comboOrderSku.setCurrentText(
+            self.comboOrderItem.itemData(
+                self.comboOrderItem.currentIndex())[0])
+        self.update_orderline_text(self.comboOrderItem.itemData(
+                self.comboOrderItem.currentIndex())[1])
+        utils.item_price(
+            self.comboOrderItem.itemData(
+                self.comboOrderItem.currentIndex())[3], self.textVisitPcs.text())
 
-    @pyqtSlot(name="on_visit_sku_changed")
-    def on_visit_sku_changed(self):
+    @pyqtSlot(name="on_order_sku_changed")
+    def on_order_sku_changed(self):
         """Update ITEM combo when sku changes"""
-        self.txtVisitLineText.setText(
-            self.comboVisitSku.itemData(
-                self.comboVisitSku.currentIndex()))
+        self.comboOrderItem.setCurrentText(
+            self.comboOrderSku.itemData(
+                self.comboOrderSku.currentIndex())[0])
+        self.update_orderline_text(self.comboOrderSku.itemData(
+                self.comboOrderSku.currentIndex())[1])
+        utils.item_price(
+            self.comboOrderSku.itemData(
+                self.comboOrderSku.currentIndex()[3]), self.textVisitPcs.text())
 
-        self.comboVisitItem.setCurrentText(
-            self.comboVisitItem.currentText())
+    def update_orderline_text(self, text):
+        self.textVisitLineText.setText(text)
 
     @pyqtSlot(name="show_csv_import_dialog")
     def show_csv_import_dialog(self):
@@ -929,9 +962,10 @@ class MainWindow(QMainWindow, Ui_mainWindow):
                            "<strong>Gør du ikke det giver det uløselige problemer</strong>!",
                            QMessageBox.Ok)
         # app, contact, customer, detail, employee, report, visit, tables
-        import_dialog = CsvFileImportDialog(app, contacts=self._contacts, customers=self._customers,
-                                            employees=self._employees, orderlines=self._archivedOrderlines,
-                                            reports=self._reports, tables=config.CSV_TABLES, visits=self._archivedVisits)
+        import_dialog = CsvFileImportDialog(
+            app, contacts=self._contacts, customers=self._customers,
+            employees=self._employees, orderlines=self._archivedOrderlines,
+            reports=self._reports, tables=config.CSV_TABLES, visits=self._archivedVisits)
         import_dialog.sig_done.connect(self.on_csv_import_done)
         import_dialog.exec_()
 
@@ -981,7 +1015,7 @@ class MainWindow(QMainWindow, Ui_mainWindow):
         Slot for masterData triggered signal
         """
         self.set_indexes(button="toolButtonReport")
-        self.widgetAppPages.setCurrentIndex(PAGE_REPORT)
+        self.widgetAppPags.setCurrentIndex(PAGE_REPORT)
 
     @pyqtSlot(name="show_page_reports")
     def show_page_reports(self):
