@@ -67,7 +67,7 @@ class Query:
         if orderby:
             orderby = orderby[1].upper()
             if not orderby == "ASC" or not orderby == "DESC":
-                orderby = None
+                orderby = "ASC"
 
         # build init_detail table query
         if querytype == "CREATE":
@@ -104,7 +104,7 @@ class Query:
             list with result of the query - may be an empty list
         """
         # query types: create, drop, delete, insert, select, update
-        # specifically the select and insert query has to return the result
+        # the select and insert query has to return the result
         select = sql_query.startswith("SELECT")  # returns data
         insert = sql_query.startswith("INSERT")  # returns rowid for the last inserted record
         db = sqlite3.connect(config.DBPATH)
@@ -151,9 +151,8 @@ class Query:
         Returns:
              bool indicating if table was found
         """
-        statement = "SELECT name FROM sqlite_master WHERE type='{}' AND name='{}';".format("table", table)
-
+        statement = "SELECT name FROM sqlite_master " \
+                    "WHERE type='{}' " \
+                    "AND name='{}';".format("table", table)
         success, data = self.execute(statement)
-        if data:
-            return True
-        return False
+        return bool(data)

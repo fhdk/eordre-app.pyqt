@@ -82,7 +82,7 @@
      </font>
     </property>
     <property name="currentIndex">
-     <number>8</number>
+     <number>4</number>
     </property>
     <widget class="QWidget" name="widgetPageCustomers">
      <widget class="QTreeWidget" name="widgetAppCustomers">
@@ -1122,7 +1122,7 @@
        <rect>
         <x>10</x>
         <y>10</y>
-        <width>293</width>
+        <width>320</width>
         <height>116</height>
        </rect>
       </property>
@@ -1157,7 +1157,7 @@
        <item row="1" column="2">
         <widget class="QPushButton" name="buttonGetPricelist">
          <property name="text">
-          <string>Priser</string>
+          <string>Hent Prisliste</string>
          </property>
         </widget>
        </item>
@@ -1191,7 +1191,7 @@
        <item row="1" column="3">
         <widget class="QPushButton" name="buttonGetCustomers">
          <property name="text">
-          <string>Kunder</string>
+          <string>Hent Kunder</string>
          </property>
         </widget>
        </item>
@@ -1263,7 +1263,7 @@
           <string>Her opretter du en dagsrapport datoen i feltet</string>
          </property>
          <property name="text">
-          <string>Opret dagsrapport</string>
+          <string>Sæt Arbejdsdato</string>
          </property>
         </widget>
        </item>
@@ -1289,7 +1289,7 @@
           <set>Qt::AlignCenter</set>
          </property>
          <property name="readOnly">
-          <bool>false</bool>
+          <bool>true</bool>
          </property>
          <property name="placeholderText">
           <string>arbejdsdato</string>
@@ -2647,7 +2647,7 @@ QToolButton:hover:checked {
      <property name="geometry">
       <rect>
        <x>10</x>
-       <y>10</y>
+       <y>0</y>
        <width>70</width>
        <height>70</height>
       </rect>

@@ -135,7 +135,7 @@ class MainWindow(QMainWindow, Ui_mainWindow):
             except KeyError:
                 pass
 
-        self.toolButtonCustomers.click()
+        self.toolButtonReport.click()
 
     def closeEvent(self, event):
         """
@@ -274,32 +274,6 @@ class MainWindow(QMainWindow, Ui_mainWindow):
         # assign Widgets to Tree
         self.widgetAppCustomers.addTopLevelItems(items)
         self.widgetAppCustomers.setSortingEnabled(True)  # enable sorting
-
-    # def populate_visit_list(self):
-    #     """
-    #     Populate
-    #     """
-    #     # populate visit list table
-    #     self.widgetArchivedVisits.setHeaderLabels(["Id", "Dato", "Navn", "Demo", "Salg"])
-    #     self.widgetArchivedVisits.setColumnWidth(0, 0)
-    #     items = []
-    #     try:
-    #         self._archivedVisits.list_customer = self._customers.customer["customer_id"]
-    #         for visit in self._archivedVisits.list_customer:
-    #             item = QTreeWidgetItem([str(visit["visit_id"]),
-    #                                     visit["visit_date"],
-    #                                     visit["po_buyer"],
-    #                                     visit["prod_demo"],
-    #                                     visit["prod_sale"]])
-    #             items.append(item)
-    #             if visit["visit_date"] == self.textWorkdate.text():
-    #                 self.load_visit()
-    #
-    #     except IndexError:
-    #         pass
-    #     except KeyError:
-    #         pass
-    #     self.widgetArchivedVisits.addTopLevelItems(items)
 
     def populate_settings_page(self):
         """
@@ -658,7 +632,7 @@ class MainWindow(QMainWindow, Ui_mainWindow):
             """
             load visits for workdate
             """
-            self._visits.load_for_customer(customerid, workdate)
+            self._visits.get_by_customer(customerid, workdate)
             self.textVisitId.setText(str(self._visits.visit["visit_id"]))
         except KeyError:
             self.textVisitId.setText(str(self._visits.add(reportid, employeeid, customerid, workdate)))
@@ -846,10 +820,9 @@ class MainWindow(QMainWindow, Ui_mainWindow):
             # account = current.text(0)
             phone = current.text(1)
             company = current.text(3)
-            # move current customer
             # load customer
             self._customers.lookup(phone, company)
-            # fields to line edits
+            # fill out fields
             self.textAccount.setText(self._customers.customer["account"])
             self.textCompany.setText(self._customers.customer["company"])
             self.textAddress1.setText(self._customers.customer["address1"])

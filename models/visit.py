@@ -130,7 +130,7 @@ class Visit:
         values = (None, report_id, employee_id, customer_id, workdate, 0,
                   "", "", "", "", "", "", "", "", "", "", "", "", 0.0, 0.0, 0.0, 0, "")
         new_id = self.insert(values)
-        self.find(new_id)
+        self.get(new_id)
         return new_id
 
     def delete(self, visit_id):
