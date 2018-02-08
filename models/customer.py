@@ -72,7 +72,7 @@ class Customer:
         try:
             _ = self._customers[0]
         except IndexError:
-            self._load()
+            self.load()
         return self._customers
 
     def clear_(self):
@@ -101,7 +101,7 @@ class Customer:
         else:
             values = [None, "NY", company, "", "", "", "", country, salesrep,
                       phone, "", "", 0, 0, createdate, "", "", "", 0.0]
-            new_id = self._insert(values)
+            new_id = self.insert(values)
             self.lookup_by_id(new_id)
         return True
 
@@ -198,7 +198,7 @@ class Customer:
                    row[6].strip(), row[7].strip(), row[8].strip(), row[9].strip(), row[10].strip(),
                    row[12].strip(), field_15, row[16], row[17],
                    row[19].strip(), "", "", 0.0, 0, 0, 0, 0)
-        self._insert(new_row)
+        self.insert(new_row)
 
     def import_http(self, values):
         """
@@ -213,7 +213,7 @@ class Customer:
         # eg '2200  København K' or '4430 Kirke Hyllinge'
         # get the first occurence of space
         # and insert '|' and use it to split zip and city
-        loc = values[4].get(" ")
+        loc = values[4].find(" ")
         zipcity = values[4][:loc] + "|" + values[4][loc:]
         zipcity = zipcity.split("|")
         zipcode = zipcity[0].strip()
@@ -244,9 +244,9 @@ class Customer:
             row_values = (None, account, company, values[2], values[3].strip(), zipcode, city,
                           values[5].strip(), values[6].strip(), phone, values[8].strip(),
                           values[9].strip(), 0, 0, 0, "", values[10].strip(), values[11].strip(), 0.0, 0, 0, 0, 0)
-            self._insert(row_values)
+            self.insert(row_values)
 
-    def _insert(self, values):
+    def insert(self, values):
         """
         Insert a new current
         Args:
@@ -260,7 +260,7 @@ class Customer:
             return data
         return False
 
-    def _load(self):
+    def load(self):
         """
         Load customers
         Returns:
