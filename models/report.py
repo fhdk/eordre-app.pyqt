@@ -200,7 +200,7 @@ class Report:
             return data
         return False
 
-    def import_csv(self, row, employee_id):
+    def translate_row_insert(self, row, employee_id):
         """
         Translate a csv row
         Args:
