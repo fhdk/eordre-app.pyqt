@@ -75,7 +75,7 @@ class Report:
         """
         try:
             _ = self._reports[0]
-        except (IndexError,):
+        except (IndexError, KeyError):
             self.__get_by_period()
         return self._reports
 
@@ -256,14 +256,14 @@ class Report:
         if workdate:
             try:
                 _ = self._reports[0]
-                for r in self._reports:
-                    if r["workdate"] == workdate:
-                        self._report = r
+                for report in self._reports:
+                    if report["workdate"] == workdate:
+                        self._report = report
                         return
             except IndexError:
                 pass
 
-        filters = ["rep_date", "like"]
+        filters = [("rep_date", "like")]
         value = "{}-{}-{}".format("%", "%", "%")
         if year:
             value = "{}-{}-{}".format(year, "%", "%")
@@ -272,20 +272,18 @@ class Report:
 
         values = (value,)
         sql = self.q.build("select", self.model, filters=filters)
-
         success, data = self.q.execute(sql, values=values)
-
         if success and data:
             try:
                 _ = data[0]
                 self._reports = [dict(zip(self.model["fields"], row)) for row in data]
-                sorted(self._reports, key=itemgetter("workdate"), reverse=True)
+                self._reports = sorted(self._reports, key=itemgetter("rep_date"), reverse=True)
                 if workdate:
-                    for r in self._reports:
-                        if r["workdate"] == workdate:
-                            self._report = r
+                    for report in self._reports:
+                        if report["rep_date"] == workdate:
+                            self._report = report
                             break
-                else:
+                if not self._report:
                     self._report = self._reports[0]
             except IndexError:
                 self._report = {}
