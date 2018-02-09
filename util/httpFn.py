@@ -19,20 +19,6 @@ from . import sanitizeDataFn
 
 USER_AGENT = "Eordre NG version {}".format(version.__version__)
 
-BC = "\033[1;36m"
-EC = "\033[0;1m"
-DBG = True
-
-
-def printit(string):
-    """
-    Print variable string when debugging
-    Args:
-        string: the string to be printed
-    """
-    if DBG:
-        print("{}\n{}{}{}".format("utils.httpFn.py", BC, string, EC))
-
 
 def get_customers(settings, employee, maxwait=2):
     """
@@ -58,7 +44,6 @@ def get_customers(settings, employee, maxwait=2):
     context = ssl.SSLContext(ssl.PROTOCOL_SSLv23)
     data = []
     uri = "{}/{}/{}".format(active_settings["http"], active_settings["usercountry"], req_file)
-    printit(" -" + uri)
     request = Request(uri)
     request.add_header("User-Agent", USER_AGENT)
     try:
@@ -69,8 +54,8 @@ def get_customers(settings, employee, maxwait=2):
                 data = sanitizeDataFn.sanitize_customer_data(data, active_employee["salesrep"])
             except KeyError:
                 return data
-    except (HTTPException, timeout, URLError) as active_employee:
-        print("HTTP ERROR: {}".format(active_employee))
+    except (HTTPException, timeout, URLError) as e:
+        pass
 
     return data
 
@@ -98,7 +83,7 @@ def get_employee_data(settings, maxwait=2):
             data = sanitizeDataFn.sanitize_employee_data(data, s["usermail"], s["userpass"])
 
     except (HTTPException, timeout, URLError) as e:
-        print("HTTP ERROR: {}".format(e))
+        pass
     return data
 
 
@@ -124,7 +109,7 @@ def get_modified_date(server, country, file, maxwait=2):
             data = response.read().decode(config.HTTP_ENCODING)
             return data
     except (HTTPException, timeout, URLError) as e:
-        print("HTTP ERROR: {}".format(e))
+        pass
     return ""
 
 
@@ -151,7 +136,7 @@ def get_products(settings, maxwait=2):
             data = response.read()
             data = sanitizeDataFn.sanitize_product_data(data)
     except (HTTPException, timeout, URLError) as e:
-        print("HTTP ERROR: {}".format(e))
+        pass
     return data
 
 
