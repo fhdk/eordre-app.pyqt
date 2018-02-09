@@ -65,7 +65,7 @@ class Customer:
         return self._csv_record_length
 
     @property
-    def list_(self):
+    def customers(self):
         """
         Load customers into primary list
         """
