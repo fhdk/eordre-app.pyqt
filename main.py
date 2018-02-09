@@ -107,8 +107,8 @@ class MainWindow(QMainWindow, Ui_mainWindow):
         self.toolButtonImportCsvData.clicked.connect(self.show_csv_import_dialog)
         self.toolButtonImportDatabase.clicked.connect(self.data_import)
 
-        self.widgetAppCustomers.currentItemChanged.connect(self.on_customer_changed)
-        self.widgetAppCustomers.itemDoubleClicked.connect(self.on_customer_double_clicked)
+        self.widgetCustomers.currentItemChanged.connect(self.on_customer_changed)
+        self.widgetCustomers.itemDoubleClicked.connect(self.on_customer_double_clicked)
 
         self.widgetArchivedVisits.currentItemChanged.connect(self.on_visit_changed)
         self.widgetArchivedVisits.setColumnHidden(0, True)
@@ -120,20 +120,56 @@ class MainWindow(QMainWindow, Ui_mainWindow):
         self.widgetArchivedOrderLines.setColumnWidth(4, 60)
         self.widgetArchivedOrderLines.setColumnWidth(5, 40)
 
-        self._reports.load_report(self.textWorkdate.text())
+        self.widgetCustomers.setColumnWidth(0, 100)
+        self.widgetCustomers.setColumnWidth(1, 100)
+        self.widgetCustomers.setColumnWidth(2, 100)
+        self.widgetCustomers.setColumnWidth(3, 250)
+        self.widgetCustomers.setColumnWidth(4, 60)
+
+        self.widgetPricelist.setColumnWidth(0, 70)
+        self.widgetPricelist.setColumnWidth(1, 100)
+        self.widgetPricelist.setColumnWidth(2, 150)
+        self.widgetPricelist.setColumnWidth(3, 50)
+        self.widgetPricelist.setColumnWidth(4, 50)
+        self.widgetPricelist.setColumnWidth(5, 50)
+        self.widgetPricelist.setColumnWidth(6, 50)
+        self.widgetPricelist.setColumnWidth(7, 50)
+        self.widgetPricelist.setColumnWidth(8, 50)
+        self.widgetPricelist.setColumnWidth(9, 50)
+        self.widgetPricelist.setColumnWidth(10, 50)
+        self.widgetPricelist.setColumnWidth(11, 50)
+        self.widgetPricelist.setColumnWidth(12, 50)
+
+        self.widgetReports.setColumnWidth(0, 50)
+        self.widgetReports.setColumnWidth(1, 50)
+        self.widgetReports.setColumnWidth(2, 50)
+        self.widgetReports.setColumnWidth(3, 50)
+        self.widgetReports.setColumnWidth(4, 50)
+        self.widgetReports.setColumnWidth(5, 50)
+        self.widgetReports.setColumnWidth(6, 50)
+
+        self.widgetReportVisits.setColumnWidth(0, 150)
+        self.widgetReportVisits.setColumnWidth(1, 100)
+        self.widgetReportVisits.setColumnWidth(2, 100)
+        self.widgetReportVisits.setColumnWidth(3, 60)
 
         self.populate_customer_list()
+        self.populate_price_list()
+        self.populate_report_list()
 
         if self._customers.lookup_by_id(self._settings.setting["cust_idx"]):
             try:
                 phone = self._customers.customer["phone1"]
-                self.widgetAppCustomers.setCurrentIndex(
-                    self.widgetAppCustomers.indexFromItem(
-                        self.widgetAppCustomers.findItems(phone, Qt.MatchExactly, column=1)[0]))
+                self.widgetCustomers.setCurrentIndex(
+                    self.widgetCustomers.indexFromItem(
+                        self.widgetCustomers.findItems(phone, Qt.MatchExactly, column=1)[0]))
                 self.toolButtonCustomer.click()
                 return
             except KeyError:
                 pass
+
+        self._reports.__get_by_date(self.textWorkdate.text())
+        self.populate_report_visit_list()
 
         self.toolButtonReport.click()
 
@@ -211,13 +247,12 @@ class MainWindow(QMainWindow, Ui_mainWindow):
         Populate the visitlist based on the active customer
         """
         self.widgetArchivedVisits.clear()
-        self.widgetArchivedVisits.setHeaderLabels(["Id", "Dato", "Navn", "Demo", "Salg", "Ordre note"])
-        self.widgetArchivedVisits.setColumnWidth(0, 0)
+
         items = []
         try:
-            self._archivedVisits.list_customer = self._customers.customer["customer_id"]
+            self._archivedVisits.list_by_customer(self._customers.customer["customer_id"])
 
-            for visit in self._archivedVisits.list_customer:
+            for visit in self._archivedVisits.visits:
                 item = QTreeWidgetItem([str(visit["visit_id"]),
                                         visit["visit_date"],
                                         visit["po_buyer"],
@@ -261,19 +296,82 @@ class MainWindow(QMainWindow, Ui_mainWindow):
         Populate customer list
         """
 
-        self.widgetAppCustomers.clear()  # shake the tree for leaves
-        self.widgetAppCustomers.setColumnCount(6)  # set columns
-        self.widgetAppCustomers.setHeaderLabels(["Konto", "Telefon", "Telefon", "Firma", "Post", "Bynavn"])
+        self.widgetCustomers.clear()  # shake the tree for leaves
         items = []  # temporary list
         try:
-            for c in self._customers.list_:
+            for c in self._customers.customers:
                 item = QTreeWidgetItem([c["account"], c["phone1"], c["phone2"], c["company"], c["zipcode"], c["city"]])
                 items.append(item)
         except (IndexError, KeyError):
             pass
         # assign Widgets to Tree
-        self.widgetAppCustomers.addTopLevelItems(items)
-        self.widgetAppCustomers.setSortingEnabled(True)  # enable sorting
+        self.widgetCustomers.addTopLevelItems(items)
+        self.widgetCustomers.setSortingEnabled(True)  # enable sorting
+
+    def populate_price_list(self):
+        """
+        Populate widgetPricelist
+        """
+        self.widgetPricelist.clear()
+        pricelist = []
+        try:
+            for product in self._products.products:
+                item = QTreeWidgetItem([product["item"],
+                                        product["sku"],
+                                        product["name1"],
+                                        str(product["price"]).format("#.##"),
+                                        str(product["d2"]).format("#.##"),
+                                        str(product["d4"]).format("#.##"),
+                                        str(product["d6"]).format("#.##"),
+                                        str(product["d8"]).format("#.##"),
+                                        str(product["d12"]).format("#.##"),
+                                        str(product["d24"]).format("#.##"),
+                                        str(product["d48"]).format("#.##"),
+                                        str(product["d96"]).format("#.##"),
+                                        str(product["net"]).format("#.##")])
+                pricelist.append(item)
+        except IndexError as i:
+            print("IndexError: {}".format(i))
+        except KeyError as k:
+            print("KeyError: {}".format(k))
+        self.widgetPricelist.addTopLevelItems(pricelist)
+        self.widgetPricelist.setSortingEnabled(True)
+
+    def populate_report_list(self):
+        """
+        Populate widgetReports
+        """
+        self.widgetReports.clear()
+        reports = []
+        try:
+            for report in self._reports.reports:
+                item = QTreeWidgetItem([report["rep_date"]])
+                reports.append(item)
+
+        except IndexError as i:
+            print("IndexError: {}]".format(i))
+        except KeyError as k:
+            print("KeyErrorError: {}]".format(k))
+        self.widgetReports.addTopLevelItems(reports)
+
+    def populate_report_visit_list(self):
+        """
+        Populate widgetReportVisits
+        """
+        self.widgetReportVisits.clear()
+        items = []
+        try:
+            self._visits.list_by_date(self.textWorkdate.text())
+            for v in self._visits.visits:
+                c = self._customers.lookup_by_id(v["customer_id"])
+                item = QTreeWidgetItem([c["company"],
+                                        v["prod_demo"],
+                                        v["prod_sale"],
+                                        v["po_total"]])
+                items.append(item)
+        except (IndexError, KeyError):
+            pass
+        self.widgetReportVisits.addTopLevelItems(items)
 
     def populate_settings_page(self):
         """
@@ -410,7 +508,7 @@ class MainWindow(QMainWindow, Ui_mainWindow):
         self._customers.customer["phone2"] = self.textPhone2.text()
         self._customers.customer["email"] = self.textEmail.text()
         self._customers.customer["factor"] = self.textFactor.text()
-        self._customers.customer["infotext"] = self.textCustomerInfoText.toPlainText()
+        self._customers.customer["infotext"] = self.textArchivedVisitNote.toPlainText()
         self._customers.customer["modified"] = 1
         self._customers.update()
 
@@ -537,7 +635,7 @@ class MainWindow(QMainWindow, Ui_mainWindow):
             repdate = self._reports.report["rep_date"]
             if not repdate == self.textWorkdate.text():
                 # if active report is not the same replace it with workdate
-                self._reports.load_report(self.textWorkdate.text())
+                self._reports.__get_by_date(self.textWorkdate.text())
                 # trigger a KeyError if no report is current which launches the CreateReportDialog
                 repdate = self._reports.report["rep_date"]
                 # check if the report is sent
@@ -558,7 +656,7 @@ class MainWindow(QMainWindow, Ui_mainWindow):
                 # user chosed to create a report
                 self.textWorkdate.setText(create_report_dialog.workdate)
                 # try load a report for that date
-                self._reports.load_report(self.textWorkdate.text())
+                self._reports.__get_by_date(self.textWorkdate.text())
                 try:
                     # did the user choose an existing report
                     _ = self._reports.report["rep_date"]
@@ -591,7 +689,7 @@ class MainWindow(QMainWindow, Ui_mainWindow):
             active_report = self.create_report()
 
         if active_report:
-            self._reports.load_report(self.textWorkdate.text())
+            self._reports.__get_by_date(self.textWorkdate.text())
             try:
                 # do we have a customer
                 _ = self._customers.customer["company"]
@@ -632,7 +730,7 @@ class MainWindow(QMainWindow, Ui_mainWindow):
             """
             load visits for workdate
             """
-            self._visits.get_by_customer(customerid, workdate)
+            self._visits.__get_by_customer(customerid, workdate)
             self.textVisitId.setText(str(self._visits.visit["visit_id"]))
         except KeyError:
             self.textVisitId.setText(str(self._visits.add(reportid, employeeid, customerid, workdate)))
@@ -700,7 +798,7 @@ class MainWindow(QMainWindow, Ui_mainWindow):
         if not factor:
             factor = 0.0
 
-        for item in customer_pricelist.list_:
+        for item in customer_pricelist.products:
             if factor is not 0.0:
                 item["price"] = item["price"] * factor
                 item["d2"] = item["d2"] * factor
@@ -833,7 +931,7 @@ class MainWindow(QMainWindow, Ui_mainWindow):
             self.textPhone2.setText(self._customers.customer["phone2"])
             self.textEmail.setText(self._customers.customer["email"])
             self.textFactor.setText(str(self._customers.customer["factor"]))
-            self.textCustomerInfoText.setText(self._customers.customer["infotext"])
+            self.textCustomerNotes.setText(self._customers.customer["infotext"])
         except AttributeError:
             pass
         except KeyError:
@@ -875,7 +973,7 @@ class MainWindow(QMainWindow, Ui_mainWindow):
         """
         Slot for getProducts finished signal
         """
-        self._products.all()
+        _ = self._products.products
         lsp = datetime.date.today().isoformat()
         self.textPricelistLocalDate.setText(lsp)
         self._settings.setting["lsp"] = lsp
@@ -890,7 +988,7 @@ class MainWindow(QMainWindow, Ui_mainWindow):
             previous:
         """
         try:
-            self._archivedVisits.find(current.text(0))
+            self._archivedVisits.load_visit(current.text(0))
         except AttributeError:
             pass
         except KeyError:
@@ -929,7 +1027,7 @@ class MainWindow(QMainWindow, Ui_mainWindow):
         """
         Slot for fileImport triggered signal
         """
-        if self._customers.list_:
+        if self._customers.customers:
             msgbox = QMessageBox()
             msgbox.warning(self,
                            __appname__,
