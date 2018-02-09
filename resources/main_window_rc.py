@@ -1077,7 +1077,7 @@ class Ui_mainWindow(object):
         mainWindow.setCentralWidget(self.centralwidget)
 
         self.retranslateUi(mainWindow)
-        self.widgetAppPages.setCurrentIndex(4)
+        self.widgetAppPages.setCurrentIndex(5)
         QtCore.QMetaObject.connectSlotsByName(mainWindow)
 
     def retranslateUi(self, mainWindow):
