@@ -82,16 +82,16 @@
      </font>
     </property>
     <property name="currentIndex">
-     <number>4</number>
+     <number>5</number>
     </property>
     <widget class="QWidget" name="widgetPageCustomers">
-     <widget class="QTreeWidget" name="widgetAppCustomers">
+     <widget class="QTreeWidget" name="widgetCustomers">
       <property name="geometry">
        <rect>
-        <x>10</x>
-        <y>10</y>
-        <width>780</width>
-        <height>360</height>
+        <x>0</x>
+        <y>30</y>
+        <width>800</width>
+        <height>480</height>
        </rect>
       </property>
       <property name="maximumSize">
@@ -101,7 +101,7 @@
        </size>
       </property>
       <property name="sizeAdjustPolicy">
-       <enum>QAbstractScrollArea::AdjustToContents</enum>
+       <enum>QAbstractScrollArea::AdjustIgnored</enum>
       </property>
       <property name="editTriggers">
        <set>QAbstractItemView::NoEditTriggers</set>
@@ -110,7 +110,7 @@
        <bool>true</bool>
       </property>
       <property name="indentation">
-       <number>20</number>
+       <number>0</number>
       </property>
       <property name="rootIsDecorated">
        <bool>false</bool>
@@ -122,11 +122,16 @@
        <bool>false</bool>
       </property>
       <property name="columnCount">
-       <number>6</number>
+       <number>7</number>
       </property>
       <attribute name="headerDefaultSectionSize">
        <number>80</number>
       </attribute>
+      <column>
+       <property name="text">
+        <string>ID</string>
+       </property>
+      </column>
       <column>
        <property name="text">
         <string>Konto</string>
@@ -161,10 +166,10 @@
      <widget class="QWidget" name="layoutWidget_4">
       <property name="geometry">
        <rect>
-        <x>220</x>
-        <y>380</y>
-        <width>271</width>
-        <height>86</height>
+        <x>0</x>
+        <y>0</y>
+        <width>800</width>
+        <height>30</height>
        </rect>
       </property>
       <layout class="QGridLayout" name="widgetAppCreateCustomer">
@@ -186,7 +191,7 @@
          </property>
         </widget>
        </item>
-       <item row="1" column="0">
+       <item row="0" column="1">
         <widget class="QLineEdit" name="textCustomerPhone1">
          <property name="font">
           <font>
@@ -205,7 +210,7 @@
          </property>
         </widget>
        </item>
-       <item row="2" column="0">
+       <item row="0" column="2">
         <widget class="QPushButton" name="buttonCreateCustomer">
          <property name="font">
           <font>
@@ -451,6 +456,9 @@
       <property name="sizeAdjustPolicy">
        <enum>QAbstractScrollArea::AdjustToContents</enum>
       </property>
+      <property name="alternatingRowColors">
+       <bool>true</bool>
+      </property>
       <property name="indentation">
        <number>0</number>
       </property>
@@ -569,6 +577,9 @@
         <width>530</width>
         <height>170</height>
        </rect>
+      </property>
+      <property name="alternatingRowColors">
+       <bool>true</bool>
       </property>
       <column>
        <property name="text">
@@ -955,10 +966,10 @@
      <widget class="QTreeWidget" name="widgetPricelist">
       <property name="geometry">
        <rect>
-        <x>10</x>
-        <y>10</y>
-        <width>780</width>
-        <height>330</height>
+        <x>0</x>
+        <y>0</y>
+        <width>800</width>
+        <height>510</height>
        </rect>
       </property>
       <property name="maximumSize">
@@ -966,6 +977,33 @@
         <width>1000000</width>
         <height>1000000</height>
        </size>
+      </property>
+      <property name="sizeAdjustPolicy">
+       <enum>QAbstractScrollArea::AdjustIgnored</enum>
+      </property>
+      <property name="editTriggers">
+       <set>QAbstractItemView::NoEditTriggers</set>
+      </property>
+      <property name="alternatingRowColors">
+       <bool>true</bool>
+      </property>
+      <property name="textElideMode">
+       <enum>Qt::ElideNone</enum>
+      </property>
+      <property name="indentation">
+       <number>0</number>
+      </property>
+      <property name="uniformRowHeights">
+       <bool>true</bool>
+      </property>
+      <property name="itemsExpandable">
+       <bool>false</bool>
+      </property>
+      <property name="sortingEnabled">
+       <bool>true</bool>
+      </property>
+      <property name="expandsOnDoubleClick">
+       <bool>false</bool>
       </property>
       <column>
        <property name="text">
@@ -986,50 +1024,80 @@
        <property name="text">
         <string>1 stk</string>
        </property>
+       <property name="textAlignment">
+        <set>AlignTrailing|AlignVCenter</set>
+       </property>
       </column>
       <column>
        <property name="text">
         <string>2 stk</string>
+       </property>
+       <property name="textAlignment">
+        <set>AlignTrailing|AlignVCenter</set>
        </property>
       </column>
       <column>
        <property name="text">
         <string>4 stk</string>
        </property>
+       <property name="textAlignment">
+        <set>AlignTrailing|AlignVCenter</set>
+       </property>
       </column>
       <column>
        <property name="text">
         <string>6 stk</string>
+       </property>
+       <property name="textAlignment">
+        <set>AlignTrailing|AlignVCenter</set>
        </property>
       </column>
       <column>
        <property name="text">
         <string>8 stk</string>
        </property>
+       <property name="textAlignment">
+        <set>AlignTrailing|AlignVCenter</set>
+       </property>
       </column>
       <column>
        <property name="text">
         <string>12 stk</string>
+       </property>
+       <property name="textAlignment">
+        <set>AlignTrailing|AlignVCenter</set>
        </property>
       </column>
       <column>
        <property name="text">
         <string>24 stk</string>
        </property>
+       <property name="textAlignment">
+        <set>AlignTrailing|AlignVCenter</set>
+       </property>
       </column>
       <column>
        <property name="text">
         <string>48 stk</string>
+       </property>
+       <property name="textAlignment">
+        <set>AlignTrailing|AlignVCenter</set>
        </property>
       </column>
       <column>
        <property name="text">
         <string>96 stk</string>
        </property>
+       <property name="textAlignment">
+        <set>AlignTrailing|AlignVCenter</set>
+       </property>
       </column>
       <column>
        <property name="text">
         <string>Netto</string>
+       </property>
+       <property name="textAlignment">
+        <set>AlignTrailing|AlignVCenter</set>
        </property>
       </column>
       <item>
@@ -1120,14 +1188,14 @@
      <widget class="QWidget" name="layoutWidget_2">
       <property name="geometry">
        <rect>
-        <x>10</x>
-        <y>10</y>
-        <width>320</width>
-        <height>116</height>
+        <x>0</x>
+        <y>0</y>
+        <width>800</width>
+        <height>130</height>
        </rect>
       </property>
       <layout class="QGridLayout" name="widgetAppLastUpdate">
-       <item row="2" column="2">
+       <item row="3" column="2">
         <widget class="QLineEdit" name="textPricelistLocalDate">
          <property name="enabled">
           <bool>true</bool>
@@ -1157,11 +1225,11 @@
        <item row="1" column="2">
         <widget class="QPushButton" name="buttonGetPricelist">
          <property name="text">
-          <string>Hent Prisliste</string>
+          <string>Opdater prisliste</string>
          </property>
         </widget>
        </item>
-       <item row="3" column="2">
+       <item row="5" column="2">
         <widget class="QLineEdit" name="textPricelistServerDate">
          <property name="enabled">
           <bool>true</bool>
@@ -1191,11 +1259,11 @@
        <item row="1" column="3">
         <widget class="QPushButton" name="buttonGetCustomers">
          <property name="text">
-          <string>Hent Kunder</string>
+          <string>Opdater kundeliste</string>
          </property>
         </widget>
        </item>
-       <item row="2" column="3">
+       <item row="3" column="3">
         <widget class="QLineEdit" name="textCustomerLocalDate">
          <property name="enabled">
           <bool>true</bool>
@@ -1222,7 +1290,7 @@
          </property>
         </widget>
        </item>
-       <item row="3" column="3">
+       <item row="5" column="3">
         <widget class="QLineEdit" name="textCustomerServerDate">
          <property name="enabled">
           <bool>true</bool>
@@ -1267,7 +1335,7 @@
          </property>
         </widget>
        </item>
-       <item row="2" column="4">
+       <item row="3" column="4">
         <widget class="QLineEdit" name="textWorkdate">
          <property name="enabled">
           <bool>true</bool>
@@ -1296,84 +1364,77 @@
          </property>
         </widget>
        </item>
+       <item row="2" column="2">
+        <widget class="QLabel" name="labelLastUpdated">
+         <property name="text">
+          <string>Sidst opdateret</string>
+         </property>
+        </widget>
+       </item>
+       <item row="4" column="2">
+        <widget class="QLabel" name="labelAvailable">
+         <property name="text">
+          <string>Server liste dato</string>
+         </property>
+        </widget>
+       </item>
       </layout>
      </widget>
-     <widget class="QTreeWidget" name="treeWidget_2">
+     <widget class="QTreeWidget" name="widgetReportVisits">
       <property name="geometry">
        <rect>
-        <x>340</x>
-        <y>10</y>
-        <width>451</width>
-        <height>491</height>
+        <x>20</x>
+        <y>150</y>
+        <width>750</width>
+        <height>340</height>
        </rect>
+      </property>
+      <property name="alternatingRowColors">
+       <bool>true</bool>
       </property>
       <column>
        <property name="text">
-        <string>Dagens besøg</string>
+        <string>Firma</string>
        </property>
       </column>
-      <item>
+      <column>
        <property name="text">
-        <string>AUDI Specialisten Aps</string>
+        <string>Demo</string>
        </property>
-       <item>
-        <property name="text">
-         <string>Mixer Nozzle</string>
-        </property>
-       </item>
-       <item>
-        <property name="text">
-         <string>SP 200</string>
-        </property>
-       </item>
-       <item>
-        <property name="text">
-         <string>MS 1000</string>
-        </property>
-       </item>
-       <item>
-        <property name="text">
-         <string>Multi Clean</string>
-        </property>
-       </item>
-       <item>
-        <property name="text">
-         <string>Zinc Coat</string>
-        </property>
-       </item>
-       <item>
-        <property name="text">
-         <string>Multiflex Co. Plus 1L Sort</string>
-        </property>
-       </item>
-       <item>
-        <property name="text">
-         <string>Top Fix Sort</string>
-        </property>
-       </item>
-       <item>
-        <property name="text">
-         <string>Linen Tape</string>
-        </property>
-       </item>
-       <item>
-        <property name="text">
-         <string>1.L.KLAR Hi-Temp Wax PRO</string>
-        </property>
-       </item>
-      </item>
+      </column>
+      <column>
+       <property name="text">
+        <string>Salg</string>
+       </property>
+      </column>
+      <column>
+       <property name="text">
+        <string>Total</string>
+       </property>
+      </column>
      </widget>
     </widget>
     <widget class="QWidget" name="widgetPageReports">
-     <widget class="QTreeWidget" name="treeWidget">
+     <widget class="QTreeWidget" name="widgetReports">
       <property name="geometry">
        <rect>
-        <x>10</x>
-        <y>10</y>
-        <width>780</width>
-        <height>430</height>
+        <x>0</x>
+        <y>0</y>
+        <width>800</width>
+        <height>510</height>
        </rect>
       </property>
+      <property name="alternatingRowColors">
+       <bool>true</bool>
+      </property>
+      <property name="indentation">
+       <number>0</number>
+      </property>
+      <column>
+       <property name="text">
+        <string>ID</string>
+       </property>
+      </column>
       <column>
        <property name="text">
         <string notr="true">Dato</string>
@@ -1386,12 +1447,12 @@
       </column>
       <column>
        <property name="text">
-        <string>Salg</string>
+        <string>Demo</string>
        </property>
       </column>
       <column>
        <property name="text">
-        <string>Demo</string>
+        <string>Salg</string>
        </property>
       </column>
       <column>
@@ -1401,12 +1462,12 @@
       </column>
       <column>
        <property name="text">
-        <string>Supervisor</string>
+        <string>Km</string>
        </property>
       </column>
       <column>
        <property name="text">
-        <string>Km</string>
+        <string>Supervisor</string>
        </property>
       </column>
      </widget>
@@ -1843,7 +1904,7 @@ QToolButton:hover:checked {
      </widget>
     </widget>
     <widget class="QWidget" name="widgetPageInfo">
-     <widget class="QLabel" name="label_2">
+     <widget class="QLabel" name="labelAbout">
       <property name="geometry">
        <rect>
         <x>250</x>
@@ -2057,7 +2118,7 @@ QToolButton:hover:checked {
          <pointsize>10</pointsize>
         </font>
        </property>
-       <layout class="QGridLayout" name="gridCustomerVisit">
+       <layout class="QGridLayout" name="gridVisitCustomer">
         <item row="0" column="0">
          <widget class="QLineEdit" name="textVisitCompany">
           <property name="font">
@@ -2411,7 +2472,7 @@ QToolButton:hover:checked {
         <height>32</height>
        </rect>
       </property>
-      <layout class="QGridLayout" name="gridLayout_2">
+      <layout class="QGridLayout" name="gridVisitProductChoice">
        <item row="0" column="0">
         <widget class="QLabel" name="label">
          <property name="text">
@@ -2517,7 +2578,7 @@ QToolButton:hover:checked {
         <height>31</height>
        </rect>
       </property>
-      <layout class="QGridLayout" name="gridLayout">
+      <layout class="QGridLayout" name="gridVisitOrderTotals">
        <item row="0" column="4">
         <widget class="QLabel" name="labelTotal">
          <property name="font">
@@ -2646,8 +2707,8 @@ QToolButton:hover:checked {
     <widget class="QToolButton" name="toolButtonReport">
      <property name="geometry">
       <rect>
-       <x>10</x>
-       <y>0</y>
+       <x>80</x>
+       <y>10</y>
        <width>70</width>
        <height>70</height>
       </rect>
@@ -2690,7 +2751,7 @@ QToolButton:hover:checked {
     <widget class="QToolButton" name="toolButtonCustomers">
      <property name="geometry">
       <rect>
-       <x>360</x>
+       <x>150</x>
        <y>10</y>
        <width>70</width>
        <height>70</height>
@@ -2731,7 +2792,7 @@ QToolButton:hover:checked {
     <widget class="QToolButton" name="toolButtonCustomer">
      <property name="geometry">
       <rect>
-       <x>80</x>
+       <x>220</x>
        <y>10</y>
        <width>70</width>
        <height>70</height>
@@ -2772,7 +2833,7 @@ QToolButton:hover:checked {
     <widget class="QToolButton" name="toolButtonCustomerVisits">
      <property name="geometry">
       <rect>
-       <x>150</x>
+       <x>290</x>
        <y>10</y>
        <width>70</width>
        <height>70</height>
@@ -2813,7 +2874,7 @@ QToolButton:hover:checked {
     <widget class="QToolButton" name="toolButtonPricelist">
      <property name="geometry">
       <rect>
-       <x>290</x>
+       <x>430</x>
        <y>10</y>
        <width>70</width>
        <height>70</height>
@@ -2854,7 +2915,7 @@ QToolButton:hover:checked {
     <widget class="QToolButton" name="toolButtonReports">
      <property name="geometry">
       <rect>
-       <x>430</x>
+       <x>10</x>
        <y>10</y>
        <width>70</width>
        <height>70</height>
@@ -2895,7 +2956,7 @@ QToolButton:hover:checked {
     <widget class="QToolButton" name="toolButtonInfo">
      <property name="geometry">
       <rect>
-       <x>570</x>
+       <x>650</x>
        <y>10</y>
        <width>70</width>
        <height>70</height>
@@ -2936,7 +2997,7 @@ QToolButton:hover:checked {
     <widget class="QToolButton" name="toolButtonSettings">
      <property name="geometry">
       <rect>
-       <x>500</x>
+       <x>580</x>
        <y>10</y>
        <width>70</width>
        <height>70</height>
@@ -3021,7 +3082,7 @@ QToolButton:hover:checked {
      </property>
      <property name="geometry">
       <rect>
-       <x>220</x>
+       <x>360</x>
        <y>10</y>
        <width>70</width>
        <height>70</height>
@@ -3062,7 +3123,7 @@ QToolButton:hover:checked {
     <widget class="Line" name="line">
      <property name="geometry">
       <rect>
-       <x>360</x>
+       <x>500</x>
        <y>10</y>
        <width>3</width>
        <height>70</height>
@@ -3075,7 +3136,7 @@ QToolButton:hover:checked {
     <widget class="Line" name="line_2">
      <property name="geometry">
       <rect>
-       <x>500</x>
+       <x>220</x>
        <y>10</y>
        <width>3</width>
        <height>70</height>
@@ -3088,7 +3149,20 @@ QToolButton:hover:checked {
     <widget class="Line" name="line_3">
      <property name="geometry">
       <rect>
-       <x>290</x>
+       <x>430</x>
+       <y>10</y>
+       <width>3</width>
+       <height>70</height>
+      </rect>
+     </property>
+     <property name="orientation">
+      <enum>Qt::Vertical</enum>
+     </property>
+    </widget>
+    <widget class="Line" name="line_4">
+     <property name="geometry">
+      <rect>
+       <x>150</x>
        <y>10</y>
        <width>3</width>
        <height>70</height>
