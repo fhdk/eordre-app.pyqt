@@ -120,11 +120,12 @@ class MainWindow(QMainWindow, Ui_mainWindow):
         self.widgetArchivedOrderLines.setColumnWidth(4, 60)
         self.widgetArchivedOrderLines.setColumnWidth(5, 40)
 
-        self.widgetCustomers.setColumnWidth(0, 100)
+        self.widgetCustomers.setColumnHidden(0, True)  # ID
         self.widgetCustomers.setColumnWidth(1, 100)
         self.widgetCustomers.setColumnWidth(2, 100)
-        self.widgetCustomers.setColumnWidth(3, 250)
-        self.widgetCustomers.setColumnWidth(4, 60)
+        self.widgetCustomers.setColumnWidth(3, 100)
+        self.widgetCustomers.setColumnWidth(4, 250)
+        self.widgetCustomers.setColumnWidth(5, 60)
 
         self.widgetPricelist.setColumnWidth(0, 70)
         self.widgetPricelist.setColumnWidth(1, 100)
@@ -140,13 +141,14 @@ class MainWindow(QMainWindow, Ui_mainWindow):
         self.widgetPricelist.setColumnWidth(11, 50)
         self.widgetPricelist.setColumnWidth(12, 50)
 
-        self.widgetReports.setColumnWidth(0, 50)
-        self.widgetReports.setColumnWidth(1, 50)
-        self.widgetReports.setColumnWidth(2, 50)
-        self.widgetReports.setColumnWidth(3, 50)
-        self.widgetReports.setColumnWidth(4, 50)
-        self.widgetReports.setColumnWidth(5, 50)
-        self.widgetReports.setColumnWidth(6, 50)
+        self.widgetReports.setColumnHidden(0, True)  # ID
+        self.widgetReports.setColumnWidth(1, 80)     # rep_date
+        self.widgetReports.setColumnWidth(2, 60)     # visits
+        self.widgetReports.setColumnWidth(3, 60)     # sale day
+        self.widgetReports.setColumnWidth(4, 60)     # demo day
+        self.widgetReports.setColumnWidth(5, 100)    # turnover day
+        self.widgetReports.setColumnWidth(6, 50)     # km
+        # self.widgetReports column 7                # supervisor
 
         self.widgetReportVisits.setColumnWidth(0, 150)
         self.widgetReportVisits.setColumnWidth(1, 100)
@@ -155,22 +157,22 @@ class MainWindow(QMainWindow, Ui_mainWindow):
 
         self.populate_customer_list()
         self.populate_price_list()
-        self.populate_report_list()
 
         if self._customers.lookup_by_id(self._settings.setting["cust_idx"]):
             try:
-                phone = self._customers.customer["phone1"]
                 self.widgetCustomers.setCurrentIndex(
                     self.widgetCustomers.indexFromItem(
-                        self.widgetCustomers.findItems(phone, Qt.MatchExactly, column=1)[0]))
+                        self.widgetCustomers.findItems(
+                            str(self._customers.customer["customer_id"]),
+                            Qt.MatchExactly,
+                            column=0)[0]))
                 self.toolButtonCustomer.click()
-                return
             except KeyError:
                 pass
 
-        self._reports.__get_by_date(self.textWorkdate.text())
+        self._reports.load(workdate=self.textWorkdate.text())
+        self.populate_report_list()
         self.populate_report_visit_list()
-
         self.toolButtonReport.click()
 
     def closeEvent(self, event):
@@ -300,7 +302,13 @@ class MainWindow(QMainWindow, Ui_mainWindow):
         items = []  # temporary list
         try:
             for c in self._customers.customers:
-                item = QTreeWidgetItem([c["account"], c["phone1"], c["phone2"], c["company"], c["zipcode"], c["city"]])
+                item = QTreeWidgetItem([str(c["customer_id"]),
+                                        c["account"],
+                                        c["phone1"],
+                                        c["phone2"],
+                                        c["company"],
+                                        c["zipcode"],
+                                        c["city"]])
                 items.append(item)
         except (IndexError, KeyError):
             pass
@@ -328,7 +336,8 @@ class MainWindow(QMainWindow, Ui_mainWindow):
                                         str(product["d24"]).format("#.##"),
                                         str(product["d48"]).format("#.##"),
                                         str(product["d96"]).format("#.##"),
-                                        str(product["net"]).format("#.##")])
+                                        str(product["net"]).format("#.##")
+                                        ])
                 pricelist.append(item)
         except IndexError as i:
             print("IndexError: {}".format(i))
@@ -342,16 +351,28 @@ class MainWindow(QMainWindow, Ui_mainWindow):
         Populate widgetReports
         """
         self.widgetReports.clear()
+        print("{}".format(self._reports.reports))
         reports = []
         try:
             for report in self._reports.reports:
-                item = QTreeWidgetItem([report["rep_date"]])
+                item = QTreeWidgetItem([str(report["report_id"]),
+                                        report["rep_date"],
+                                        str(report["newvisitday"] +
+                                            report["recallvisitday"]),
+                                        str(report["newdemoday"] +
+                                            report["recalldemoday"]),
+                                        str(report["newsaleday"] +
+                                            report["recallsaleday"]),
+                                        str(report["newturnoverday"] +
+                                            report["recallturnoverday"] +
+                                            report["sasturnoverday"]),
+                                        str(report["kmevening"] -
+                                            report["kmmorning"]),
+                                        report["supervisor"]
+                                        ])
                 reports.append(item)
-
-        except IndexError as i:
-            print("IndexError: {}]".format(i))
-        except KeyError as k:
-            print("KeyErrorError: {}]".format(k))
+        except (IndexError, KeyError):
+            pass
         self.widgetReports.addTopLevelItems(reports)
 
     def populate_report_visit_list(self):
@@ -916,8 +937,8 @@ class MainWindow(QMainWindow, Ui_mainWindow):
         """
         try:
             # account = current.text(0)
-            phone = current.text(1)
-            company = current.text(3)
+            phone = current.text(2)
+            company = current.text(4)
             # load customer
             self._customers.lookup(phone, company)
             # fill out fields
