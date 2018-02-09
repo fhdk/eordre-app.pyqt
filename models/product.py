@@ -29,8 +29,8 @@ class Product:
                       "REAL DEFAULT 0", "REAL DEFAULT 0", "REAL DEFAULT 0", "REAL DEFAULT 0", "REAL DEFAULT 0",
                       "REAL DEFAULT 0", "REAL DEFAULT 0", "REAL DEFAULT 0", "REAL DEFAULT 0", "REAL DEFAULT 0",
                       "REAL DEFAULT 0", "TEXT")}
-        self._products = []
         self._product = {}
+        self._products = []
         self.q = Query()
         if not self.q.exist_table(self.model["name"]):
             sql = self.q.build("create", self.model)
@@ -114,15 +114,10 @@ class Product:
         Load product list
         """
         sql = self.q.build("select", self.model)
-
         success, data = self.q.execute(sql)
-
         if success and data:
-            try:
-                self._product = self._products[0]
-                self._products = [dict(zip(self.model["fields"], row)) for row in data]
-            except (KeyError, IndexError):
-                pass
+            self._products = [dict(zip(self.model["fields"], row)) for row in data]
+            self._product = self._products[0]
         else:
             self._product = {}
             self._products = []
