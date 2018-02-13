@@ -158,17 +158,21 @@ class MainWindow(QMainWindow, Ui_mainWindow):
         self.populate_customer_list()
         self.populate_price_list()
 
-        if self._customers.lookup_by_id(self._settings.setting["cust_idx"]):
-            try:
-                self.widgetCustomers.setCurrentIndex(
-                    self.widgetCustomers.indexFromItem(
-                        self.widgetCustomers.findItems(
-                            str(self._customers.customer["customer_id"]),
-                            Qt.MatchExactly,
-                            column=0)[0]))
-                self.toolButtonCustomer.click()
-            except KeyError:
-                pass
+        try:
+            cid = self._settings.setting["cust_idx"]
+            if self._customers.lookup_by_id(cid):
+                try:
+                    self.widgetCustomers.setCurrentIndex(
+                        self.widgetCustomers.indexFromItem(
+                            self.widgetCustomers.findItems(
+                                str(self._customers.customer["customer_id"]),
+                                Qt.MatchExactly,
+                                column=0)[0]))
+                    self.toolButtonCustomer.click()
+                except KeyError:
+                    pass
+        except KeyError:
+            return
 
         self._reports.load(workdate=self.textWorkdate.text())
         self.populate_report_list()
@@ -190,10 +194,13 @@ class MainWindow(QMainWindow, Ui_mainWindow):
         """
         Update status fields
         """
-        self.textCustomerLocalDate.setText(self._settings.setting["lsc"])
-        self.textCustomerServerDate.setText(self._settings.setting["sac"])
-        self.textPricelistLocalDate.setText(self._settings.setting["lsp"])
-        self.textPricelistServerDate.setText(self._settings.setting["sap"])
+        try:
+            self.textCustomerLocalDate.setText(self._settings.setting["lsc"])
+            self.textCustomerServerDate.setText(self._settings.setting["sac"])
+            self.textPricelistLocalDate.setText(self._settings.setting["lsp"])
+            self.textPricelistServerDate.setText(self._settings.setting["sap"])
+        except KeyError:
+            pass
 
     def populate_archived_visit_details(self):
         """
@@ -399,18 +406,21 @@ class MainWindow(QMainWindow, Ui_mainWindow):
         Populate settings page
         :return: 
         """
-        self.textAppUserMail.setText(self._settings.setting["usermail"])
-        self.textAppUserPass.setText(self._settings.setting["userpass"])
-        self.textAppUserCountry.setText(self._settings.setting["usercountry"])
-        self.textAppDataServer.setText(self._settings.setting["http"])
-        self.textAppMailServer.setText(self._settings.setting["smtp"])
-        self.textAppMailServerPort.setText(str(self._settings.setting["port"]))
-        self.textAppMailOrderTo.setText(self._settings.setting["mailto"])
-        self.checkServerData.setChecked(utils.int2bool(self._settings.setting["sc"]))
-        self.textExtMailServer.setText(self._settings.setting["mailserver"])
-        self.textExtMailServerPort.setText(str(self._settings.setting["mailport"]))
-        self.textExtMailServerUser.setText(self._settings.setting["mailuser"])
-        self.textExtMailServerPass.setText(self._settings.setting["mailpass"])
+        try:
+            self.textAppUserMail.setText(self._settings.setting["usermail"])
+            self.textAppUserPass.setText(self._settings.setting["userpass"])
+            self.textAppUserCountry.setText(self._settings.setting["usercountry"])
+            self.textAppDataServer.setText(self._settings.setting["http"])
+            self.textAppMailServer.setText(self._settings.setting["smtp"])
+            self.textAppMailServerPort.setText(str(self._settings.setting["port"]))
+            self.textAppMailOrderTo.setText(self._settings.setting["mailto"])
+            self.checkServerData.setChecked(utils.int2bool(self._settings.setting["sc"]))
+            self.textExtMailServer.setText(self._settings.setting["mailserver"])
+            self.textExtMailServerPort.setText(str(self._settings.setting["mailport"]))
+            self.textExtMailServerUser.setText(self._settings.setting["mailuser"])
+            self.textExtMailServerPass.setText(self._settings.setting["mailpass"])
+        except KeyError:
+            pass
 
     def resizeEvent(self, event):
         """
@@ -446,12 +456,15 @@ class MainWindow(QMainWindow, Ui_mainWindow):
             self.show_page_settings()
 
         # if requested check server data
-        if utils.int2bool(self._settings.setting["sc"]):
-            # update sync status
-            status = utils.refresh_sync_status(self._settings)
-            self._settings.setting["sac"] = status[0][1].split()[0]
-            self._settings.setting["sap"] = status[1][1].split()[0]
-            self._settings.update()
+        try:
+            if utils.int2bool(self._settings.setting["sc"]):
+                # update sync status
+                status = utils.refresh_sync_status(self._settings)
+                self._settings.setting["sac"] = status[0][1].split()[0]
+                self._settings.setting["sap"] = status[1][1].split()[0]
+                self._settings.update()
+        except KeyError:
+            pass
 
         # display known sync data
         self.display_sync_status()
@@ -467,7 +480,9 @@ class MainWindow(QMainWindow, Ui_mainWindow):
             self._settings.setting["cust_idx"] = self._customers.customer["customer_id"]
         except KeyError:
             self._settings.setting["cust_idx"] = 0
-        if not self._settings.setting["page_idx"]:
+        try:
+            _ = self._settings.setting["page_idx"]
+        except KeyError:
             self._settings.setting["page_idx"] = self.widgetAppPages.currentIndex()
         self._settings.setting["toolbutton"] = button
         self._settings.update()
