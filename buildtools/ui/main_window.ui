@@ -82,7 +82,7 @@
      </font>
     </property>
     <property name="currentIndex">
-     <number>5</number>
+     <number>8</number>
     </property>
     <widget class="QWidget" name="widgetPageCustomers">
      <widget class="QTreeWidget" name="widgetCustomers">
@@ -3175,6 +3175,100 @@ QToolButton:hover:checked {
    </widget>
   </widget>
  </widget>
+ <tabstops>
+  <tabstop>textVisitTotal</tabstop>
+  <tabstop>toolButtonReport</tabstop>
+  <tabstop>toolButtonCustomers</tabstop>
+  <tabstop>toolButtonCustomer</tabstop>
+  <tabstop>toolButtonCustomerVisits</tabstop>
+  <tabstop>toolButtonCustomerVisit</tabstop>
+  <tabstop>toolButtonPricelist</tabstop>
+  <tabstop>toolButtonSettings</tabstop>
+  <tabstop>toolButtonInfo</tabstop>
+  <tabstop>toolButtonExit</tabstop>
+  <tabstop>buttonGetPricelist</tabstop>
+  <tabstop>buttonGetCustomers</tabstop>
+  <tabstop>buttonCreateReport</tabstop>
+  <tabstop>textPricelistLocalDate</tabstop>
+  <tabstop>textCustomerLocalDate</tabstop>
+  <tabstop>textWorkdate</tabstop>
+  <tabstop>textPricelistServerDate</tabstop>
+  <tabstop>textCustomerServerDate</tabstop>
+  <tabstop>widgetReportVisits</tabstop>
+  <tabstop>widgetReports</tabstop>
+  <tabstop>toolButtonExportDatabase</tabstop>
+  <tabstop>toolButtonImportDatabase</tabstop>
+  <tabstop>toolButtonImportCsvData</tabstop>
+  <tabstop>toolButtonDeleteSalesData</tabstop>
+  <tabstop>toolButtonArchiveSettings</tabstop>
+  <tabstop>textAppUserMail</tabstop>
+  <tabstop>textAppUserPass</tabstop>
+  <tabstop>textAppUserCountry</tabstop>
+  <tabstop>textAppMailServer</tabstop>
+  <tabstop>textAppMailServerPort</tabstop>
+  <tabstop>textAppMailOrderTo</tabstop>
+  <tabstop>textAppDataServer</tabstop>
+  <tabstop>checkServerData</tabstop>
+  <tabstop>textExtMailServer</tabstop>
+  <tabstop>textExtMailServerPort</tabstop>
+  <tabstop>textExtMailServerUser</tabstop>
+  <tabstop>textExtMailServerPass</tabstop>
+  <tabstop>textVisitId</tabstop>
+  <tabstop>textCustId</tabstop>
+  <tabstop>textCompany</tabstop>
+  <tabstop>textAddress1</tabstop>
+  <tabstop>textAddress2</tabstop>
+  <tabstop>textZipCode</tabstop>
+  <tabstop>textCityName</tabstop>
+  <tabstop>textAccount</tabstop>
+  <tabstop>textPhone1</tabstop>
+  <tabstop>textPhone2</tabstop>
+  <tabstop>textEmail</tabstop>
+  <tabstop>textFactor</tabstop>
+  <tabstop>textCustomerNotes</tabstop>
+  <tabstop>buttonArchiveCustomer</tabstop>
+  <tabstop>widgetCustomerProducts</tabstop>
+  <tabstop>widgetCustomerContacts</tabstop>
+  <tabstop>buttonCreateContact</tabstop>
+  <tabstop>buttonArchiveContacts</tabstop>
+  <tabstop>textCustomerName</tabstop>
+  <tabstop>textCustomerPhone1</tabstop>
+  <tabstop>buttonCreateCustomer</tabstop>
+  <tabstop>widgetCustomers</tabstop>
+  <tabstop>widgetArchivedVisits</tabstop>
+  <tabstop>buttonCreateVisit</tabstop>
+  <tabstop>widgetArchivedOrderLines</tabstop>
+  <tabstop>textArchivedVisitNote</tabstop>
+  <tabstop>textArchivedOrderPoNumber</tabstop>
+  <tabstop>textArchivedOrderSale</tabstop>
+  <tabstop>textArchivedOrderSas</tabstop>
+  <tabstop>textArchivedOrderTotal</tabstop>
+  <tabstop>widgetPricelist</tabstop>
+  <tabstop>toolButtonReports</tabstop>
+  <tabstop>textVisitCompany</tabstop>
+  <tabstop>textVisitNote</tabstop>
+  <tabstop>textVisitDate</tabstop>
+  <tabstop>textVisitBuyer</tabstop>
+  <tabstop>textVisitPoNumber</tabstop>
+  <tabstop>textVisitProductDemo</tabstop>
+  <tabstop>textVisitProductSale</tabstop>
+  <tabstop>textVisitOrderNote</tabstop>
+  <tabstop>textVisitDelCompany</tabstop>
+  <tabstop>textVisitDelAddress1</tabstop>
+  <tabstop>textVisitDelAddress2</tabstop>
+  <tabstop>textVisitDelZip</tabstop>
+  <tabstop>textVisitDelCity</tabstop>
+  <tabstop>buttonArchiveVisit</tabstop>
+  <tabstop>textVisitPcs</tabstop>
+  <tabstop>comboOrderItem</tabstop>
+  <tabstop>comboOrderSku</tabstop>
+  <tabstop>toolButtonAddDemo</tabstop>
+  <tabstop>toolButtonAddSale</tabstop>
+  <tabstop>tableDemo</tabstop>
+  <tabstop>tableSale</tabstop>
+  <tabstop>textVisitSale</tabstop>
+  <tabstop>textVisitSas</tabstop>
+ </tabstops>
  <resources>
   <include location="../icons/system.qrc"/>
  </resources>
