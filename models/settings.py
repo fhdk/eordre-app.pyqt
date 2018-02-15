@@ -25,24 +25,31 @@ class Settings:
         self.model = {
             "name": "settings",
             "id": "settings_id",
-            "fields": ("settings_id", "usermail", "userpass", "usercountry", "pd", "pf", "sf",
-                       "http", "smtp", "port", "mailto", "mailserver", "mailport", "mailuser", "mailpass",
-                       "fc", "fp", "fe", "lsc", "lsp", "sac", "sap", "sc",
-                       "cust_idx", "page_idx", "cust_blob", "toolbutton"),
-            "types": ("INTEGER PRIMARY KEY NOT NULL", "TEXT", "TEXT", "TEXT", "TEXT", "TEXT", "TEXT",
-                      "TEXT", "TEXT", "TEXT", "TEXT", "TEXT", "TEXT", "TEXT", "TEXT",
-                      "TEXT", "TEXT", "TEXT", "TEXT", "TEXT", "TEXT", "TEXT", "INTEGER",
-                      "INTEGER", "INTEGER", "BLOB", "TEXT")
+            "fields": ("settings_id",
+                       "usermail", "userpass", "usercountry",
+                       "pd", "pf", "sf",
+                       "http", "smtp", "port", "mailto",
+                       "mailserver", "mailport", "mailuser", "mailpass",
+                       "fc", "fp", "fe",
+                       "lsc", "lsp", "sac", "sap", "sc",
+                       "cust_idx", "page_idx"),
+            "types": ("INTEGER PRIMARY KEY NOT NULL",
+                      "TEXT", "TEXT", "TEXT",
+                      "TEXT", "TEXT", "TEXT",
+                      "TEXT", "TEXT", "TEXT", "TEXT",
+                      "TEXT", "TEXT", "TEXT", "TEXT",
+                      "TEXT", "TEXT", "TEXT",
+                      "TEXT", "TEXT", "TEXT", "TEXT",
+                      "INTEGER", "INTEGER", "INTEGER")
         }
         self._settings = {}
         self.q = Query()
         if not self.q.exist_table(self.model["name"]):
             sql = self.q.build("create", self.model)
             self.q.execute(sql)
-            self.get()
 
     @property
-    def setting(self):
+    def settings(self):
         """
         current
         Returns:
@@ -55,8 +62,8 @@ class Settings:
 
         return self._settings
 
-    @setting.setter
-    def setting(self, settings):
+    @settings.setter
+    def settings(self, settings):
         """
         Pushing new current settings
         Args:
@@ -72,22 +79,20 @@ class Settings:
         sql = self.q.build("select", self.model)
 
         success, data = self.q.execute(sql)
-
         if success and not data:
-            values = (None, "", "", "", "_", "__", ".txt", "", "", "", "", "", "", "", "",
-                      "customers", "invenprices", "employees", "", "", "", "", 0, 0, 0, None)
-
+            values = (None,
+                      "", "", "",
+                      "_", "__", ".txt",
+                      "", "", "", "",
+                      "", "", "", "",
+                      "customers", "invenprices", "employees",
+                      "", "", "", "",
+                      0, 0, 0)
             self.__insert(values)
-
             success, data = self.q.execute(sql)
 
         if success and data:
             self._settings = dict(zip(self.model["fields"], data[0]))
-
-        if success and data:
-            return data
-
-        return False
 
     def update(self):
         """
@@ -96,15 +101,8 @@ class Settings:
         fields = list(self.model["fields"])[1:]
         filters = [(self.model["id"], "=")]
         values = self.q.values_to_update(self._settings.values())
-
         sql = self.q.build("update", self.model, update=fields, filters=filters)
-
-        success, data = self.q.execute(sql, values=values)
-
-        if success and data:
-            return data
-
-        return False
+        self.q.execute(sql, values=values)
 
     def __insert(self, values):
         """
@@ -115,10 +113,6 @@ class Settings:
         Returns:
 
         """
-
         sql = self.q.build("insert", self.model)
-
-        success, data = self.q.execute(sql, values=values)
-
-        if success and data:
-            self._settings = dict(zip(self.model["fields"], values))
+        self.q.execute(sql, values=values)
+        self._settings = dict(zip(self.model["fields"], values))

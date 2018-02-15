@@ -23,14 +23,14 @@ class Product:
         self.model = {
             "name": "products",
             "id": "product_id",
-            "fields": ("product_id", "sku", "name1", "name2", "name3", "item", "price", "d2", "d4", "d6", "d8", "d12",
-                       "d24", "d48", "d96", "min", "net", "groupid"),
+            "fields": ("product_id", "sku", "name1", "name2", "name3", "item", "price",
+                       "d2", "d4", "d6", "d8", "d12", "d24", "d48", "d96", "min", "net", "groupid"),
             "types": ("INTEGER PRIMARY KEY NOT NULL", "TEXT", "TEXT", "TEXT", "TEXT", "TEXT",
                       "REAL DEFAULT 0", "REAL DEFAULT 0", "REAL DEFAULT 0", "REAL DEFAULT 0", "REAL DEFAULT 0",
                       "REAL DEFAULT 0", "REAL DEFAULT 0", "REAL DEFAULT 0", "REAL DEFAULT 0", "REAL DEFAULT 0",
                       "REAL DEFAULT 0", "TEXT")}
-        self._products = []
         self._product = {}
+        self._products = []
         self.q = Query()
         if not self.q.exist_table(self.model["name"]):
             sql = self.q.build("create", self.model)
@@ -50,10 +50,10 @@ class Product:
         Args:
             product_id:
         """
-        self.by_id(product_id)
+        self.__get_by_id(product_id)
 
     @property
-    def list_(self):
+    def products(self):
         """
         ProductList
         Returns:
@@ -62,37 +62,8 @@ class Product:
         try:
             _ = self._products[0]
         except IndexError:
-            self.all()
+            self.__get_all()
         return self._products
-
-    def all(self):
-        """
-        Load product list
-        """
-        sql = self.q.build("select", self.model)
-
-        success, data = self.q.execute(sql)
-
-        if success and data:
-            self._products = [dict(zip(self.model["fields"], row)) for row in data]
-            self._product = self._products[0]
-        else:
-            self._product = {}
-            self._products = []
-
-    def by_id(self, product_id):
-        """
-        Set current product
-        :param product_id:
-        """
-        filters = [("product_id", "=")]
-        values = (product_id,)
-        sql = self.q.build("select", self.model, filters=filters)
-        success, data = self.q.execute(sql, values)
-        if success:
-            self._product = dict(zip(self.model["fields"], data[0]))
-        else:
-            self._product = {}
 
     def clear(self):
         """
@@ -102,12 +73,12 @@ class Product:
         self._products = []
 
     def drop_table(self):
-        """Drop the product table
+        """
+        Drop the product table
         The table can be safely recreated.
         An internal pointer to a specific product id is not used as line will contain the product sku etc
-        This approach also eliminates and outstanding issue with deprecated product
+        This approach also eliminates a current issue with deprecated products
         """
-        self._product = []
         self.recreate_table()
 
     def insert(self, values):
@@ -137,3 +108,30 @@ class Product:
         sql = self.q.build("create", self.model)
         self.q.execute(sql)
         self.clear()
+
+    def __get_all(self):
+        """
+        Load product list
+        """
+        sql = self.q.build("select", self.model)
+        success, data = self.q.execute(sql)
+        if success and data:
+            self._products = [dict(zip(self.model["fields"], row)) for row in data]
+            self._product = self._products[0]
+        else:
+            self._product = {}
+            self._products = []
+
+    def __get_by_id(self, product_id):
+        """
+        Set current product
+        :param product_id:
+        """
+        filters = [("product_id", "=")]
+        values = (product_id,)
+        sql = self.q.build("select", self.model, filters=filters)
+        success, data = self.q.execute(sql, values)
+        if success and data:
+            self._product = dict(zip(self.model["fields"], data[0]))
+        else:
+            self._product = {}

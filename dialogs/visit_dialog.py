@@ -41,7 +41,7 @@ class VisitDialog(QDialog, Ui_visitDialog):
         self._employeeid = employees.item_["employee_id"]
         self._reportid = reports.item_["report_id"]
         self._workdate = reports.item_["rep_date"]
-        self._products = products.list_
+        self._products = products.products
 
         self._visit = visits
         self._visit.clear()
@@ -49,7 +49,7 @@ class VisitDialog(QDialog, Ui_visitDialog):
             """
             load visits for workdata
             """
-            self._visit.get_by_customer(self._customerid, self._workdate)
+            self._visit.__get_by_customer(self._customerid, self._workdate)
             _ = self._visit.item_["visit_id"]
 
         except KeyError:

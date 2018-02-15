@@ -40,14 +40,22 @@ class Visit:
                       "REAL DEFAULT 0", "REAL DEFAULT 0", "REAL DEFAULT 0",
                       "INTEGER DEFAULT 0", "TEXT")
         }
-        self._report_visits = []
         self._visit = {}
-        self._customer_visits = []
+        self._visits = []
+        self._visits = []
+        self._visits = []
         self._csv_record_length = 22
         self.q = Query()
         if not self.q.exist_table(self.model["name"]):
             sql = self.q.build("create", self.model)
             self.q.execute(sql)
+
+    @property
+    def csv_record_length(self):
+        """
+        The number of fields expected on csv import
+        """
+        return self._csv_record_length
 
     @property
     def visit(self):
@@ -58,63 +66,46 @@ class Visit:
         """
         return self._visit
 
-    @visit.setter
-    def visit(self, visit_id):
-        """
-        Set a visit
-        :param visit_id:
-        :return:
-        """
-        self.get(visit_id)
-
     @property
-    def csv_record_length(self):
-        """The number of fields expected on csv import"""
-        return self._csv_record_length
-
-    @property
-    def list_customer(self):
-        """
-        The list of visits for a customer
-        Returns:
-            The list of visits for a customer
-        """
-        return self._customer_visits
-
-    @list_customer.setter
-    def list_customer(self, customer_id):
-        """
-        Load the list of visits for a customer_id
-        Args:
-            customer_id:
-        """
-        self.get_by_customer(customer_id)
-
-    @property
-    def list_report(self):
+    def visits(self):
         """
         Report Visit List
         Returns:
             The list of visits for a report_id
         """
-        return self._report_visits
+        return self._visits
 
-    @list_report.setter
-    def list_report(self, report_id):
+    def list_by_customer(self, customer_id):
         """
-        Load visits for the requested report_id
+        Load the list of visits for a given customer
+        Args:
+            customer_id:
+        """
+        self.__get_by_customer(customer_id)
+
+    def list_by_date(self, visit_date):
+        """
+        Load the list of visits for a given date
+        Args:
+             visit_date:
+        """
+        self.__get_by_date(visit_date)
+
+    def list_by_report_id(self, report_id):
+        """
+        Load the list of visits for a given report
         Args:
             report_id:
         """
-        self.get_by_report(report_id)
+        self.__get_by_report_id(report_id)
 
-    def clear(self):
+    def load_visit(self, visit_id):
         """
-        Clear internal variables
+        Load a visit
+        Args:
+            visit_id:
         """
-        self._visit = {}
-        self._report_visits = []
-        self._customer_visits = []
+        self.__get(visit_id)
 
     def add(self, report_id, employee_id, customer_id, workdate):
         """
@@ -130,8 +121,15 @@ class Visit:
         values = (None, report_id, employee_id, customer_id, workdate, 0,
                   "", "", "", "", "", "", "", "", "", "", "", "", 0.0, 0.0, 0.0, 0, "")
         new_id = self.insert(values)
-        self.find(new_id)
+        self.__get(new_id)
         return new_id
+
+    def clear(self):
+        """
+        Clear internal variables
+        """
+        self._visit = {}
+        self._visits = []
 
     def delete(self, visit_id):
         """
@@ -144,92 +142,6 @@ class Visit:
         sql = self.q.build("delete", self.model, filters)
         self.q.execute(sql, values)
 
-    def get(self, visit_id):
-        """
-        Find the specified visit
-        :param visit_id:
-        :return: True on success
-        """
-        filters = [(self.model["id"], "=")]
-        values = (visit_id,)
-        sql = self.q.build("select", self.model, filters=filters)
-        success, data = self.q.execute(sql, values=values)
-        if success:
-            try:
-                self._visit = dict(zip(self.model["fields"], data[0]))
-                return True
-            except IndexError:
-                self._visit = {}
-        return False
-
-    def get_by_customer(self, customer_id, visit_date=None):
-        """
-        Load visit_list_customer for specified customer
-        :rtype: bool
-        :param customer_id:
-        :param visit_date:
-        :return: True / False
-        """
-        if visit_date:
-            filters = [("customer_id", "=", "AND"), ("visit_date", "=")]
-            values = (customer_id, visit_date)
-        else:
-            filters = [("customer_id", "=")]
-            values = (customer_id,)
-
-        sql = self.q.build("select", self.model, filters=filters)
-        success, data = self.q.execute(sql, values=values)
-        if success:
-            try:
-                self._customer_visits = [dict(zip(self.model["fields"], row)) for row in data]
-                self._visit = self._customer_visits[0]
-                return True
-            except (IndexError, KeyError):
-                self._visit = {}
-                self._customer_visits = []
-        return False
-
-    def get_by_date(self, visit_date):
-        """
-        Locate visit by date
-        :rtype: bool
-        :param visit_date:
-        :return: True on success
-        """
-        filters = [("visit_date", "=")]
-        values = (visit_date,)
-
-        sql = self.q.build("select", self.model, filters=filters)
-        success, data = self.q.execute(sql, values=values)
-        if success:
-            try:
-                self._visit = dict(zip(self.model["fields"], data[0]))
-                return True
-            except IndexError:
-                self._visit = {}
-        return False
-
-    def get_by_report(self, report_id):
-        """
-        Load visit_list_customer for specified report
-        :rtype: bool
-        :param: report_id
-        :return: True / False
-        """
-        filters = [("report_id", "=")]
-        values = (report_id,)
-        sql = self.q.build("select", self.model, filters=filters)
-        success, data = self.q.execute(sql, values=values)
-        if success:
-            try:
-                self._report_visits = [dict(zip(self.model["fields"], row)) for row in data]
-                self._visit = self._report_visits[0]
-                return True
-            except (IndexError, KeyError):
-                self._visit = {}
-                self._report_visits = []
-        return False
-
     def insert(self, values):
         """
         Insert a new row in the database
@@ -241,6 +153,16 @@ class Visit:
         if success and data:
             return data
         return None
+
+    def recreate_table(self):
+        """
+        Recreate table
+        """
+        sql = self.q.build("drop", self.model)
+        self.q.execute(sql)
+        sql = self.q.build("create", self.model)
+        self.q.execute(sql)
+        self.clear()
 
     def translate_row_insert(self, row):
         """
@@ -258,16 +180,6 @@ class Visit:
                    row[20], row[21], row[14].strip())
         self.insert(new_row)  # call insert function
 
-    def recreate_table(self):
-        """
-        Recreate table
-        """
-        sql = self.q.build("drop", self.model)
-        self.q.execute(sql)
-        sql = self.q.build("create", self.model)
-        self.q.execute(sql)
-        self.clear()
-
     def update(self):
         """
         Write visit changes to database
@@ -281,3 +193,79 @@ class Visit:
         if success and data:
             return data
         return None
+
+    def __get(self, visit_id):
+        """
+        Find the specified visit
+        :param visit_id:
+        :return: True on success
+        """
+        filters = [(self.model["id"], "=")]
+        values = (visit_id,)
+        sql = self.q.build("select", self.model, filters=filters)
+        success, data = self.q.execute(sql, values=values)
+        if success:
+            try:
+                self._visit = dict(zip(self.model["fields"], data[0]))
+                return True
+            except IndexError:
+                self._visit = {}
+        return False
+
+    def __get_by_customer(self, customer_id, visit_date=None):
+        """
+        Load visit_list_customer for specified customer
+        :param customer_id:
+        :param visit_date:
+        """
+        if visit_date:
+            filters = [("customer_id", "=", "AND"), ("visit_date", "=")]
+            values = (customer_id, visit_date)
+        else:
+            filters = [("customer_id", "=")]
+            values = (customer_id,)
+
+        sql = self.q.build("select", self.model, filters=filters)
+        success, data = self.q.execute(sql, values=values)
+        if success:
+            try:
+                self._visits = [dict(zip(self.model["fields"], row)) for row in data]
+                self._visit = self._visits[0]
+            except (IndexError, KeyError):
+                self._visit = {}
+                self._visits = []
+
+    def __get_by_date(self, visit_date):
+        """
+        List visits by date
+        :param visit_date:
+        """
+        filters = [("visit_date", "=")]
+        values = (visit_date,)
+
+        sql = self.q.build("select", self.model, filters=filters)
+        success, data = self.q.execute(sql, values=values)
+        if success:
+            try:
+                self._visits = dict(zip(self.model["fields"], data[0]))
+                self._visit = self._visits[0]
+            except IndexError:
+                self._visit = {}
+                self._visits = []
+
+    def __get_by_report_id(self, report_id):
+        """
+        Load visit_list_customer for specified report
+        :param: report_id
+        """
+        filters = [("report_id", "=")]
+        values = (report_id,)
+        sql = self.q.build("select", self.model, filters=filters)
+        success, data = self.q.execute(sql, values=values)
+        if success:
+            try:
+                self._visits = [dict(zip(self.model["fields"], row)) for row in data]
+                self._visit = self._visits[0]
+            except (IndexError, KeyError):
+                self._visit = {}
+                self._visits = []

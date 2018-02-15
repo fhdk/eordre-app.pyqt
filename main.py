@@ -107,8 +107,8 @@ class MainWindow(QMainWindow, Ui_mainWindow):
         self.toolButtonImportCsvData.clicked.connect(self.show_csv_import_dialog)
         self.toolButtonImportDatabase.clicked.connect(self.data_import)
 
-        self.widgetAppCustomers.currentItemChanged.connect(self.on_customer_changed)
-        self.widgetAppCustomers.itemDoubleClicked.connect(self.on_customer_double_clicked)
+        self.widgetCustomers.currentItemChanged.connect(self.on_customer_changed)
+        self.widgetCustomers.itemDoubleClicked.connect(self.on_customer_double_clicked)
 
         self.widgetArchivedVisits.currentItemChanged.connect(self.on_visit_changed)
         self.widgetArchivedVisits.setColumnHidden(0, True)
@@ -120,22 +120,64 @@ class MainWindow(QMainWindow, Ui_mainWindow):
         self.widgetArchivedOrderLines.setColumnWidth(4, 60)
         self.widgetArchivedOrderLines.setColumnWidth(5, 40)
 
-        self._reports.load_report(self.textWorkdate.text())
+        self.widgetCustomers.setColumnHidden(0, True)  # ID
+        self.widgetCustomers.setColumnWidth(1, 100)
+        self.widgetCustomers.setColumnWidth(2, 100)
+        self.widgetCustomers.setColumnWidth(3, 100)
+        self.widgetCustomers.setColumnWidth(4, 250)
+        self.widgetCustomers.setColumnWidth(5, 60)
+
+        self.widgetPricelist.setColumnWidth(0, 70)
+        self.widgetPricelist.setColumnWidth(1, 100)
+        self.widgetPricelist.setColumnWidth(2, 150)
+        self.widgetPricelist.setColumnWidth(3, 50)
+        self.widgetPricelist.setColumnWidth(4, 50)
+        self.widgetPricelist.setColumnWidth(5, 50)
+        self.widgetPricelist.setColumnWidth(6, 50)
+        self.widgetPricelist.setColumnWidth(7, 50)
+        self.widgetPricelist.setColumnWidth(8, 50)
+        self.widgetPricelist.setColumnWidth(9, 50)
+        self.widgetPricelist.setColumnWidth(10, 50)
+        self.widgetPricelist.setColumnWidth(11, 50)
+        self.widgetPricelist.setColumnWidth(12, 50)
+
+        self.widgetReports.setColumnHidden(0, True)  # ID
+        self.widgetReports.setColumnWidth(1, 80)     # rep_date
+        self.widgetReports.setColumnWidth(2, 60)     # visits
+        self.widgetReports.setColumnWidth(3, 60)     # sale day
+        self.widgetReports.setColumnWidth(4, 60)     # demo day
+        self.widgetReports.setColumnWidth(5, 100)    # turnover day
+        self.widgetReports.setColumnWidth(6, 50)     # km
+        # self.widgetReports column 7                # supervisor
+
+        self.widgetReportVisits.setColumnWidth(0, 150)
+        self.widgetReportVisits.setColumnWidth(1, 100)
+        self.widgetReportVisits.setColumnWidth(2, 100)
+        self.widgetReportVisits.setColumnWidth(3, 60)
 
         self.populate_customer_list()
+        self.populate_price_list()
 
-        if self._customers.lookup_by_id(self._settings.setting["cust_idx"]):
-            try:
-                phone = self._customers.customer["phone1"]
-                self.widgetAppCustomers.setCurrentIndex(
-                    self.widgetAppCustomers.indexFromItem(
-                        self.widgetAppCustomers.findItems(phone, Qt.MatchExactly, column=1)[0]))
-                self.toolButtonCustomer.click()
-                return
-            except KeyError:
-                pass
+        try:
+            cid = self._settings.settings["cust_idx"]
+            if self._customers.lookup_by_id(cid):
+                try:
+                    self.widgetCustomers.setCurrentIndex(
+                        self.widgetCustomers.indexFromItem(
+                            self.widgetCustomers.findItems(
+                                str(self._customers.customer["customer_id"]),
+                                Qt.MatchExactly,
+                                column=0)[0]))
+                    self.toolButtonCustomer.click()
+                except KeyError:
+                    pass
+        except KeyError:
+            return
 
-        self.toolButtonCustomers.click()
+        self._reports.load(workdate=self.textWorkdate.text())
+        self.populate_report_list()
+        self.populate_report_visit_list()
+        self.toolButtonReport.click()
 
     def closeEvent(self, event):
         """
@@ -152,10 +194,13 @@ class MainWindow(QMainWindow, Ui_mainWindow):
         """
         Update status fields
         """
-        self.textCustomerLocalDate.setText(self._settings.setting["lsc"])
-        self.textCustomerServerDate.setText(self._settings.setting["sac"])
-        self.textPricelistLocalDate.setText(self._settings.setting["lsp"])
-        self.textPricelistServerDate.setText(self._settings.setting["sap"])
+        try:
+            self.textCustomerLocalDate.setText(self._settings.settings["lsc"])
+            self.textCustomerServerDate.setText(self._settings.settings["sac"])
+            self.textPricelistLocalDate.setText(self._settings.settings["lsp"])
+            self.textPricelistServerDate.setText(self._settings.settings["sap"])
+        except KeyError:
+            pass
 
     def populate_archived_visit_details(self):
         """
@@ -211,13 +256,12 @@ class MainWindow(QMainWindow, Ui_mainWindow):
         Populate the visitlist based on the active customer
         """
         self.widgetArchivedVisits.clear()
-        self.widgetArchivedVisits.setHeaderLabels(["Id", "Dato", "Navn", "Demo", "Salg", "Ordre note"])
-        self.widgetArchivedVisits.setColumnWidth(0, 0)
+
         items = []
         try:
-            self._archivedVisits.list_customer = self._customers.customer["customer_id"]
+            self._archivedVisits.list_by_customer(self._customers.customer["customer_id"])
 
-            for visit in self._archivedVisits.list_customer:
+            for visit in self._archivedVisits.visits:
                 item = QTreeWidgetItem([str(visit["visit_id"]),
                                         visit["visit_date"],
                                         visit["po_buyer"],
@@ -261,63 +305,121 @@ class MainWindow(QMainWindow, Ui_mainWindow):
         Populate customer list
         """
 
-        self.widgetAppCustomers.clear()  # shake the tree for leaves
-        self.widgetAppCustomers.setColumnCount(6)  # set columns
-        self.widgetAppCustomers.setHeaderLabels(["Konto", "Telefon", "Telefon", "Firma", "Post", "Bynavn"])
+        self.widgetCustomers.clear()  # shake the tree for leaves
         items = []  # temporary list
         try:
-            for c in self._customers.list_:
-                item = QTreeWidgetItem([c["account"], c["phone1"], c["phone2"], c["company"], c["zipcode"], c["city"]])
+            for c in self._customers.customers:
+                item = QTreeWidgetItem([str(c["customer_id"]),
+                                        c["account"],
+                                        c["phone1"],
+                                        c["phone2"],
+                                        c["company"],
+                                        c["zipcode"],
+                                        c["city"]])
                 items.append(item)
         except (IndexError, KeyError):
             pass
         # assign Widgets to Tree
-        self.widgetAppCustomers.addTopLevelItems(items)
-        self.widgetAppCustomers.setSortingEnabled(True)  # enable sorting
+        self.widgetCustomers.addTopLevelItems(items)
+        self.widgetCustomers.setSortingEnabled(True)  # enable sorting
 
-    # def populate_visit_list(self):
-    #     """
-    #     Populate
-    #     """
-    #     # populate visit list table
-    #     self.widgetArchivedVisits.setHeaderLabels(["Id", "Dato", "Navn", "Demo", "Salg"])
-    #     self.widgetArchivedVisits.setColumnWidth(0, 0)
-    #     items = []
-    #     try:
-    #         self._archivedVisits.list_customer = self._customers.customer["customer_id"]
-    #         for visit in self._archivedVisits.list_customer:
-    #             item = QTreeWidgetItem([str(visit["visit_id"]),
-    #                                     visit["visit_date"],
-    #                                     visit["po_buyer"],
-    #                                     visit["prod_demo"],
-    #                                     visit["prod_sale"]])
-    #             items.append(item)
-    #             if visit["visit_date"] == self.textWorkdate.text():
-    #                 self.load_visit()
-    #
-    #     except IndexError:
-    #         pass
-    #     except KeyError:
-    #         pass
-    #     self.widgetArchivedVisits.addTopLevelItems(items)
+    def populate_price_list(self):
+        """
+        Populate widgetPricelist
+        """
+        self.widgetPricelist.clear()
+        pricelist = []
+        try:
+            for product in self._products.products:
+                item = QTreeWidgetItem([product["item"],
+                                        product["sku"],
+                                        product["name1"],
+                                        str(product["price"]).format("#.##"),
+                                        str(product["d2"]).format("#.##"),
+                                        str(product["d4"]).format("#.##"),
+                                        str(product["d6"]).format("#.##"),
+                                        str(product["d8"]).format("#.##"),
+                                        str(product["d12"]).format("#.##"),
+                                        str(product["d24"]).format("#.##"),
+                                        str(product["d48"]).format("#.##"),
+                                        str(product["d96"]).format("#.##"),
+                                        str(product["net"]).format("#.##")
+                                        ])
+                pricelist.append(item)
+        except IndexError as i:
+            print("IndexError: {}".format(i))
+        except KeyError as k:
+            print("KeyError: {}".format(k))
+        self.widgetPricelist.addTopLevelItems(pricelist)
+        self.widgetPricelist.setSortingEnabled(True)
+
+    def populate_report_list(self):
+        """
+        Populate widgetReports
+        """
+        self.widgetReports.clear()
+        reports = []
+        try:
+            for report in self._reports.reports:
+                item = QTreeWidgetItem([str(report["report_id"]),
+                                        report["rep_date"],
+                                        str(report["newvisitday"] +
+                                            report["recallvisitday"]),
+                                        str(report["newdemoday"] +
+                                            report["recalldemoday"]),
+                                        str(report["newsaleday"] +
+                                            report["recallsaleday"]),
+                                        str(report["newturnoverday"] +
+                                            report["recallturnoverday"] +
+                                            report["sasturnoverday"]),
+                                        str(report["kmevening"] -
+                                            report["kmmorning"]),
+                                        report["supervisor"]
+                                        ])
+                reports.append(item)
+        except (IndexError, KeyError):
+            pass
+        self.widgetReports.addTopLevelItems(reports)
+
+    def populate_report_visit_list(self):
+        """
+        Populate widgetReportVisits
+        """
+        self.widgetReportVisits.clear()
+        items = []
+        try:
+            self._visits.list_by_date(self.textWorkdate.text())
+            for v in self._visits.visits:
+                c = self._customers.lookup_by_id(v["customer_id"])
+                item = QTreeWidgetItem([c["company"],
+                                        v["prod_demo"],
+                                        v["prod_sale"],
+                                        v["po_total"]])
+                items.append(item)
+        except (IndexError, KeyError):
+            pass
+        self.widgetReportVisits.addTopLevelItems(items)
 
     def populate_settings_page(self):
         """
         Populate settings page
         :return: 
         """
-        self.textAppUserMail.setText(self._settings.setting["usermail"])
-        self.textAppUserPass.setText(self._settings.setting["userpass"])
-        self.textAppUserCountry.setText(self._settings.setting["usercountry"])
-        self.textAppDataServer.setText(self._settings.setting["http"])
-        self.textAppMailServer.setText(self._settings.setting["smtp"])
-        self.textAppMailServerPort.setText(str(self._settings.setting["port"]))
-        self.textAppMailOrderTo.setText(self._settings.setting["mailto"])
-        self.checkServerData.setChecked(utils.int2bool(self._settings.setting["sc"]))
-        self.textExtMailServer.setText(self._settings.setting["mailserver"])
-        self.textExtMailServerPort.setText(str(self._settings.setting["mailport"]))
-        self.textExtMailServerUser.setText(self._settings.setting["mailuser"])
-        self.textExtMailServerPass.setText(self._settings.setting["mailpass"])
+        try:
+            self.textAppUserMail.setText(self._settings.settings["usermail"])
+            self.textAppUserPass.setText(self._settings.settings["userpass"])
+            self.textAppUserCountry.setText(self._settings.settings["usercountry"])
+            self.textAppDataServer.setText(self._settings.settings["http"])
+            self.textAppMailServer.setText(self._settings.settings["smtp"])
+            self.textAppMailServerPort.setText(str(self._settings.settings["port"]))
+            self.textAppMailOrderTo.setText(self._settings.settings["mailto"])
+            self.checkServerData.setChecked(utils.int2bool(self._settings.settings["sc"]))
+            self.textExtMailServer.setText(self._settings.settings["mailserver"])
+            self.textExtMailServerPort.setText(str(self._settings.settings["mailport"]))
+            self.textExtMailServerUser.setText(self._settings.settings["mailuser"])
+            self.textExtMailServerPass.setText(self._settings.settings["mailpass"])
+        except KeyError:
+            pass
 
     def resizeEvent(self, event):
         """
@@ -335,7 +437,7 @@ class MainWindow(QMainWindow, Ui_mainWindow):
         Setup database and basic configuration
         """
         # basic settings must be done
-        is_set = check_settings(self._settings.setting)
+        is_set = check_settings(self._settings.settings)
         if is_set:
             try:
                 _ = self._employees.employee["fullname"]
@@ -353,12 +455,15 @@ class MainWindow(QMainWindow, Ui_mainWindow):
             self.show_page_settings()
 
         # if requested check server data
-        if utils.int2bool(self._settings.setting["sc"]):
-            # update sync status
-            status = utils.refresh_sync_status(self._settings)
-            self._settings.setting["sac"] = status[0][1].split()[0]
-            self._settings.setting["sap"] = status[1][1].split()[0]
-            self._settings.update()
+        try:
+            if utils.int2bool(self._settings.settings["sc"]):
+                # update sync status
+                status = utils.refresh_sync_status(self._settings)
+                self._settings.settings["sac"] = status[0][1].split()[0]
+                self._settings.settings["sap"] = status[1][1].split()[0]
+                self._settings.update()
+        except KeyError:
+            pass
 
         # display known sync data
         self.display_sync_status()
@@ -369,14 +474,15 @@ class MainWindow(QMainWindow, Ui_mainWindow):
         :param button:
         :return:
         """
-        # customer id
         try:
-            self._settings.setting["cust_idx"] = self._customers.customer["customer_id"]
+            self._settings.settings["cust_idx"] = self._customers.customer["customer_id"]
         except KeyError:
-            self._settings.setting["cust_idx"] = 0
-        if not self._settings.setting["page_idx"]:
-            self._settings.setting["page_idx"] = self.widgetAppPages.currentIndex()
-        self._settings.setting["toolbutton"] = button
+            self._settings.settings["cust_idx"] = 0
+
+        try:
+            _ = self._settings.settings["page_idx"]
+        except KeyError:
+            self._settings.settings["page_idx"] = self.widgetAppPages.currentIndex()
         self._settings.update()
 
     def set_input_enabled(self, arg: bool):
@@ -395,9 +501,9 @@ class MainWindow(QMainWindow, Ui_mainWindow):
         """
         # customer id
         try:
-            self._settings.setting["cust_idx"] = self._customers.customer["customer_id"]
+            self._settings.settings["cust_idx"] = self._customers.customer["customer_id"]
         except KeyError:
-            self._settings.setting["cust_idx"] = 0
+            self._settings.settings["cust_idx"] = 0
         self._settings.update()
         app.quit()
 
@@ -436,7 +542,7 @@ class MainWindow(QMainWindow, Ui_mainWindow):
         self._customers.customer["phone2"] = self.textPhone2.text()
         self._customers.customer["email"] = self.textEmail.text()
         self._customers.customer["factor"] = self.textFactor.text()
-        self._customers.customer["infotext"] = self.textCustomerInfoText.toPlainText()
+        self._customers.customer["infotext"] = self.textArchivedVisitNote.toPlainText()
         self._customers.customer["modified"] = 1
         self._customers.update()
 
@@ -478,21 +584,21 @@ class MainWindow(QMainWindow, Ui_mainWindow):
             return False
         # update password in settings
         if len(self.textAppUserPass.text()) < 97:
-            self._settings.setting["userpass"] = passwdFn.hash_password(self.textAppUserPass.text())
+            self._settings.settings["userpass"] = passwdFn.hash_password(self.textAppUserPass.text())
         if len(self.textExtMailServerPass.text()) < 97:
-            self._settings.setting["mailpass"] = passwdFn.hash_password(self.textExtMailServerPass.text())
-        self._settings.setting["usermail"] = self.textAppUserMail.text().lower()
-        self._settings.setting["usercountry"] = self.textAppUserCountry.text()
-        self._settings.setting["http"] = self.textAppDataServer.text()
-        self._settings.setting["smtp"] = self.textAppMailServer.text()
-        self._settings.setting["port"] = self.textAppMailServerPort.text()
-        self._settings.setting["mailto"] = self.textAppMailOrderTo.text()
-        self._settings.setting["sc"] = utils.bool2int(self.checkServerData.isChecked())
-        self._settings.setting["mailserver"] = self.textExtMailServer.text().lower()
-        self._settings.setting["mailport"] = self.textExtMailServerPort.text()
-        self._settings.setting["mailuser"] = self.textExtMailServerUser.text()
+            self._settings.settings["mailpass"] = passwdFn.hash_password(self.textExtMailServerPass.text())
+        self._settings.settings["usermail"] = self.textAppUserMail.text().lower()
+        self._settings.settings["usercountry"] = self.textAppUserCountry.text()
+        self._settings.settings["http"] = self.textAppDataServer.text()
+        self._settings.settings["smtp"] = self.textAppMailServer.text()
+        self._settings.settings["port"] = self.textAppMailServerPort.text()
+        self._settings.settings["mailto"] = self.textAppMailOrderTo.text()
+        self._settings.settings["sc"] = utils.bool2int(self.checkServerData.isChecked())
+        self._settings.settings["mailserver"] = self.textExtMailServer.text().lower()
+        self._settings.settings["mailport"] = self.textExtMailServerPort.text()
+        self._settings.settings["mailuser"] = self.textExtMailServerUser.text()
         self._settings.update()
-        self._employees.load(self._settings.setting["usermail"])
+        self._employees.load(self._settings.settings["usermail"])
         msgbox.information(self, __appname__, "Indstillinger opdateret.", QMessageBox.Ok)
 
     @pyqtSlot(name="archive_visit")
@@ -563,7 +669,7 @@ class MainWindow(QMainWindow, Ui_mainWindow):
             repdate = self._reports.report["rep_date"]
             if not repdate == self.textWorkdate.text():
                 # if active report is not the same replace it with workdate
-                self._reports.load_report(self.textWorkdate.text())
+                self._reports.load(self.textWorkdate.text())
                 # trigger a KeyError if no report is current which launches the CreateReportDialog
                 repdate = self._reports.report["rep_date"]
                 # check if the report is sent
@@ -584,7 +690,7 @@ class MainWindow(QMainWindow, Ui_mainWindow):
                 # user chosed to create a report
                 self.textWorkdate.setText(create_report_dialog.workdate)
                 # try load a report for that date
-                self._reports.load_report(self.textWorkdate.text())
+                self._reports.load(self.textWorkdate.text())
                 try:
                     # did the user choose an existing report
                     _ = self._reports.report["rep_date"]
@@ -617,7 +723,7 @@ class MainWindow(QMainWindow, Ui_mainWindow):
             active_report = self.create_report()
 
         if active_report:
-            self._reports.load_report(self.textWorkdate.text())
+            self._reports.__get_by_date(self.textWorkdate.text())
             try:
                 # do we have a customer
                 _ = self._customers.customer["company"]
@@ -658,7 +764,7 @@ class MainWindow(QMainWindow, Ui_mainWindow):
             """
             load visits for workdate
             """
-            self._visits.load_for_customer(customerid, workdate)
+            self._visits.__get_by_customer(customerid, workdate)
             self.textVisitId.setText(str(self._visits.visit["visit_id"]))
         except KeyError:
             self.textVisitId.setText(str(self._visits.add(reportid, employeeid, customerid, workdate)))
@@ -726,7 +832,7 @@ class MainWindow(QMainWindow, Ui_mainWindow):
         if not factor:
             factor = 0.0
 
-        for item in customer_pricelist.list_:
+        for item in customer_pricelist.products:
             if factor is not 0.0:
                 item["price"] = item["price"] * factor
                 item["d2"] = item["d2"] * factor
@@ -844,12 +950,11 @@ class MainWindow(QMainWindow, Ui_mainWindow):
         """
         try:
             # account = current.text(0)
-            phone = current.text(1)
-            company = current.text(3)
-            # move current customer
+            phone = current.text(2)
+            company = current.text(4)
             # load customer
             self._customers.lookup(phone, company)
-            # fields to line edits
+            # fill out fields
             self.textAccount.setText(self._customers.customer["account"])
             self.textCompany.setText(self._customers.customer["company"])
             self.textAddress1.setText(self._customers.customer["address1"])
@@ -860,7 +965,7 @@ class MainWindow(QMainWindow, Ui_mainWindow):
             self.textPhone2.setText(self._customers.customer["phone2"])
             self.textEmail.setText(self._customers.customer["email"])
             self.textFactor.setText(str(self._customers.customer["factor"]))
-            self.textCustomerInfoText.setText(self._customers.customer["infotext"])
+            self.textCustomerNotes.setText(self._customers.customer["infotext"])
         except AttributeError:
             pass
         except KeyError:
@@ -894,7 +999,7 @@ class MainWindow(QMainWindow, Ui_mainWindow):
         self.populate_customer_list()
         lsc = datetime.date.today().isoformat()
         self.textCustomerLocalDate.setText(lsc)
-        self._settings.setting["lsc"] = lsc
+        self._settings.settings["lsc"] = lsc
         self._settings.update()
 
     @pyqtSlot(name="on_get_products_done")
@@ -902,10 +1007,10 @@ class MainWindow(QMainWindow, Ui_mainWindow):
         """
         Slot for getProducts finished signal
         """
-        self._products.all()
+        _ = self._products.products
         lsp = datetime.date.today().isoformat()
         self.textPricelistLocalDate.setText(lsp)
-        self._settings.setting["lsp"] = lsp
+        self._settings.settings["lsp"] = lsp
         self._settings.update()
 
     @pyqtSlot(QTreeWidgetItem, QTreeWidgetItem, name="on_visit_changed")
@@ -917,7 +1022,7 @@ class MainWindow(QMainWindow, Ui_mainWindow):
             previous:
         """
         try:
-            self._archivedVisits.find(current.text(0))
+            self._archivedVisits.load_visit(current.text(0))
         except AttributeError:
             pass
         except KeyError:
@@ -956,7 +1061,7 @@ class MainWindow(QMainWindow, Ui_mainWindow):
         """
         Slot for fileImport triggered signal
         """
-        if self._customers.list_:
+        if self._customers.customers:
             msgbox = QMessageBox()
             msgbox.warning(self,
                            __appname__,
@@ -1099,10 +1204,10 @@ class MainWindow(QMainWindow, Ui_mainWindow):
             self.populate_archived_visits()
             self.populate_customer_list()
 
-            self._settings.setting["lsc"] = ""
-            self._settings.setting["sac"] = ""
-            self._settings.setting["lsp"] = ""
-            self._settings.setting["sap"] = ""
+            self._settings.settings["lsc"] = ""
+            self._settings.settings["sac"] = ""
+            self._settings.settings["lsp"] = ""
+            self._settings.settings["sap"] = ""
             self._settings.update()
             self.display_sync_status()
 

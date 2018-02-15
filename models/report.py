@@ -7,6 +7,7 @@
 """Report class"""
 
 from datetime import datetime
+from operator import itemgetter
 
 from models.reportcalculator import ReportCalculator
 from models.query import Query
@@ -52,6 +53,11 @@ class Report:
             self.q.execute(sql)
 
     @property
+    def csv_record_length(self):
+        """The number of fields expected on csv import"""
+        return self._csv_record_length
+
+    @property
     def report(self):
         """
         Report
@@ -60,41 +66,18 @@ class Report:
         """
         return self._report
 
-    @report.setter
-    def report(self, workdate):
-        """
-        Set reportid to workdate
-        Args:
-            workdate:
-        """
-        try:
-            _ = self._report["rep_date"]
-        except KeyError:
-            self.load_report(workdate=workdate)
-
     @property
-    def csv_record_length(self):
-        """The number of fields expected on csv import"""
-        return self._csv_record_length
-
-    @property
-    def list_(self):
+    def reports(self):
         """
         Report List
         Returns:
             Current list of reports
         """
+        try:
+            _ = self._reports[0]
+        except (IndexError, KeyError):
+            self.__get_by_period()
         return self._reports
-
-    @list_.setter
-    def list_(self, year=None, month=None):
-        """
-        Set the current list of reports to specified filter
-        Args:
-            year:
-            month:
-        """
-        self.load_reports(year=year, month=month)
 
     def clear(self):
         """
@@ -108,8 +91,8 @@ class Report:
         """
         Create reportid for employeeid and date supplied
         Args:
-            employee: object
-            workdate: iso formatted str representing the reportid date
+            :type employee: object
+            :type workdate: str iso formatted representing the work date
         """
         # we need to find the number of reports for the month of the supplied date
         # then init_detail 1 to that number
@@ -191,6 +174,8 @@ class Report:
     def insert(self, values):
         """
         Insert new reportid in table
+        Args:
+            :type values: iterable
         """
         sql = self.q.build("insert", self.model)
 
@@ -200,12 +185,34 @@ class Report:
             return data
         return False
 
-    def import_csv(self, row, employee_id):
+    def load(self, workdate=None, year=None, month=None):
+        """
+        Load reports for a given period
+        If none given load all
+        Args:
+            :type workdate: str
+            :type year: str
+            :type month: str
+        """
+        self.__get_by_period(workdate, year, month)
+
+    def recreate_table(self):
+        """
+        Drop and initialize reports table
+        """
+        self.c.recreate_table()
+        sql = self.q.build("drop", self.model)
+        self.q.execute(sql)
+        sql = self.q.build("create", self.model)
+        self.q.execute(sql)
+        self.clear()
+
+    def translate_row_insert(self, row, employee_id):
         """
         Translate a csv row
         Args:
-            row:
-            employee_id:
+            :type row: iterable
+            :type employee_id: int
         """
         # translate bool text to integer for col 19, 21
         field_19 = utils.bool2int(utils.arg2bool(row[19]))
@@ -218,70 +225,6 @@ class Report:
                   field_19, row[20].strip(), field_21, row[22], row[23].strip(), row[24])
 
         self.insert(values)
-
-    def load_report(self, workdate):
-        """
-        Load report for supplied date arg
-
-        Args:
-            workdate: iso formatted str representing the date for the report to be loaded
-        """
-        filters = [("rep_date", "=")]
-        values = (workdate,)
-
-        sql = self.q.build("select", self.model, filters=filters)
-
-        success, data = self.q.execute(sql, values=values)
-
-        if success:
-            try:
-                self._report = dict(zip(self.model["fields"], data[0]))
-                return True
-            except IndexError:
-                self._report = {}
-
-        return False
-
-    def load_reports(self, year=None, month=None):
-        """
-        Load reports matching args or all if no args
-
-        Args:
-            :type year: str
-            :type month: str
-        """
-        filters = ["rep_date", "like"]
-        value = "{}-{}-{}".format("%", "%", "%")
-        if year:
-            value = "{}-{}-{}".format(year, "%", "%")
-        if year and month:
-            value = "{}-{}-{}".format(year, month, "%")
-        values = (value,)
-        sql = self.q.build("select", self.model, filters=filters)
-
-        success, data = self.q.execute(sql, values=values)
-
-        if success:
-            try:
-                _ = data[0]
-                self._reports = [dict(zip(self.model["fields"], row)) for row in data]
-                self._report = self._reports[0]
-                return True
-            except IndexError:
-                self._report = {}
-                self._reports = []
-        return False
-
-    def recreate_table(self):
-        """
-        Drop and init_detail table
-        """
-        self.c.recreate_table()
-        sql = self.q.build("drop", self.model)
-        self.q.execute(sql)
-        sql = self.q.build("create", self.model)
-        self.q.execute(sql)
-        self.clear()
 
     def update(self):
         """
@@ -300,5 +243,51 @@ class Report:
         #     printit(
         #         "{}\n ->update\n  ->success: {}\n  ->data: {}".format(
         #             success, data))
-
         pass
+
+    def __get_by_period(self, workdate=None, year=None, month=None):
+        """
+        Load reports matching args or all if no args
+        Args:
+            :type workdate: str
+            :type year: str
+            :type month: str
+        """
+        if workdate:
+            try:
+                _ = self._reports[0]
+                for report in self._reports:
+                    if report["workdate"] == workdate:
+                        self._report = report
+                        return
+            except IndexError:
+                pass
+
+        filters = [("rep_date", "like")]
+        value = "{}-{}-{}".format("%", "%", "%")
+        if year:
+            value = "{}-{}-{}".format(year, "%", "%")
+        if year and month:
+            value = "{}-{}-{}".format(year, month, "%")
+
+        values = (value,)
+        sql = self.q.build("select", self.model, filters=filters)
+        success, data = self.q.execute(sql, values=values)
+        if success and data:
+            try:
+                _ = data[0]
+                self._reports = [dict(zip(self.model["fields"], row)) for row in data]
+                self._reports = sorted(self._reports, key=itemgetter("rep_date"), reverse=True)
+                if workdate:
+                    for report in self._reports:
+                        if report["rep_date"] == workdate:
+                            self._report = report
+                            break
+                if not self._report:
+                    self._report = self._reports[0]
+            except IndexError:
+                self._report = {}
+                self._reports = []
+        else:
+            self._report = {}
+            self._reports = []
