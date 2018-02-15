@@ -358,7 +358,6 @@ class MainWindow(QMainWindow, Ui_mainWindow):
         Populate widgetReports
         """
         self.widgetReports.clear()
-        print("{}".format(self._reports.reports))
         reports = []
         try:
             for report in self._reports.reports:

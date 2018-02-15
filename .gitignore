@@ -1,7 +1,8 @@
 git ls-files --others --exclude-from=.git/info/exclude
 .idea
-/appdata/app.db
-/appdata/test.db
+appdata/app.db
+appdata/test.db
+dist/*
 configuration/__pycache__/
 dialogs/__pycache__/
 models/__pycache__/
