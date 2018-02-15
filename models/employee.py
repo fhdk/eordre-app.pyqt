@@ -36,8 +36,8 @@ class Employee:
             sql = self.q.build("create", self.model)
             self.q.execute(sql)
         self.s = Settings()
-        if rules.check_settings(self.s.setting):
-            self.load(self.s.setting["usermail"])
+        if rules.check_settings(self.s.settings):
+            self.load(self.s.settings["usermail"])
 
     @property
     def employee(self):
@@ -62,7 +62,6 @@ class Employee:
         filters = [("email", "=")]
         values = (email,)
         sql = self.q.build("select", self.model, filters=filters)
-
         success, data = self.q.execute(sql, values)
         # first check if employee is loaded
         # second check is in exception handling

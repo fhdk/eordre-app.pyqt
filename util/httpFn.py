@@ -31,7 +31,7 @@ def get_customers(settings, employee, maxwait=2):
     Returns:
         customers list
     """
-    active_settings = settings.setting
+    active_settings = settings.settings
     active_employee = employee.employee
     try:
         # old file
@@ -70,7 +70,7 @@ def get_employee_data(settings, maxwait=2):
     Returns:
         current data
     """
-    s = settings.setting
+    s = settings.settings
     f = "".join([s["pf"], s["fe"], s["sf"]])
     context = ssl.SSLContext(ssl.PROTOCOL_SSLv23)
     data = []
@@ -124,7 +124,7 @@ def get_products(settings, maxwait=2):
     Returns:
         products list
     """
-    s = settings.setting
+    s = settings.settings
     f = "".join([s["pf"], s["fp"], s["sf"]])
     context = ssl.SSLContext(ssl.PROTOCOL_SSLv23)
     data = []
@@ -169,7 +169,7 @@ def update_last_sync_info(settings):
     Returns:
         Two tuples with target and date time values
     """
-    s = settings.setting
+    s = settings.settings
     f = "".join([s["pd"], s["fc"], s["sf"]])
     s["sac"] = get_modified_date(s["http"], s["usercountry"], f)
     f = "".join([s["pd"], s["fc"], s["sf"]])
