@@ -430,6 +430,12 @@ class MainWindow(QMainWindow, Ui_mainWindow):
         :param event:
         """
         # TODO handle resize event
+        w = event.size().width()
+        h = event.size().height()
+        dpival = self.topbar.devicePixelRatio()
+        winch = w/dpival
+        hinch = h/dpival
+        print("width = {}\nheight = {}\ndpi = {}".format(w, h, dpival))
         pass
 
     def run(self):
