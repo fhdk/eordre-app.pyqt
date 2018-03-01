@@ -432,10 +432,16 @@ class MainWindow(QMainWindow, Ui_mainWindow):
         # TODO handle resize event
         w = event.size().width()
         h = event.size().height()
-        dpival = self.topbar.devicePixelRatio()
+        dpival = self.centralwidget.devicePixelRatio()
+        dpivalf = self.centralwidget.devicePixelRatioF()
         winch = w/dpival
         hinch = h/dpival
-        print("width = {}\nheight = {}\ndpi = {}".format(w, h, dpival))
+        print("width = {}\n"
+              "height = {}\n"
+              "dpi = {}\n"
+              "dpi f = {}\n"
+              "w inch = {}\n"
+              "h inch = {}".format(w, h, dpival, dpivalf, winch, hinch))
         pass
 
     def run(self):
