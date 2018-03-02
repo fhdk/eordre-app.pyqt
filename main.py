@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-# Author: Frede Hundewadt <echo "ZmhAdWV4LmRrCg==" | base64 -d>
+
 # Copyright: Frede Hundewadt <echo "ZmhAdWV4LmRrCg==" | base64 -d>
 # License: GNU AGPL, version 3 or later; http://www.gnu.org/licenses/agpl.html
 
@@ -432,8 +432,12 @@ class MainWindow(QMainWindow, Ui_mainWindow):
         # TODO handle resize event
         w = event.size().width()
         h = event.size().height()
-        dpival = self.centralwidget.devicePixelRatio()
-        dpivalf = self.centralwidget.devicePixelRatioF()
+        dpival = self.labelAvailable.devicePixelRatio()
+        dpivalf = self.labelAvailable.devicePixelRatioF()
+        dpivalfs = self.labelAvailable.devicePixelRatioFScale()
+        dpilogx = self.labelAvailable.logicalDpiX()
+        dpilogy = self.labelAvailable.logicalDpiY()
+
         winch = w/dpival
         hinch = h/dpival
         print("width = {}\n"
@@ -441,7 +445,10 @@ class MainWindow(QMainWindow, Ui_mainWindow):
               "dpi = {}\n"
               "dpi f = {}\n"
               "w inch = {}\n"
-              "h inch = {}".format(w, h, dpival, dpivalf, winch, hinch))
+              "h inch = {}\n"
+              "dpi fs = {}\n"
+              "dpi log x = {}\n"
+              "dpi log y = {}".format(w, h, dpival, dpivalf, winch, hinch, dpivalfs, dpilogx, dpilogy))
         pass
 
     def run(self):
@@ -1242,7 +1249,8 @@ if __name__ == '__main__':
     window = MainWindow()
     window.show()
 
-    QTimer.singleShot(1000, window.run)
+    qtimer = QTimer()
+    qtimer.singleShot(5000, window.run)
     splash.finish(window)
 
     sys.exit(app.exec_())
