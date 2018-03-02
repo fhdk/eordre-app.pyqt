@@ -9,6 +9,7 @@ Eordre application module
 """
 
 import datetime
+import os
 import sys
 
 from PyQt5.QtCore import QTimer, Qt, QThread, pyqtSlot
@@ -1239,6 +1240,26 @@ if __name__ == '__main__':
     # app.setDesktopSettingsAware(True)
     # app.setAttribute(Qt.AA_EnableHighDpiScaling)
 
+    # w = event.size().width()
+    # h = event.size().height()
+    # dpival = self.labelAvailable.devicePixelRatio()
+    # dpivalf = self.labelAvailable.devicePixelRatioF()
+    # dpivalfs = self.labelAvailable.devicePixelRatioFScale()
+    # dpilogx = self.labelAvailable.logicalDpiX()
+    # dpilogy = self.labelAvailable.logicalDpiY()
+    #
+    # winch = w / dpival
+    # hinch = h / dpival
+    # print("width = {}\n"
+    #       "height = {}\n"
+    #       "dpi = {}\n"
+    #       "dpi f = {}\n"
+    #       "w inch = {}\n"
+    #       "h inch = {}\n"
+    #       "dpi fs = {}\n"
+    #       "dpi log x = {}\n"
+    #       "dpi log y = {}".format(w, h, dpival, dpivalf, winch, hinch, dpivalfs, dpilogx, dpilogy))
+    #
     pixmap = QPixmap(":/splash/splash.png")
     splash = QSplashScreen(pixmap, Qt.WindowStaysOnTopHint)
     splash.show()
