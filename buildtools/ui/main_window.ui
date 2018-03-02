@@ -34,7 +34,11 @@
    </font>
   </property>
   <property name="windowTitle">
-   <string>Eordre</string>
+   <string>Eordre NG</string>
+  </property>
+  <property name="windowIcon">
+   <iconset resource="../icons/system.qrc">
+    <normaloff>:/system/paper-pencil.png</normaloff>:/system/paper-pencil.png</iconset>
   </property>
   <property name="styleSheet">
    <string notr="true"/>
