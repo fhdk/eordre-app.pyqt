@@ -487,10 +487,9 @@ class MainWindow(QMainWindow, Ui_mainWindow):
         # display known sync data
         self.display_sync_status()
 
-    def set_indexes(self, button: str):
+    def set_indexes(self):
         """
         Save page index to settings
-        :param button:
         :return:
         """
         try:
@@ -1102,7 +1101,7 @@ class MainWindow(QMainWindow, Ui_mainWindow):
         """
         Show page with customer
         """
-        self.set_indexes(button="toolButtonCustomer")
+        self.set_indexes()
         self.widgetAppPages.setCurrentIndex(PAGE_CUSTOMER)
 
     @pyqtSlot(name="show_page_customer_visits")
@@ -1110,7 +1109,7 @@ class MainWindow(QMainWindow, Ui_mainWindow):
         """
         Show page with customer visits and orders
         """
-        self.set_indexes(button="toolButtonCustomerVisits")
+        self.set_indexes()
         self.widgetAppPages.setCurrentIndex(PAGE_CUSTOMER_VISITS)
 
     @pyqtSlot(name="show_page_customers")
@@ -1118,7 +1117,7 @@ class MainWindow(QMainWindow, Ui_mainWindow):
         """
         Show page with customer list
         """
-        self.set_indexes(button="toolButtonCustomers")
+        self.set_indexes()
         self.widgetAppPages.setCurrentIndex(PAGE_CUSTOMERS)
 
     @pyqtSlot(name="show_page_info")
@@ -1126,7 +1125,7 @@ class MainWindow(QMainWindow, Ui_mainWindow):
         """
         Show page with about Qt and Eordre
         """
-        self.set_indexes(button="toolButtonInfo")
+        self.set_indexes()
         self.widgetAppPages.setCurrentIndex(PAGE_INFO)
 
     @pyqtSlot(name="show_page_pricelist")
@@ -1134,7 +1133,7 @@ class MainWindow(QMainWindow, Ui_mainWindow):
         """
         Show page with pricelist
         """
-        self.set_indexes(button="toolButtonPricelist")
+        self.set_indexes()
         self.widgetAppPages.setCurrentIndex(PAGE_PRICELIST)
 
     @pyqtSlot(name="show_page_report")
@@ -1142,7 +1141,7 @@ class MainWindow(QMainWindow, Ui_mainWindow):
         """
         Slot for masterData triggered signal
         """
-        self.set_indexes(button="toolButtonReport")
+        self.set_indexes()
         self.widgetAppPages.setCurrentIndex(PAGE_REPORT)
 
     @pyqtSlot(name="show_page_reports")
@@ -1150,7 +1149,7 @@ class MainWindow(QMainWindow, Ui_mainWindow):
         """
         Show page with a report list
         """
-        self.set_indexes(button="toolButtonReports")
+        self.set_indexes()
         self.widgetAppPages.setCurrentIndex(PAGE_REPORTS)
 
     @pyqtSlot(name="show_page_settings")
@@ -1158,7 +1157,7 @@ class MainWindow(QMainWindow, Ui_mainWindow):
         """
         Show page with settings
         """
-        self.set_indexes(button="toolButtonSettings")
+        self.set_indexes()
         self.populate_settings_page()
         self.widgetAppPages.setCurrentIndex(PAGE_SETTINGS)
 
@@ -1167,7 +1166,7 @@ class MainWindow(QMainWindow, Ui_mainWindow):
         """
         Show page with visit
         """
-        self.set_indexes(button="toolButtonVisit")
+        self.set_indexes()
         self.widgetAppPages.setCurrentIndex(PAGE_VISIT)
 
     @pyqtSlot(name="visit_add_line")
