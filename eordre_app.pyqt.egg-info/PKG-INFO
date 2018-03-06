@@ -1,6 +1,6 @@
 Metadata-Version: 1.1
 Name: eordre-app.pyqt
-Version: 0.3.1
+Version: 0.5.3
 Summary: Eordre app build with Python 3 and PyQt5
 Home-page: https://github.com/fhdk/eordre-app.pyqt
 Author: Frede Hundewadt

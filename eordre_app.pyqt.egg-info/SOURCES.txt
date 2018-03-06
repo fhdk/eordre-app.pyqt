@@ -9,10 +9,11 @@ configuration/configfn.py
 dialogs/__init__.py
 dialogs/create_report_dialog.py
 dialogs/csv_import_dialog.py
-dialogs/http_customers_dialog.py
-dialogs/http_products_dialog.py
+dialogs/get_customers_dialog.py
+dialogs/get_pricelist_dialog.py
 dialogs/settings_dialog.py
 dialogs/visit_dialog.py
+eordre_app.pyqt.egg-info/.gitignore
 eordre_app.pyqt.egg-info/PKG-INFO
 eordre_app.pyqt.egg-info/SOURCES.txt
 eordre_app.pyqt.egg-info/dependency_links.txt
@@ -35,10 +36,8 @@ resources/csv_import_dialog_rc.py
 resources/http_customers_dialog_rc.py
 resources/http_products_dialog_rc.py
 resources/main_window_rc.py
-resources/settings_dialog_rc.py
 resources/splash_rc.py
 resources/system_rc.py
-resources/visit_dialog_rc.py
 util/__init__.py
 util/colors.py
 util/fileFn.py
