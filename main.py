@@ -12,7 +12,7 @@ import datetime
 import os
 import sys
 
-from PyQt5.QtCore import QTimer, Qt, QThread, pyqtSlot
+from PyQt5.QtCore import QTimer, Qt, QThread, pyqtSlot, QCoreApplication
 from PyQt5.QtGui import QPixmap
 from PyQt5.QtWidgets import QApplication, QMainWindow, QMessageBox, QSplashScreen, \
     QTreeWidgetItem, QTableWidgetItem
@@ -49,6 +49,8 @@ PAGE_REPORTS = 5
 PAGE_SETTINGS = 6
 PAGE_INFO = 7
 PAGE_VISIT = 8
+
+QCoreApplication.setAttribute(Qt.AA_EnableHighDpiScaling, True)
 
 
 class MainWindow(QMainWindow, Ui_mainWindow):
