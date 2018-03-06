@@ -260,7 +260,7 @@ class Report:
                     if report["workdate"] == workdate:
                         self._report = report
                         return
-            except IndexError:
+            except (IndexError, KeyError):
                 pass
 
         filters = [("rep_date", "like")]

@@ -50,6 +50,10 @@ PAGE_SETTINGS = 6
 PAGE_INFO = 7
 PAGE_VISIT = 8
 
+"""
+Set application attributes before creating object
+Enable High Dpi Scaling
+"""
 QCoreApplication.setAttribute(Qt.AA_EnableHighDpiScaling, True)
 
 
@@ -744,7 +748,7 @@ class MainWindow(QMainWindow, Ui_mainWindow):
             active_report = self.create_report()
 
         if active_report:
-            self._reports.__get_by_date(self.textWorkdate.text())
+            self._reports.load(workdate=self.textWorkdate.text())
             try:
                 # do we have a customer
                 _ = self._customers.customer["company"]
@@ -785,9 +789,9 @@ class MainWindow(QMainWindow, Ui_mainWindow):
             """
             load visits for workdate
             """
-            self._visits.__get_by_customer(customerid, workdate)
+            self._visits.list_by_date(workdate)
             self.textVisitId.setText(str(self._visits.visit["visit_id"]))
-        except KeyError:
+        except (KeyError,):
             self.textVisitId.setText(str(self._visits.add(reportid, employeeid, customerid, workdate)))
             self._visits.visit["visit_type"] = "R"
             if self._customers.customer["account"] == "NY":
@@ -797,56 +801,69 @@ class MainWindow(QMainWindow, Ui_mainWindow):
         self._orderLines = OrderLine()
         self._orderLines.load_visit(visit_id)
 
-        self.widgetVisitOrderLines.setColumnWidth(0, 43)   # line_type D/N/S
-        self.widgetVisitOrderLines.setColumnWidth(1, 44)   # pcs
-        self.widgetVisitOrderLines.setColumnWidth(2, 44)   # item
-        self.widgetVisitOrderLines.setColumnWidth(3, 123)  # sku
-        self.widgetVisitOrderLines.setColumnWidth(4, 153)  # text
-        self.widgetVisitOrderLines.setColumnWidth(5, 60)   # price
-        self.widgetVisitOrderLines.setColumnWidth(6, 50)   # discount
-        self.widgetVisitOrderLines.setColumnWidth(6, 60)   # amount
-        self.widgetVisitOrderLines.setColumnWidth(7, 30)   # SAS
+        self.widgetTableSale.setColumnWidth(0, 43)   # line_type D/N/S
+        self.widgetTableSale.setColumnWidth(1, 44)   # pcs
+        self.widgetTableSale.setColumnWidth(2, 44)   # item
+        self.widgetTableSale.setColumnWidth(3, 123)  # sku
+        self.widgetTableSale.setColumnWidth(4, 153)  # text
+        self.widgetTableSale.setColumnWidth(5, 60)   # price
+        self.widgetTableSale.setColumnWidth(6, 50)   # discount
+        self.widgetTableSale.setColumnWidth(6, 60)   # amount
+        self.widgetTableSale.setColumnWidth(7, 30)   # SAS
 
         lines = self._orderLines.list_
-        self.widgetVisitOrderLines.setRowCount(len(lines) - 1)
-        for idx, detail in enumerate(lines):
+        visit_sale = 0.0
+        visit_sas = 0.0
+        visit_total = 0.0
+        line_demo = 0
+        line_sale = 0
+        row_number = 0
+        self.widgetTableSale.setRowCount(len(lines) - 1)
+        for line in lines:
             # "line_id", "visit_id",
             # "pcs", "sku", "text", "price", "sas", "discount",
             # "linetype", "linenote", "item"
-            amount = float(detail["pcs"]) * detail["price"] * detail["discount"] / 100
-            row_number = idx + 1
-            # self.widgetVisitOrderLines.setRowCount(row_number)
-            # self.widgetVisitOrderLines.setRowHeight(row_number, 12)
+            amount = float(line["pcs"]) * line["price"] * line["discount"] / 100
+            if line["sas"] == 1:
+                visit_sas += amount
+            else:
+                visit_sale += amount
+            visit_total += amount
+            if line["linetype"].lower() == "d":
+                row_number = line_demo + 1
+                self.widgetTableDemo.setRowCount(row_number)
+            else:
+                row_number = line_sale + 1
+                self.widgetTableSale.setRowCount(row_number)
+
+            # self.widgetTableSale.setRowHeight(row_number, 12)
             c1 = QTableWidgetItem()
-            c1.setText(detail["linetype"])
-            self.widgetVisitOrderLines.setItem(row_number, 0, c1)
+            c1.setText(line["linetype"])
+            self.widgetTableSale.setItem(row_number, 0, c1)
             c2 = QTableWidgetItem()
-            c2.setText(str(detail["pcs"]))
-            self.widgetVisitOrderLines.setItem(row_number, 1, c2)
+            c2.setText(str(line["pcs"]))
+            self.widgetTableSale.setItem(row_number, 1, c2)
             c3 = QTableWidgetItem()
-            c3.setText(str(detail["item"]))
-            self.widgetVisitOrderLines.setItem(row_number, 2, c3)
+            c3.setText(str(line["item"]))
+            self.widgetTableSale.setItem(row_number, 2, c3)
             c4 = QTableWidgetItem()
-            c4.setText(detail["sku"])
-            self.widgetVisitOrderLines.setItem(row_number, 3, c4)
+            c4.setText(line["sku"])
+            self.widgetTableSale.setItem(row_number, 3, c4)
             c5 = QTableWidgetItem()
-            c5.setText(detail["text"])
-            self.widgetVisitOrderLines.setItem(row_number, 4, c5)
+            c5.setText(line["text"])
+            self.widgetTableSale.setItem(row_number, 4, c5)
             c6 = QTableWidgetItem()
-            c6.setText(str(detail["price"]))
-            self.widgetVisitOrderLines.setItem(row_number, 5, c6)
+            c6.setText(str(line["price"]))
+            self.widgetTableSale.setItem(row_number, 5, c6)
             c7 = QTableWidgetItem()
-            c6.setText(str(detail["discount"]))
-            self.widgetVisitOrderLines.setItem(row_number, 6, c7)
-            c8 = QTableWidgetItem()
-            c8.setText(str(amount))
-            self.widgetVisitOrderLines.setItem(row_number, 7, c8)
+            c6.setText(str(line["discount"]))
+            self.widgetTableSale.setItem(row_number, 6, c7)
             c9 = QTableWidgetItem()
-            c9.setText(utils.int2strdk(detail["sas"]))
-            self.widgetVisitOrderLines.setItem(row_number, 8, c9)
+            c9.setText(utils.int2strdk(line["sas"]))
+            self.widgetTableSale.setItem(row_number, 7, c9)
             c10 = QTableWidgetItem()
-            c10.setText(detail["linenote"])
-            self.widgetVisitOrderLines.setItem(row_number, 9, c10)
+            c10.setText(line["linenote"])
+            self.widgetTableSale.setItem(row_number, 8, c10)
 
         # Setup pricelist and selection combos
         factor = self._customers.customer["factor"]
@@ -987,6 +1004,7 @@ class MainWindow(QMainWindow, Ui_mainWindow):
             self.textEmail.setText(self._customers.customer["email"])
             self.textFactor.setText(str(self._customers.customer["factor"]))
             self.textCustomerNotes.setText(self._customers.customer["infotext"])
+            self.textCustomerNameCreateVisit.setText(self._customers.customer["company"])
         except AttributeError:
             pass
         except KeyError:
@@ -1177,9 +1195,9 @@ class MainWindow(QMainWindow, Ui_mainWindow):
         """
         Slot for Add Demo button clicked
         """
-        new_row = self.widgetVisitOrderLines.rowCount() + 1
-        self.widgetVisitOrderLines.setRowCount(new_row)
-        self.widgetVisitOrderLines.setRowHeight(new_row, 20)
+        new_row = self.widgetArchivedOrderLines.rowCount() + 1
+        self.widgetArchivedOrderLines.setRowCount(new_row)
+        self.widgetArchivedOrderLines.setRowHeight(new_row, 20)
 
     @pyqtSlot(name="visit_clear_line")
     def visit_clear_line(self):
@@ -1238,30 +1256,6 @@ class MainWindow(QMainWindow, Ui_mainWindow):
 
 if __name__ == '__main__':
     app = QApplication(sys.argv)
-    # app.setAutoSipEnabled(True)
-    # app.setDesktopSettingsAware(True)
-    # app.setAttribute(Qt.AA_EnableHighDpiScaling)
-
-    # w = event.size().width()
-    # h = event.size().height()
-    # dpival = self.labelAvailable.devicePixelRatio()
-    # dpivalf = self.labelAvailable.devicePixelRatioF()
-    # dpivalfs = self.labelAvailable.devicePixelRatioFScale()
-    # dpilogx = self.labelAvailable.logicalDpiX()
-    # dpilogy = self.labelAvailable.logicalDpiY()
-    #
-    # winch = w / dpival
-    # hinch = h / dpival
-    # print("width = {}\n"
-    #       "height = {}\n"
-    #       "dpi = {}\n"
-    #       "dpi f = {}\n"
-    #       "w inch = {}\n"
-    #       "h inch = {}\n"
-    #       "dpi fs = {}\n"
-    #       "dpi log x = {}\n"
-    #       "dpi log y = {}".format(w, h, dpival, dpivalf, winch, hinch, dpivalfs, dpilogx, dpilogy))
-    #
     pixmap = QPixmap(":/splash/splash.png")
     splash = QSplashScreen(pixmap, Qt.WindowStaysOnTopHint)
     splash.show()
