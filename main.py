@@ -1263,7 +1263,6 @@ if __name__ == '__main__':
     pixmap = QPixmap(":/splash/splash.png")
     splash = QSplashScreen(pixmap, Qt.WindowStaysOnTopHint)
     splash.show()
-    dpilogx = splash.logicalDpiX()
 
     app.processEvents()
 
