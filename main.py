@@ -829,41 +829,52 @@ class MainWindow(QMainWindow, Ui_mainWindow):
             else:
                 visit_sale += amount
             visit_total += amount
+
+            # self.widgetTableSale.setRowHeight(row_number, 12)
             if line["linetype"].lower() == "d":
                 row_number = line_demo + 1
                 self.widgetTableDemo.setRowCount(row_number)
+
+                c1 = QTableWidgetItem()
+                c1.setText(line["linetype"])
+                self.widgetTableDemo.setItem(row_number, 0, c1)
+                c2 = QTableWidgetItem()
+                c2.setText(str(line["pcs"]))
+                self.widgetTableDemo.setItem(row_number, 1, c2)
+                c3 = QTableWidgetItem()
+                c3.setText(str(line["item"]))
+                self.widgetTableDemo.setItem(row_number, 2, c3)
             else:
                 row_number = line_sale + 1
                 self.widgetTableSale.setRowCount(row_number)
 
-            # self.widgetTableSale.setRowHeight(row_number, 12)
-            c1 = QTableWidgetItem()
-            c1.setText(line["linetype"])
-            self.widgetTableSale.setItem(row_number, 0, c1)
-            c2 = QTableWidgetItem()
-            c2.setText(str(line["pcs"]))
-            self.widgetTableSale.setItem(row_number, 1, c2)
-            c3 = QTableWidgetItem()
-            c3.setText(str(line["item"]))
-            self.widgetTableSale.setItem(row_number, 2, c3)
-            c4 = QTableWidgetItem()
-            c4.setText(line["sku"])
-            self.widgetTableSale.setItem(row_number, 3, c4)
-            c5 = QTableWidgetItem()
-            c5.setText(line["text"])
-            self.widgetTableSale.setItem(row_number, 4, c5)
-            c6 = QTableWidgetItem()
-            c6.setText(str(line["price"]))
-            self.widgetTableSale.setItem(row_number, 5, c6)
-            c7 = QTableWidgetItem()
-            c6.setText(str(line["discount"]))
-            self.widgetTableSale.setItem(row_number, 6, c7)
-            c9 = QTableWidgetItem()
-            c9.setText(utils.int2strdk(line["sas"]))
-            self.widgetTableSale.setItem(row_number, 7, c9)
-            c10 = QTableWidgetItem()
-            c10.setText(line["linenote"])
-            self.widgetTableSale.setItem(row_number, 8, c10)
+                c1 = QTableWidgetItem()
+                c1.setText(line["linetype"])
+                self.widgetTableSale.setItem(row_number, 0, c1)
+                c2 = QTableWidgetItem()
+                c2.setText(str(line["pcs"]))
+                self.widgetTableSale.setItem(row_number, 1, c2)
+                c3 = QTableWidgetItem()
+                c3.setText(str(line["item"]))
+                self.widgetTableSale.setItem(row_number, 2, c3)
+                c4 = QTableWidgetItem()
+                c4.setText(line["sku"])
+                self.widgetTableSale.setItem(row_number, 3, c4)
+                c5 = QTableWidgetItem()
+                c5.setText(line["text"])
+                self.widgetTableSale.setItem(row_number, 4, c5)
+                c6 = QTableWidgetItem()
+                c6.setText(str(line["price"]))
+                self.widgetTableSale.setItem(row_number, 5, c6)
+                c7 = QTableWidgetItem()
+                c6.setText(str(line["discount"]))
+                self.widgetTableSale.setItem(row_number, 6, c7)
+                c9 = QTableWidgetItem()
+                c9.setText(utils.int2strdk(line["sas"]))
+                self.widgetTableSale.setItem(row_number, 7, c9)
+                c10 = QTableWidgetItem()
+                c10.setText(line["linenote"])
+                self.widgetTableSale.setItem(row_number, 8, c10)
 
         # Setup pricelist and selection combos
         factor = self._customers.customer["factor"]
@@ -892,9 +903,6 @@ class MainWindow(QMainWindow, Ui_mainWindow):
         self.comboOrderItem.currentIndexChanged.connect(self.on_order_item_changed)
         self.comboOrderSku.currentIndexChanged.connect(self.on_order_sku_changed)
         self.comboOrderSku.editTextChanged.connect(self.on_order_sku_changed)
-        self.comboVisitLineType.currentIndexChanged.connect(self.visit_line_type_changed)
-        self.toolButtonVisitAppendLine.clicked.connect(self.visit_add_line)
-        self.toolButtonVisitClearLine.clicked.connect(self.visit_clear_line)
 
     @pyqtSlot(name="data_export")
     def data_export(self):
@@ -949,8 +957,8 @@ class MainWindow(QMainWindow, Ui_mainWindow):
         Add line to product demo table
         :return:
         """
-        row_count = self.tableDemo.rowCount()
-        self.tableDemo.setRowCount(row_count + 1)
+        row_count = self.widgetTableDemo.rowCount()
+        self.widgetTableDemo.setRowCount(row_count + 1)
 
     @pyqtSlot(name="on_add_sale")
     def on_add_sale(self):
@@ -958,8 +966,8 @@ class MainWindow(QMainWindow, Ui_mainWindow):
         Add line to product sale table
         :return:
         """
-        row_count = self.tableSale.rowCount()
-        self.tableSale.setRowCount(row_count + 1)
+        row_count = self.widgetTableSale.rowCount()
+        self.widgetTableSale.setRowCount(row_count + 1)
 
     @pyqtSlot(name="on_remove_demo")
     def on_remove_demo(self):
@@ -967,6 +975,8 @@ class MainWindow(QMainWindow, Ui_mainWindow):
         Remove line from product demo table
         :return:
         """
+        if self.widgetTableDemo.currentIndex():
+            self.widgetTableDemo.removeRow(self.widgetTableDemo.currentIndex())
 
     @pyqtSlot(name="on_remove_sale")
     def on_remove_sale(self):
@@ -974,6 +984,8 @@ class MainWindow(QMainWindow, Ui_mainWindow):
         Remove line from product sale table
         :return:
         """
+        if self.widgetTableSale.currentIndex():
+            self.widgetTableSale.removeRow(self.widgetTableSale.currentIndex())
 
     @pyqtSlot(QTreeWidgetItem, QTreeWidgetItem, name="on_customer_changed")
     def on_customer_changed(self, current, previous):
@@ -1189,39 +1201,6 @@ class MainWindow(QMainWindow, Ui_mainWindow):
         """
         self.set_indexes()
         self.widgetAppPages.setCurrentIndex(PAGE_VISIT)
-
-    @pyqtSlot(name="visit_add_line")
-    def visit_add_line(self):
-        """
-        Slot for Add Demo button clicked
-        """
-        new_row = self.widgetArchivedOrderLines.rowCount() + 1
-        self.widgetArchivedOrderLines.setRowCount(new_row)
-        self.widgetArchivedOrderLines.setRowHeight(new_row, 20)
-
-    @pyqtSlot(name="visit_clear_line")
-    def visit_clear_line(self):
-        """
-        Clear visit line
-        """
-        # TODO clear the add visit line
-        msgbox = QMessageBox()
-        msgbox.information(self,
-                           __appname__,
-                           "# TODO clear the add visit line",
-                           QMessageBox.Ok)
-
-    @pyqtSlot(name="visit_line_type_changed")
-    def visit_line_type_changed(self):
-        """
-        Changed linetype
-        `D`emo `N`ysalg `S`alg `T`ekst
-        :return: nothing
-        """
-        if self.comboVisitLineType.currentText() == "T":
-            self.set_input_enabled(False)
-            return
-        self.set_input_enabled(True)
 
     @pyqtSlot(name="zero_database")
     def zero_database(self):
