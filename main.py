@@ -1040,6 +1040,7 @@ class MainWindow(QMainWindow, Ui_mainWindow):
         :param current:
         :return:
         """
+        print("current: {}".format(current))
         self.toolButtonCustomer.click()
 
     @pyqtSlot(name="on_get_customers_done")
