@@ -741,48 +741,10 @@
         <x>570</x>
         <y>340</y>
         <width>220</width>
-        <height>160</height>
+        <height>111</height>
        </rect>
       </property>
       <layout class="QGridLayout" name="widgetArchivedOrder">
-       <item row="4" column="2">
-        <widget class="QLabel" name="labelArchivedSend">
-         <property name="maximumSize">
-          <size>
-           <width>16777215</width>
-           <height>16</height>
-          </size>
-         </property>
-         <property name="text">
-          <string>Afsl.</string>
-         </property>
-        </widget>
-       </item>
-       <item row="4" column="3">
-        <widget class="QLabel" name="labelArchivedSendText">
-         <property name="sizePolicy">
-          <sizepolicy hsizetype="Preferred" vsizetype="Maximum">
-           <horstretch>0</horstretch>
-           <verstretch>0</verstretch>
-          </sizepolicy>
-         </property>
-         <property name="maximumSize">
-          <size>
-           <width>16777215</width>
-           <height>16</height>
-          </size>
-         </property>
-         <property name="font">
-          <font>
-           <weight>75</weight>
-           <bold>true</bold>
-          </font>
-         </property>
-         <property name="text">
-          <string/>
-         </property>
-        </widget>
-       </item>
        <item row="1" column="2">
         <widget class="QLabel" name="labelArchivedOrderSale">
          <property name="text">
@@ -819,19 +781,6 @@
          </property>
          <property name="text">
           <string>SAS</string>
-         </property>
-        </widget>
-       </item>
-       <item row="3" column="2">
-        <widget class="QLabel" name="labelArchivedOrderTotal">
-         <property name="maximumSize">
-          <size>
-           <width>16777215</width>
-           <height>16</height>
-          </size>
-         </property>
-         <property name="text">
-          <string>Total</string>
          </property>
         </widget>
        </item>
@@ -873,7 +822,33 @@
          </property>
         </widget>
        </item>
-       <item row="0" column="3">
+       <item row="3" column="2">
+        <widget class="QLabel" name="labelArchivedOrderTotal">
+         <property name="maximumSize">
+          <size>
+           <width>16777215</width>
+           <height>16</height>
+          </size>
+         </property>
+         <property name="text">
+          <string>Total</string>
+         </property>
+        </widget>
+       </item>
+       <item row="1" column="4">
+        <widget class="QLabel" name="labelArchivedPurchaseOrder">
+         <property name="maximumSize">
+          <size>
+           <width>16777215</width>
+           <height>16</height>
+          </size>
+         </property>
+         <property name="text">
+          <string>Rekv.</string>
+         </property>
+        </widget>
+       </item>
+       <item row="1" column="5">
         <widget class="QLineEdit" name="textArchivedOrderPoNumber">
          <property name="sizePolicy">
           <sizepolicy hsizetype="Expanding" vsizetype="Maximum">
@@ -892,8 +867,8 @@
          </property>
         </widget>
        </item>
-       <item row="0" column="2">
-        <widget class="QLabel" name="labelArchivedPurchaseOrder">
+       <item row="2" column="4">
+        <widget class="QLabel" name="labelArchivedSend">
          <property name="maximumSize">
           <size>
            <width>16777215</width>
@@ -901,18 +876,43 @@
           </size>
          </property>
          <property name="text">
-          <string>Rekv.</string>
+          <string>Afsl.</string>
          </property>
         </widget>
        </item>
-       <item row="5" column="2">
+       <item row="2" column="5">
+        <widget class="QLabel" name="labelArchivedSendText">
+         <property name="sizePolicy">
+          <sizepolicy hsizetype="Preferred" vsizetype="Maximum">
+           <horstretch>0</horstretch>
+           <verstretch>0</verstretch>
+          </sizepolicy>
+         </property>
+         <property name="maximumSize">
+          <size>
+           <width>16777215</width>
+           <height>16</height>
+          </size>
+         </property>
+         <property name="font">
+          <font>
+           <weight>75</weight>
+           <bold>true</bold>
+          </font>
+         </property>
+         <property name="text">
+          <string/>
+         </property>
+        </widget>
+       </item>
+       <item row="3" column="4">
         <widget class="QLabel" name="labelArchivedApproved">
          <property name="text">
           <string>Godk.</string>
          </property>
         </widget>
        </item>
-       <item row="5" column="3">
+       <item row="3" column="5">
         <widget class="QLabel" name="labelArchivedApprovedText">
          <property name="sizePolicy">
           <sizepolicy hsizetype="Preferred" vsizetype="Maximum">
@@ -945,7 +945,7 @@
         <x>10</x>
         <y>340</y>
         <width>550</width>
-        <height>160</height>
+        <height>111</height>
        </rect>
       </property>
       <property name="readOnly">
@@ -2299,7 +2299,7 @@ QToolButton:hover:checked {
         </widget>
        </item>
        <item row="0" column="3">
-        <widget class="QComboBox" name="comboOrderSku">
+        <widget class="QComboBox" name="comboLineSku">
          <property name="enabled">
           <bool>true</bool>
          </property>
@@ -2326,7 +2326,7 @@ QToolButton:hover:checked {
         </widget>
        </item>
        <item row="0" column="2">
-        <widget class="QComboBox" name="comboOrderItem">
+        <widget class="QComboBox" name="comboLineItem">
          <property name="enabled">
           <bool>true</bool>
          </property>
@@ -2353,7 +2353,7 @@ QToolButton:hover:checked {
         </widget>
        </item>
        <item row="0" column="1">
-        <widget class="QLineEdit" name="textVisitPcs">
+        <widget class="QLineEdit" name="textLinePcs">
          <property name="enabled">
           <bool>true</bool>
          </property>
@@ -3339,7 +3339,6 @@ QToolButton:hover:checked {
   <tabstop>buttonCreateVisit</tabstop>
   <tabstop>widgetArchivedOrderLines</tabstop>
   <tabstop>textArchivedVisitNote</tabstop>
-  <tabstop>textArchivedOrderPoNumber</tabstop>
   <tabstop>textArchivedOrderSale</tabstop>
   <tabstop>textArchivedOrderSas</tabstop>
   <tabstop>textArchivedOrderTotal</tabstop>
@@ -3359,9 +3358,9 @@ QToolButton:hover:checked {
   <tabstop>textVisitDelZip</tabstop>
   <tabstop>textVisitDelCity</tabstop>
   <tabstop>buttonArchiveVisit</tabstop>
-  <tabstop>textVisitPcs</tabstop>
-  <tabstop>comboOrderItem</tabstop>
-  <tabstop>comboOrderSku</tabstop>
+  <tabstop>textLinePcs</tabstop>
+  <tabstop>comboLineItem</tabstop>
+  <tabstop>comboLineSku</tabstop>
   <tabstop>textVisitSale</tabstop>
   <tabstop>textVisitSas</tabstop>
  </tabstops>

@@ -203,8 +203,8 @@ class MainWindow(QMainWindow, Ui_mainWindow):
         """
         try:
             self.textCustomerLocalDate.setText(self._settings.settings["lsc"])
-            self.textCustomerServerDate.setText(self._settings.settings["sac"])
             self.textPricelistLocalDate.setText(self._settings.settings["lsp"])
+            self.textCustomerServerDate.setText(self._settings.settings["sac"])
             self.textPricelistServerDate.setText(self._settings.settings["sap"])
         except KeyError:
             pass
@@ -398,11 +398,12 @@ class MainWindow(QMainWindow, Ui_mainWindow):
             self._visits.list_by_date(self.textWorkdate.text())
             for v in self._visits.visits:
                 c = self._customers.lookup_by_id(v["customer_id"])
-                item = QTreeWidgetItem([c["company"],
-                                        v["prod_demo"],
-                                        v["prod_sale"],
-                                        v["po_total"]])
-                items.append(item)
+                if c:
+                    item = QTreeWidgetItem([self._customers.customer["company"],
+                                            v["prod_demo"],
+                                            v["prod_sale"],
+                                            v["po_total"]])
+                    items.append(item)
         except (IndexError, KeyError):
             pass
         self.widgetReportVisits.addTopLevelItems(items)
@@ -410,7 +411,7 @@ class MainWindow(QMainWindow, Ui_mainWindow):
     def populate_settings_page(self):
         """
         Populate settings page
-        :return: 
+        :return:
         """
         try:
             self.textAppUserMail.setText(self._settings.settings["usermail"])
@@ -437,25 +438,25 @@ class MainWindow(QMainWindow, Ui_mainWindow):
         :param event:
         """
         # TODO handle resize event
-        w = event.size().width()
-        h = event.size().height()
-        dpival = self.labelAvailable.devicePixelRatio()
-        dpivalf = self.labelAvailable.devicePixelRatioF()
-        dpivalfs = self.labelAvailable.devicePixelRatioFScale()
-        dpilogx = self.labelAvailable.logicalDpiX()
-        dpilogy = self.labelAvailable.logicalDpiY()
-
-        winch = w/dpival
-        hinch = h/dpival
-        print("width = {}\n"
-              "height = {}\n"
-              "dpi = {}\n"
-              "dpi f = {}\n"
-              "w inch = {}\n"
-              "h inch = {}\n"
-              "dpi fs = {}\n"
-              "dpi log x = {}\n"
-              "dpi log y = {}".format(w, h, dpival, dpivalf, winch, hinch, dpivalfs, dpilogx, dpilogy))
+        # w = event.size().width()
+        # h = event.size().height()
+        # dpival = self.labelAvailable.devicePixelRatio()
+        # dpivalf = self.labelAvailable.devicePixelRatioF()
+        # dpivalfs = self.labelAvailable.devicePixelRatioFScale()
+        # dpilogx = self.labelAvailable.logicalDpiX()
+        # dpilogy = self.labelAvailable.logicalDpiY()
+        #
+        # winch = w/dpival
+        # hinch = h/dpival
+        # print("width = {}\n"
+        #       "height = {}\n"
+        #       "dpi = {}\n"
+        #       "dpi f = {}\n"
+        #       "w inch = {}\n"
+        #       "h inch = {}\n"
+        #       "dpi fs = {}\n"
+        #       "dpi log x = {}\n"
+        #       "dpi log y = {}".format(w, h, dpival, dpivalf, winch, hinch, dpivalfs, dpilogx, dpilogy))
         pass
 
     def run(self):
@@ -636,8 +637,8 @@ class MainWindow(QMainWindow, Ui_mainWindow):
         self._visits.visit["po_buyer"] = self.textVisitBuyer.text()
         self._visits.visit["po_number"] = self.textVisitPoNumber.text()
         self._visits.visit["po_company"] = self.textVisitDelCompany.text()
-        self._visits.visit["po_address1"] = self.textDelAddress1.text()
-        self._visits.visit["po_address2"] = self.textDelAddress2.text()
+        self._visits.visit["po_address1"] = self.textVisitDelAddress1.text()
+        self._visits.visit["po_address2"] = self.textVisitDelAddress2.text()
         self._visits.visit["po_postcode"] = self.textVisitDelZip.text()
         self._visits.visit["po_postofffice"] = self.textVisitDelCity.text()
         self._visits.visit["po_country"] = self._employees.employee["country"]
@@ -895,8 +896,8 @@ class MainWindow(QMainWindow, Ui_mainWindow):
                 item["d96"] = item["d96"] * factor
                 item["min"] = item["min"] * factor
                 item["net"] = item["net"] * factor
-            self.comboOrderItem.addItem(item["item"], [item["sku"], item["name1"], item])
-            self.comboOrderSku.addItem(item["sku"], [item["item"], item["name1"], item])
+            self.comboLineItem.addItem(item["item"], [item["sku"], item["name1"], item])
+            self.comboLineSku.addItem(item["sku"], [item["item"], item["name1"], item])
 
         # connect to signals
         self.buttonArchiveVisit.clicked.connect(self.archive_visit)
@@ -1209,7 +1210,8 @@ class MainWindow(QMainWindow, Ui_mainWindow):
         Slot for zeroDatabase triggered signal
         """
         confirm = QMessageBox()
-        val = confirm.question(self, __appname__, "Alle salgsdata slettes<br/>Vil du fortsætte?", confirm.Yes | confirm.No)
+        val = confirm.question(self, __appname__,
+                               "Alle salgsdata slettes<br/>Vil du fortsætte?", confirm.Yes | confirm.No)
 
         if val == confirm.Yes:
             self._contacts.recreate_table()

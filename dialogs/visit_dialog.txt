@@ -122,7 +122,7 @@ class VisitDialog(QDialog, Ui_visitDialog):
         self.btnAppend.clicked.connect(self.button_add_line_action)
         self.btnClear.clicked.connect(self.button_clear_line_action)
         self.btnArchiveVisit.clicked.connect(self.button_save_visit_action)
-        self.cboDnst.currentIndexChanged.connect(self.dnst_changed_action)
+        self.cboDnst.currentIndexChanged.connect(self.line_type_changed_action)
         self.widgetVisitDetails.setColumnWidth(0, 43)   # line_type D/N/S
         self.widgetVisitDetails.setColumnWidth(1, 44)   # pcs
         self.widgetVisitDetails.setColumnWidth(2, 83)   # product
@@ -172,7 +172,7 @@ class VisitDialog(QDialog, Ui_visitDialog):
         # TODO: save visitdetails
 
     @pyqtSlot(name="dnst_changed_action")
-    def dnst_changed_action(self):
+    def line_type_changed_action(self):
         """
         Changed linetype
         :return: nothing
