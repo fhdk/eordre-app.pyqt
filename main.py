@@ -18,10 +18,12 @@ from PyQt5.QtWidgets import QApplication, QMainWindow, QMessageBox, QSplashScree
     QTreeWidgetItem, QTableWidgetItem
 
 from configuration import config, configfn
+
 from dialogs.csv_import_dialog import CsvFileImportDialog
 from dialogs.get_customers_dialog import GetCustomersDialog
 from dialogs.get_pricelist_dialog import GetPricelistDialog
 from dialogs.create_report_dialog import ReportDialogCreate
+
 from models.contact import Contact
 from models.customer import Customer
 from models.orderline import OrderLine
@@ -30,8 +32,10 @@ from models.product import Product
 from models.report import Report
 from models.settings import Settings
 from models.visit import Visit
+
 from resources.main_window_rc import Ui_mainWindow
 from resources import splash_rc
+
 from util import utils
 from util import passwdFn
 from util import printFn
@@ -724,7 +728,7 @@ class MainWindow(QMainWindow, Ui_mainWindow):
                 except KeyError:
                     # create the report
                     self._reports.create(self._employees.employee, self.textWorkdate.text())
-                    infotext = "Rapport oprettet for: {}".format(self.textWorkdate.text())
+                    infotext = "Rapport Createtet for: {}".format(self.textWorkdate.text())
                 msgbox = QMessageBox()
                 msgbox.information(self, __appname__, infotext, QMessageBox.Ok)
                 return True
@@ -739,7 +743,7 @@ class MainWindow(QMainWindow, Ui_mainWindow):
     @pyqtSlot(name="create_visit")
     def load_visit(self):
         """
-        Slot for launching the visit dialog
+        Slot for loading the visit dialog
         """
         try:
             # do we have a report
@@ -833,7 +837,8 @@ class MainWindow(QMainWindow, Ui_mainWindow):
 
             # self.widgetTableSale.setRowHeight(row_number, 12)
             if line["linetype"].lower() == "d":
-                row_number = line_demo + 1
+                line_demo += 1
+                row_number = line_demo
                 self.widgetTableDemo.setRowCount(row_number)
 
                 c1 = QTableWidgetItem()
@@ -846,7 +851,8 @@ class MainWindow(QMainWindow, Ui_mainWindow):
                 c3.setText(str(line["item"]))
                 self.widgetTableDemo.setItem(row_number, 2, c3)
             else:
-                row_number = line_sale + 1
+                line_sale += 1
+                row_number = line_sale
                 self.widgetTableSale.setRowCount(row_number)
 
                 c1 = QTableWidgetItem()
@@ -910,7 +916,7 @@ class MainWindow(QMainWindow, Ui_mainWindow):
         """
         Export Database backup file
         """
-        # TODO: Opret CSV data backup
+        # TODO: Create CSV data backup
         msgbox = QMessageBox()
         msgbox.information(self,
                            __appname__,
@@ -922,7 +928,7 @@ class MainWindow(QMainWindow, Ui_mainWindow):
         """
         Import Database backup file
         """
-        # TODO: Opret CSV data backup
+        # TODO: Restore from CSV data backup
         msgbox = QMessageBox()
         msgbox.information(self,
                            __appname__,
