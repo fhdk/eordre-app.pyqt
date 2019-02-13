@@ -44,15 +44,8 @@ from util.rules import check_settings
 __appname__ = "Eordre NG"
 __module__ = "main.py"
 
-PAGE_CUSTOMERS = 0
-PAGE_CUSTOMER = 1
-PAGE_CUSTOMER_VISITS = 2
-PAGE_PRICELIST = 3
-PAGE_REPORT = 4
-PAGE_REPORTS = 5
-PAGE_SETTINGS = 6
-PAGE_INFO = 7
-PAGE_VISIT = 8
+PAGE_CUSTOMERS, PAGE_CUSTOMER, PAGE_CUSTOMER_VISITS, PAGE_PRICELIST, \
+    PAGE_REPORT, PAGE_REPORTS, PAGE_SETTINGS, PAGE_INFO, PAGE_VISIT = list(range(9))
 
 """
 Set application attributes before creating object

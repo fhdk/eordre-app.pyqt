@@ -6,7 +6,6 @@ Home-page: https://github.com/fhdk/eordre-app.pyqt
 Author: Frede Hundewadt
 Author-email: echo "ZmhAdWV4LmRrCg==" | base64 -d
 License: AGPL
-Description-Content-Type: UNKNOWN
 Description: # eordre-app
         
         Build with Python 3.6 and PyQt5
