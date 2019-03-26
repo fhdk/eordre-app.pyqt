@@ -508,7 +508,7 @@ class MainWindow(QMainWindow, Ui_mainWindow):
             self._settings.settings["page_idx"] = self.widgetAppPages.currentIndex()
         self._settings.update()
 
-    def set_input_enabled(self, arg: bool):
+    def set_input_enabled(self, arg: bool) -> None:
         """Enable inputs"""
         self.checkVisitSas.setEnabled(arg)
         self.comboOrderItem.setEnabled(arg)
@@ -733,11 +733,12 @@ class MainWindow(QMainWindow, Ui_mainWindow):
                                    QMessageBox.Ok)
                 return False
 
-    @pyqtSlot(name="create_visit")
+    @pyqtSlot(name="load_visit")
     def load_visit(self):
         """
         Slot for loading the visit dialog
         """
+
         try:
             # do we have a report
             _ = self._reports.report["rep_date"]
@@ -762,8 +763,8 @@ class MainWindow(QMainWindow, Ui_mainWindow):
                 self.textCustId.text() is not self._customers.customer["customer_id"]:
             confirm = QMessageBox()
             val = confirm.question(self, __appname__,
-                                   "Du har en uafsluttet sag på {}.<br/>Vil du slette den?".format(
-                                       self.textVisitCompany.text()),
+                                   f"Du har et uafsluttet besøg på {self.textVisitCompany.text()}."
+                                   f"<br/>Vil du slette det?",
                                    confirm.Yes | confirm.No)
             if val == confirm.No:
                 self._customers.lookup_by_id(self.textCustId.text())
@@ -771,7 +772,7 @@ class MainWindow(QMainWindow, Ui_mainWindow):
                 self._archivedVisits.delete(self.textVisitId.text())
 
         self.toolButtonCustomerVisit.setEnabled(True)
-        self.widgetAppPages.setCurrentIndex(PAGE_VISIT)
+        # self.widgetAppPages.setCurrentIndex(PAGE_VISIT)
 
         customer_pricelist = self._products
         workdate = self.textWorkdate.text()
@@ -1025,6 +1026,7 @@ class MainWindow(QMainWindow, Ui_mainWindow):
         self.populate_contact_list()
         self.populate_archived_visits()
         self.populate_archived_visit_details()
+        self.load_visit()
 
     @pyqtSlot(name="on_csv_import_done")
     def on_csv_import_done(self):
@@ -1201,6 +1203,7 @@ class MainWindow(QMainWindow, Ui_mainWindow):
         Show page with visit
         """
         self.set_indexes()
+        self.load_visit()
         self.widgetAppPages.setCurrentIndex(PAGE_VISIT)
 
     @pyqtSlot(name="zero_database")
